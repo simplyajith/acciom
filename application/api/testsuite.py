@@ -10,6 +10,14 @@ from application.helper.uploadfiledb import save_file_to_db
 
 
 def args_as_list(s):
+    """
+
+    Args:
+        s: accepts argument from parser
+
+    Returns: a List
+
+    """
     v = ast.literal_eval(s)
     if type(v) is not list:
         pass
