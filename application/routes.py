@@ -1,12 +1,10 @@
 import os
 
-from flask import send_from_directory
-
 from application.api.login import (Login, LogOut, AddUser)
+from application.api.testsuite import AddTestSuite
 from application.model.models import db
-from index import (app, api, static_folder)
-
-db
+from flask import send_from_directory
+from index import (app, api, static_folder,db)
 
 
 @app.route('/', defaults={'path': ''})
@@ -26,3 +24,4 @@ def serve(path):
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
 api.add_resource(AddUser, '/api/adduser/<string:email>')
+api.add_resource(AddTestSuite, '/api/test-suite')

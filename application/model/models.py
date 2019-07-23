@@ -1,9 +1,8 @@
 from datetime import datetime
 
-# from flask import current_app
-from sqlalchemy.dialects.postgresql import JSON
-
+from application.common.constants import ExecutionStatus
 from index import db
+from sqlalchemy.dialects.postgresql import JSON
 
 supported_db_type = ("postgresql", "mysql", "mssql", "oracle", "sqlite")
 supported_test_class = ("countcheck", "nullcheck", "ddlcheck",
@@ -216,15 +215,13 @@ class TestCase(db.Model):
     user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     test_case_class = db.Column(db.SMALLINT, nullable=False)
     latest_execution_status = db.Column(db.SMALLINT,
-                                        nullable=False, default='new')
+                                        nullable=False,
+                                        default=ExecutionStatus().get_execution_status_id_by_name(
+                                            'new'))
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     test_case_detail = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
-
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
 
     def __init__(self, test_suite_id, user_id, test_case_class,
                  test_case_detail):
@@ -232,6 +229,10 @@ class TestCase(db.Model):
         self.user_id = user_id
         self.test_case_class = test_case_class
         self.test_case_detail = test_case_detail
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class TestCaseLog(db.Model):
