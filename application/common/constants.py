@@ -48,7 +48,7 @@ class SupportedDBType:
         Returns:(str) name of the database
 
         """
-        return self.supported_db_type[db_id]
+        return self.supported_db_type.get(db_id)  # Returns None if Id does not exist
 
     def get_db_id_by_name(self, name):
         """
@@ -60,8 +60,9 @@ class SupportedDBType:
         Returns: (int) Id of the database
         """
         for key, value in self.supported_db_type.items():
-            if value == name:
+            if value == name.lower():  # Name will be converted to lower case and compared
                 return key
+            # Returns None if Name does not exist
 
 
 class SupportedTestClass:
@@ -78,7 +79,7 @@ class SupportedTestClass:
 
         Returns: (str) name of the test class
         """
-        return self.supported_test_class[test_class_id]
+        return self.supported_test_class.get(test_class_id)
 
     def get_test_class_id_by_name(self, name):
         """
@@ -90,14 +91,14 @@ class SupportedTestClass:
         Returns: (int) Id of the test class
         """
         for key, value in self.supported_test_class.items():
-            if value == name:
+            if value == name.lower():
                 return key
 
 
 class ExecutionStatus:
     """Class to return Name and Id of the DataBase."""
 
-    execution_status = {0: "new", 1: "pass", 2: "fail", 3: "inprogress", 4: "error"}
+    execution_status = {0: "inprogress", 1: "pass", 2: "fail", 3: "error", 4: "new"}
 
     def get_execution_status_by_id(self, execution_id):
         """
@@ -109,7 +110,7 @@ class ExecutionStatus:
         Returns:(str) Execution status
 
         """
-        return self.execution_status[execution_id]
+        return self.execution_status.get(execution_id)
 
     def get_execution_status_id_by_name(self, name):
         """
@@ -122,5 +123,5 @@ class ExecutionStatus:
 
         """
         for key, value in self.execution_status.items():
-            if value == name:
+            if value == name.lower():
                 return key
