@@ -1,88 +1,111 @@
-[2019-07-24 11:38:38,932] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
-DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
-
-[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
-[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:39:28,721] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
-DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
-
-[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
-[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:43:38,703] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
-DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
-
-[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
-[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:44:15,128] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
-DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
-
-[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
-[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:44:51,116] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
-DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
-
-[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
-[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:45:46,673] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
-DETAIL:  Failing row contains (1, 48, null, 1, null, 2019-07-24 11:45:46.660698).
-
-[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
-[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 11, 45, 46, 660698)}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 11:48:27,109] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
-DETAIL:  Failing row contains (2, 48, null, 1, null, 2019-07-24 11:48:27.107519).
-
-[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
-[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 11, 48, 27, 107519)}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 12:17:33,460] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
-DETAIL:  Failing row contains (3, 48, null, 1, null, 2019-07-24 12:17:33.459165).
-
-[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
-[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 12, 17, 33, 459165)}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 12:20:44,284] ERROR in testcase/post/36: save_case_log() missing 1 required positional argument: 'execution_log'
-[2019-07-24 12:21:26,830] ERROR in testcase/post/36: save_case_log() missing 2 required positional arguments: 'user_id' and 'execution_log'
-[2019-07-24 12:24:10,687] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "user_id" violates not-null constraint
-DETAIL:  Failing row contains (4, 48, 1, null, 0, 2019-07-24 12:24:10.685998).
-
-[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
-[parameters: {'test_case_id': 48, 'execution_status': 1, 'user_id': None, 'execution_log': '0', 'executed_at': datetime.datetime(2019, 7, 24, 12, 24, 10, 685998)}]
-(Background on this error at: http://sqlalche.me/e/gkpj)
-[2019-07-24 13:30:25,545] ERROR in testcase/post/36: Entity '<class 'application.model.models.DbConnection'>' has no property 'db_id'
-[2019-07-24 13:31:16,746] ERROR in testcase/post/36: 'int' object has no attribute 'lower'
-[2019-07-24 13:58:35,806] ERROR in testcase/post/36: 'int' object has no attribute 'lower'
-[2019-07-24 14:01:58,528] ERROR in testcase/post/36: 'NoneType' object has no attribute 'cursor'
-[2019-07-24 14:03:49,139] ERROR in testcase/post/36: 'NoneType' object has no attribute 'cursor'
-[2019-07-24 14:04:54,023] ERROR in testcase/post/36: 'SupportedDBType' object has no attribute 'get_test_class_id_by_name'
-[2019-07-24 14:05:17,693] ERROR in testcase/post/36: (1045, "Access denied for user 'acciom_user'@'localhost' (using password: YES)")
-[2019-07-24 14:05:52,703] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:07:21,200] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:07:47,353] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:08:03,643] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:08:18,019] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:08:40,184] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:08:55,607] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:09:08,334] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:10:53,071] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:11:11,536] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
-[2019-07-24 14:11:29,854] DEBUG in countcheck/count_check/31: []
-[2019-07-24 14:11:30,000] INFO in countcheck/count_check/62: count check fail
-[2019-07-24 14:11:30,001] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
-[2019-07-24 14:11:42,518] DEBUG in countcheck/count_check/31: []
-[2019-07-24 14:11:42,522] INFO in countcheck/count_check/62: count check fail
-[2019-07-24 14:11:42,522] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
-[2019-07-24 14:12:13,418] DEBUG in countcheck/count_check/31: []
-[2019-07-24 14:12:13,421] INFO in countcheck/count_check/62: count check fail
-[2019-07-24 14:12:13,422] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
-[2019-07-24 14:13:33,568] DEBUG in countcheck/count_check/31: []
-[2019-07-24 14:13:33,575] INFO in countcheck/count_check/63: count check fail
-[2019-07-24 14:13:33,576] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
-[2019-07-24 14:13:52,692] DEBUG in countcheck/count_check/31: []
-[2019-07-24 14:13:52,697] INFO in countcheck/count_check/63: count check fail
-[2019-07-24 14:13:52,697] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:15:07,585] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:15:07,593] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:15:07,593] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:18:48,256] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:18:48,259] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:18:48,260] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:21:13,249] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:21:13,252] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:21:13,253] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:21:35,155] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:21:35,158] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:21:35,158] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:22:19,291] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:22:19,295] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:22:19,296] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:22:40,658] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:22:40,662] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:22:40,662] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:23:27,397] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:23:27,401] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:23:27,401] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:24:49,997] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:24:50,001] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:24:50,002] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:25:05,399] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:25:05,403] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:25:05,403] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:27:13,999] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:27:14,003] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:27:14,003] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:27:33,034] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:27:33,037] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:27:33,038] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:29:07,063] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:29:07,068] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:31:46,976] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:31:46,980] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:32:06,664] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:32:06,670] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:38:03,206] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:38:03,210] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:54:26,218] ERROR in testcase/post/37: ('28000', "[28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Login failed for user 'SA'. (18456) (SQLDriverConnect)")
+[2019-07-24 14:55:20,952] ERROR in testcase/post/37: ('28000', "[28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Login failed for user 'SA'. (18456) (SQLDriverConnect)")
+[2019-07-24 14:55:39,835] DEBUG in nullcheck/null_check/37: ['Account_Number']
+[2019-07-24 14:55:53,995] DEBUG in nullcheck/null_check/37: ['Phone']
+[2019-07-24 14:56:00,786] DEBUG in nullcheck/null_check/37: ['Billing_Address']
+[2019-07-24 14:56:06,674] DEBUG in nullcheck/null_check/37: ['Shipping_Address']
+[2019-07-24 14:56:10,695] DEBUG in nullcheck/null_check/37: ['Shipping_Address']
+[2019-07-24 14:56:16,586] DEBUG in nullcheck/null_check/37: ['Location_Type']
+[2019-07-24 15:00:56,906] DEBUG in nullcheck/null_check/37: ['Account_Number']
+[2019-07-24 15:04:32,457] DEBUG in nullcheck/null_check/43: ['Account_Number']
+[2019-07-24 16:00:36,512] ERROR in testcase/post/37: 'NoneType' object has no attribute 'latest_execution_status'
+[2019-07-24 16:03:32,172] ERROR in testcase/post/37: 'src_value'
+[2019-07-24 16:18:46,144] ERROR in testcase/post/37: 'NoneType' object is not subscriptable
+[2019-07-24 16:18:49,204] ERROR in testcase/post/37: 'NoneType' object is not subscriptable
+[2019-07-24 16:58:47,766] ERROR in testcase/post/37: 'Execution_log'
+[2019-07-24 16:59:24,582] ERROR in testcase/post/37: 'Execution_log'
+[2019-07-24 16:59:59,633] ERROR in testcase/post/37: 'Execution_log'
+[2019-07-24 17:18:40,534] ERROR in testcase/post/37: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 17:20:33,329] ERROR in testcase/post/37: 'NoneType' object is not subscriptable
+[2019-07-24 17:23:23,122] ERROR in testcase/post/37: 'NoneType' object is not subscriptable
+[2019-07-24 17:24:28,284] ERROR in testcase/post/37: 'test_case_detail'
+[2019-07-24 17:38:52,996] ERROR in testcase/post/37: 'test_case_detail'
+[2019-07-24 17:42:23,187] ERROR in testcase/post/37: 'test_case_detail'
+[2019-07-24 17:42:42,704] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 17:42:42,705] ERROR in testcase/post/37: 'int' object has no attribute 'lower'
+[2019-07-24 17:42:59,347] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 17:42:59,348] INFO in datavalidation/datavalidation/32: Data validation Job start at = 2019-07-24 17:42:59.348256
+[2019-07-24 17:42:59,353] DEBUG in datavalidation/datavalidation/60: 2019-07-24 17:42:59.353245
+[2019-07-24 17:46:03,198] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 17:46:03,199] INFO in datavalidation/datavalidation/32: Data validation Job start at = 2019-07-24 17:46:03.199331
+[2019-07-24 17:46:03,202] DEBUG in datavalidation/datavalidation/60: 2019-07-24 17:46:03.202510
+[2019-07-24 18:01:20,265] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:01:20,266] INFO in datavalidation/datavalidation/32: Data validation Job start at = 2019-07-24 18:01:20.266818
+[2019-07-24 18:01:20,269] DEBUG in datavalidation/datavalidation/60: 2019-07-24 18:01:20.269270
+[2019-07-24 18:03:50,919] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:03:50,920] INFO in datavalidation/datavalidation/32: Data validation Job start at = 2019-07-24 18:03:50.920113
+[2019-07-24 18:03:50,926] DEBUG in datavalidation/datavalidation/60: 2019-07-24 18:03:50.926320
+[2019-07-24 18:06:37,327] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:06:37,328] INFO in datavalidation/datavalidation/55: Data validation Job start at = 2019-07-24 18:06:37.328284
+[2019-07-24 18:06:37,331] DEBUG in datavalidation/datavalidation/83: 2019-07-24 18:06:37.331345
+[2019-07-24 18:08:00,485] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:08:00,486] INFO in datavalidation/datavalidation/55: Data validation Job start at = 2019-07-24 18:08:00.486256
+[2019-07-24 18:08:00,489] DEBUG in datavalidation/datavalidation/83: 2019-07-24 18:08:00.489136
+[2019-07-24 18:09:28,005] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:09:28,006] INFO in datavalidation/datavalidation/55: Data validation Job start at = 2019-07-24 18:09:28.006033
+[2019-07-24 18:09:28,010] DEBUG in datavalidation/datavalidation/83: 2019-07-24 18:09:28.010196
+[2019-07-24 18:15:50,707] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:15:50,707] INFO in datavalidation/datavalidation/61: Data validation Job start at = 2019-07-24 18:15:50.707575
+[2019-07-24 18:15:50,710] DEBUG in datavalidation/datavalidation/90: 2019-07-24 18:15:50.710339
+[2019-07-24 18:23:02,934] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:23:02,935] INFO in datavalidation/datavalidation/61: Data validation Job start at = 2019-07-24 18:23:02.935136
+[2019-07-24 18:23:02,939] DEBUG in datavalidation/datavalidation/90: 2019-07-24 18:23:02.939154
+[2019-07-24 18:31:05,148] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:31:05,148] INFO in datavalidation/datavalidation/61: Data validation Job start at = 2019-07-24 18:31:05.148667
+[2019-07-24 18:31:05,153] DEBUG in datavalidation/datavalidation/90: 2019-07-24 18:31:05.153686
+[2019-07-24 18:33:23,300] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:33:23,300] INFO in datavalidation/datavalidation/61: Data validation Job start at = 2019-07-24 18:33:23.300600
+[2019-07-24 18:33:23,305] DEBUG in datavalidation/datavalidation/90: 2019-07-24 18:33:23.305736
+[2019-07-24 18:40:10,419] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:40:10,420] INFO in datavalidation/datavalidation/63: Data validation Job start at = 2019-07-24 18:40:10.420298
+[2019-07-24 18:40:10,422] DEBUG in datavalidation/datavalidation/92: 2019-07-24 18:40:10.422756
+[2019-07-24 18:41:47,557] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:41:47,558] INFO in datavalidation/datavalidation/63: Data validation Job start at = 2019-07-24 18:41:47.558552
+[2019-07-24 18:41:47,563] DEBUG in datavalidation/datavalidation/92: 2019-07-24 18:41:47.562936
+[2019-07-24 18:52:57,304] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:52:57,305] INFO in datavalidation/datavalidation/63: Data validation Job start at = 2019-07-24 18:52:57.305115
+[2019-07-24 18:52:57,308] DEBUG in datavalidation/datavalidation/92: 2019-07-24 18:52:57.308875
+[2019-07-24 18:57:15,844] DEBUG in runnerclass/run_test/226: srcqry targetqry 
+[2019-07-24 18:57:15,845] INFO in datavalidation/datavalidation/63: Data validation Job start at = 2019-07-24 18:57:15.845006
+[2019-07-24 18:57:15,851] DEBUG in datavalidation/datavalidation/92: 2019-07-24 18:57:15.851664

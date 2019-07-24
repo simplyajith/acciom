@@ -1,10 +1,25 @@
-import json
-
 from flask import current_app as app
+
+from application.common.constants import ExecutionStatus
 
 
 def ddl_check(source_cursor, target_cursor, source_table, target_table,
               src_db_type, target_db_type):
+    """
+
+    Args:
+        source_cursor:
+        target_cursor:
+        source_table:
+        target_table:
+        src_db_type:
+        target_db_type:
+
+    Returns:
+
+    """
+    print(source_cursor, target_cursor, source_table, target_table,
+          src_db_type, target_db_type)
     try:
         data1 = []
         data2 = []
@@ -18,7 +33,7 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
             )
 
             for row in cursor:
-                row=[x.lower() for x in row]
+                row = [x.lower() for x in row]
                 data3.append(row)
             for i in data3:
                 if i[2] == "y":
@@ -35,7 +50,6 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
 
             for row in cursor:
                 data1.append(tuple(row))
-
 
         if target_db_type == "oracle":
 
@@ -78,20 +92,23 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         x = OrderedDict({k: d1.get(k, ("missing",)) for k in all_keys})
         y = OrderedDict({k: d2.get(k, ("missing",)) for k in all_keys})
 
-        x1 = list(x.values())
-        y1 = list(y.values())
-
-        x = json.dumps(x1)
-        y = json.dumps(y1)
+        src_result = list(x.values())
+        dest_result = list(y.values())
 
         if data1 == [] and data2 == []:
-            return {"res": 1, "src_value": "none1",
-                    "des_value": "none1"}
+            return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+                'pass'),
+                "Execution_log": {"src_log": src_result,
+                                  "dest_log": dest_result}})
         else:
-
-            return {"res": 0, "src_value": x,
-                    "des_value": y}
+            return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+                'fail'),
+                "Execution_log": {"src_log": None,
+                                  "dest_log": None}})
 
     except Exception as e:
         app.logger.error(e)
-        return {"res": 2, "src_value": None, "des_value": None}
+        return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+            'error'),
+            "Execution_log": {"src_log": None,
+                              "dest_log": None}})

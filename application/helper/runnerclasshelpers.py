@@ -1,3 +1,5 @@
+import ast
+
 from application.model.models import DbConnection
 
 
@@ -46,19 +48,72 @@ def split_table(test_case_details):
 
 
 def get_query(queries):
-    print("51", queries)
+    """
+    Parse the query from excel
+    Args:
+        queries: query from Excel as Text
+
+    Returns: Parsed queries
+
+    """
     query = queries["query"]
     print(query)
     return query
 
 
 def get_column(columns):
-    '''
-    :param columns:
-    :return: list of target columns only as a list used in case of nullcheck
-    and duplicate check
-    '''
+    """
+
+    Args:
+        columns: columns as Text from Excel
+
+    Returns: list of columns
+
+    """
 
     column = columns["column"]
     column = list(column.values())
     return column
+
+
+def save_case_log_information(case_log, source_count, src_to_dest, src_log,
+                              dest_count, dest_to_src, dest_log):
+    """
+    Save log information from spark to the TestCaseLog Table
+    Args:
+        case_log: caselog object
+        source_count: source table count
+        src_to_dest: source and target table diffrence
+        src_log: source log
+        dest_count: target table count
+        dest_to_src: target and source table diffrence
+        dest_log: target table log
+
+    Returns: Submit the log to the TestCaseLog Table
+
+    """
+    print(case_log, source_count, src_to_dest, src_log,
+          dest_count, dest_to_src, dest_log)
+    spark_job_data = {"src_execution_log": src_log,
+                      "dest_execution_log": dest_log,
+                      "src_count": source_count,
+                      "src_to_dest_count": src_to_dest,
+                      "dest_count": dest_count,
+                      "dest_to_src_count": dest_to_src}
+    case_log.execution_log = spark_job_data
+    case_log.save_to_db()
+
+
+def args_as_list(list_args):
+    """
+
+    Args:
+        list_args: accepts argument from parser
+
+    Returns: a List
+
+    """
+    list_Arg = ast.literal_eval(list_args)
+    if type(list_Arg) is not list:
+        pass
+    return list_Arg

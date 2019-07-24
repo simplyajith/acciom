@@ -1,6 +1,5 @@
 # from logger import set_up_logging
 # logger = set_up_logging()
-import json
 
 from flask import current_app as app
 
@@ -97,23 +96,19 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
         if all_results:
             if flag == True:
                 all_results.insert(0, col_list)
-                a = json.dumps(all_results)
             elif flag == False:
                 all_results.insert(0, col_list_custom)
-                a = json.dumps(all_results)
-            print("104")
-            print(a)
 
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
-                'fail'), "src_value": None,
-                "des_value": {"dest_log": a}})
+                'fail'),
+                "Execution_log": {"src_log": None,
+                                  "dest_log": all_results[:10]}})
         else:
             print("109")
             return {"res": ExecutionStatus().get_execution_status_id_by_name(
-                'pass'), "src_value": None,
-                "des_value": None}
+                'pass'), "Execution_log": None}
 
     except Exception as e:
         app.logger.debug(e)
         return {"res": ExecutionStatus().get_execution_status_id_by_name(
-            'error'), "src_value": None, "des_value": None}
+            'error'), "Execution_log": {"error_log": e}}

@@ -1,6 +1,9 @@
+from flask import current_app as app
+
 from application.common.constants import ExecutionStatus, SupportedTestClass
 from application.common.dbconnect import dbconnection
 from application.helper.countcheck import count_check
+from application.helper.datavalidation import datavalidation
 from application.helper.ddlcheck import ddl_check
 from application.helper.duplicate import duplication
 from application.helper.nullcheck import null_check
@@ -62,11 +65,11 @@ def run_by_case_id(test_case_id, user_id):
 def run_test(case_id, user_id):
     """
     This method implements the execution of job
+
     Args:
         case_id: test_case_id of the Case.
 
     Returns: Runs the job based on the testCaseClass
-
     """
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
@@ -112,7 +115,6 @@ def run_test(case_id, user_id):
             table_name = split_table(case_id.test_case_detail)
             query = get_query(case_id.test_case_detail)
             column = get_column(case_id.test_case_detail)
-            print("@115")
             result = null_check(target_cursor, table_name['target_table'],
                                 column, query, target_detail['db_type'])
 
@@ -151,19 +153,24 @@ def run_test(case_id, user_id):
                                          target_detail['db_username'],
                                          target_detail[
                                              'db_password']).cursor()
+
             result = ddl_check(source_cursor,
                                target_cursor,
                                table_name['src_table'],
                                table_name['target_table'],
                                src_detail['db_type'],
                                target_detail['db_type'])
+        if case_id.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+                'datavalidation'):
+            table_name = split_table(case_id.test_case_detail)
+            result = {'res': 0, "Execution_log": None}
 
         if result['res'] == ExecutionStatus().get_execution_status_id_by_name(
                 'pass'):
             save_test_status(case_id, 1)
             case_log.execution_status = 1
-            data = {"src_execution_log": result['src_value'],
-                    "dest_execution_log": result['des_value']}
+            data = {"src_execution_log": result['Execution_log']['src_log'],
+                    "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
             case_log.save_to_db()
 
@@ -172,8 +179,8 @@ def run_test(case_id, user_id):
             'fail'):
             save_test_status(case_id, 2)
             case_log.execution_status = 2
-            data = {"src_execution_log": result['src_value'],
-                    "dest_execution_log": result['des_value']}
+            data = {"src_execution_log": result['Execution_log']['src_log'],
+                    "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
             case_log.save_to_db()
 
@@ -182,9 +189,48 @@ def run_test(case_id, user_id):
             'error'):
             save_test_status(case_id, 3)
             case_log.execution_status = 3
-            data = {"src_execution_log": result['src_value'],
-                    "dest_execution_log": result['des_value']}
+            data = {"src_execution_log": result['Execution_log']['src_log'],
+                    "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
             case_log.save_to_db()
 
+        elif result[
+            'res'] == ExecutionStatus().get_execution_status_id_by_name(
+            'inprogress'):
+            save_test_status(case_id, 3)
+            case_log.execution_status = 3
+            case_log.save_to_db()
+            if case_id.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+                    'datavalidation'):
+                src_detail = db_details(
+                    case_id.test_case_detail['src_db_id'])
+                target_detail = db_details(
+                    case_id.test_case_detail['target_db_id'])
+                query = get_query(case_id.test_case_detail)
+                if query == {}:
+                    src_qry = ""
+                    target_qry = ""
+                else:
+                    src_qry = query[
+                        'sourceqry'] if 'sourceqry' in query else ""
+                    target_qry = query[
+                        'targetqry'] if 'targetqry' in query else ""
+
+                app.logger.debug(
+                    "srcqry " + src_qry + "targetqry " + target_qry)
+
+                table_name = split_table(case_id.test_case_detail)
+                datavalidation(src_detail['db_name'],
+                               table_name['src_table'],
+                               src_detail['db_type'],
+                               target_detail['db_name'],
+                               table_name['target_table'],
+                               target_detail['db_type'],
+                               src_detail['db_username'],
+                               src_detail['db_password'],
+                               src_detail['db_hostname'],
+                               target_detail['db_username'],
+                               target_detail['db_password'],
+                               target_detail['db_hostname'],
+                               src_qry, target_qry, case_log)
     return {"status": True, "test_case_log_id": case_log.test_case_log_id}

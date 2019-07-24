@@ -1,11 +1,11 @@
 import os
 
-from application.api.login import (Login, LogOut, AddUser)
-from application.api.testsuite import AddTestSuite
-from application.api.testcase import TestCaseJob
-from application.model.models import db
 from flask import send_from_directory
-from index import (app, api, static_folder,db)
+
+from application.api.login import (Login, LogOut, AddUser)
+from application.api.testcase import TestCaseJob, TestCaseSparkJob
+from application.api.testsuite import AddTestSuite
+from index import (app, api, static_folder)
 
 
 @app.route('/', defaults={'path': ''})
@@ -26,4 +26,6 @@ api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
 api.add_resource(AddUser, '/api/adduser/<string:email>')
 api.add_resource(AddTestSuite, '/api/test-suite')
-api.add_resource(TestCaseJob,'/api/test-case-job')
+api.add_resource(TestCaseJob, '/api/test-case-job')
+api.add_resource(TestCaseSparkJob,
+                 '/api/spark-job-status/<int:test_case_log_id>')

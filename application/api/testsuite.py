@@ -1,27 +1,11 @@
-import ast
-
 from flask import request
 from flask_restful import reqparse, Resource
 
 from application.common.constants import APIMessages
 from application.common.response import api_response
 from application.common.token import (token_required)
+from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
-
-
-def args_as_list(s):
-    """
-
-    Args:
-        s: accepts argument from parser
-
-    Returns: a List
-
-    """
-    v = ast.literal_eval(s)
-    if type(v) is not list:
-        pass
-    return v
 
 
 class AddTestSuite(Resource):

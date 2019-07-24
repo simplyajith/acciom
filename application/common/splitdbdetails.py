@@ -2,26 +2,21 @@ import ast
 
 
 def split_table(table_name):
-    # """
-    # :param table_name: gets table_src_target value stored in TestSuite table
-    # :return: returns a list consist of source and destination db.
-    # """
     """
-
+    Method to convert data from excel to src,target tables
     Args:
-        table_name: gets table_src_target from Excel
+        table_name: Table name as argument in Text Format
 
-    Returns:returns a list consist of source and destination db.
+    Returns: src,target tables
 
     """
-
     table_names = ast.literal_eval(table_name)
-    lst1 = {}
+    table_list = {}
     tables = table_names["table"]
     for key in tables:
-        lst1['src_table'] = key
-        lst1['target_table'] = tables[key]
-    return lst1
+        table_list['src_table'] = key
+        table_list['target_table'] = tables[key]
+    return table_list
 
 
 def split_db(test_db_detail):
@@ -31,21 +26,21 @@ def split_db(test_db_detail):
         test_db_detail: Contains a String consist of DBDetails fetched from Excel
 
     Returns: A dictionary consist of keys(source_db,targetdb,sourcedbType,sourceServer
-    # ,targetServer,sourceuser,Targetuser)
+    targetServer,sourceuser,Targetuser)
 
     """
 
-    lst1 = []
-    lst2 = {}
+    temp_dblist = []
+    db_detail = {}
     strip_db_detail = test_db_detail.split(";")
     for i in range(len(strip_db_detail)):
-        lst1.append(strip_db_detail[i].split(':', 1))
-    lst2.update({"sourcedb": lst1[2][1]})
-    lst2.update({"targetdb": lst1[5][1]})
-    lst2.update({"sourcedbType": lst1[0][1]})
-    lst2.update({"targetdbType": lst1[4][1]})
-    lst2.update({"sourceServer": lst1[1][1]})
-    lst2.update({"targetServer": lst1[6][1]})
-    lst2.update({"sourceuser": lst1[3][1]})
-    lst2.update({"Targetuser": lst1[7][1]})
-    return lst2
+        temp_dblist.append(strip_db_detail[i].split(':', 1))
+    db_detail.update({"sourcedb": temp_dblist[2][1]})
+    db_detail.update({"targetdb": temp_dblist[5][1]})
+    db_detail.update({"sourcedbType": temp_dblist[0][1]})
+    db_detail.update({"targetdbType": temp_dblist[4][1]})
+    db_detail.update({"sourceServer": temp_dblist[1][1]})
+    db_detail.update({"targetServer": temp_dblist[6][1]})
+    db_detail.update({"sourceuser": temp_dblist[3][1]})
+    db_detail.update({"Targetuser": temp_dblist[7][1]})
+    return db_detail

@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-from application.common.constants import SupportedDBType
+from application.common.constants import SupportedDBType, ExecutionStatus
 
 
 def qry_generator(columns, target_table):
@@ -87,7 +87,7 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                     print(all_results)
 
                     all_results.insert(0, col_list)
-                    res1 = json.dumps(all_results)
+                    print("90", all_results[:2])
                 else:
                     column_name.append("Duplicate Occurance")
                     for i in all_results:
@@ -97,8 +97,7 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                             else:
                                 i[x] == i[x]
                     all_results.insert(0, column_name)
-                    res1 = json.dumps(all_results)
-                    # if column give in excel
+                    print("100", all_results[:2])
             else:
                 if "select * from" in (test_queries["targetqry"].lower()):
                     col_list.append("Duplicate Occurance")
@@ -109,7 +108,7 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                             else:
                                 i[x] == i[x]
                     all_results.insert(0, col_list)
-                    res1 = json.dumps(all_results)
+                    print("111", all_results[:2])
                 else:
                     print("custom qry for cols.")
                     qry = (test_queries["targetqry"]).lower()
@@ -130,7 +129,7 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                                 else:
                                     i[x] == i[x]
                         all_results.insert(0, column)
-                        res1 = json.dumps(all_results)
+                        print("132", all_results[:2])
 
                     else:
                         col_list_custom = []
@@ -144,14 +143,18 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                                 else:
                                     i[x] == i[x]
                         all_results.insert(0, col_list_custom)
-                        res1 = json.dumps(all_results)
-
-            return {"res": 0, "src_value": "src_val_not required",
-                    "des_value": res1}
+                        print("146", all_results[:2])
+            return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+                'fail'),
+                "Execution_log": {"src_log": None,
+                                  "dest_log": all_results[:10]}})
         else:
-            return {"res": 1, "src_value": "src_value not require",
-                    "des_value": None}
+            return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+                'pass'),
+                "Execution_log": {"src_log": None, "dest_log": None}})
 
     except Exception as e:
         app.logger.error(e)
-        return {"res": 2, "src_value": "src_value", "des_value": "des_val"}
+        return ({"res": ExecutionStatus().get_execution_status_id_by_name(
+            'error'),
+            "Execution_log": {"error_log": e}})
