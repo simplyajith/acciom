@@ -246,10 +246,11 @@ class TestCaseLog(db.Model):
     executed_at = db.Column(db.DateTime, default=datetime.now, index=True)
 
     def __init__(self, test_case_id, execution_status, user_id,
-                 execution_log):
+                 execution_log, dqi_percentage):
         self.test_case_id = test_case_id
         self.execution_status = execution_status
         self.user_id = user_id
+        self.dqi_percentage = dqi_percentage
         self.execution_log = execution_log
 
     def save_to_db(self):
