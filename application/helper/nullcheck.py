@@ -36,7 +36,6 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
 
     """
     try:
-        print("35", target_cursor, target_table, column, test_queries, db_type)
         col_list = []
         newlst = []
         if db_type == SupportedDBType().get_db_id_by_name('oracle'):
@@ -45,7 +44,6 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
                                   " WHERE table_name=UPPER('{0}')".format(
                 target_table))
         else:
-            print("else")
             target_cursor.execute(
                 "SELECT COLUMN_NAME FROM "
                 "information_schema.COLUMNS"

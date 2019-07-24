@@ -168,7 +168,8 @@ def run_test(case_id, user_id):
         if result['res'] == ExecutionStatus().get_execution_status_id_by_name(
                 'pass'):
             save_test_status(case_id, 1)
-            case_log.execution_status = 1
+            case_log.execution_status = ExecutionStatus().get_execution_status_id_by_name(
+                'pass')
             data = {"src_execution_log": result['Execution_log']['src_log'],
                     "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
@@ -178,7 +179,8 @@ def run_test(case_id, user_id):
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
             'fail'):
             save_test_status(case_id, 2)
-            case_log.execution_status = 2
+            case_log.execution_status = ExecutionStatus().get_execution_status_id_by_name(
+                'fail')
             data = {"src_execution_log": result['Execution_log']['src_log'],
                     "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
@@ -188,7 +190,8 @@ def run_test(case_id, user_id):
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
             'error'):
             save_test_status(case_id, 3)
-            case_log.execution_status = 3
+            case_log.execution_status = ExecutionStatus().get_execution_status_id_by_name(
+                'error')
             data = {"src_execution_log": result['Execution_log']['src_log'],
                     "dest_execution_log": result['Execution_log']['dest_log']}
             case_log.execution_log = data
@@ -198,7 +201,8 @@ def run_test(case_id, user_id):
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
             'inprogress'):
             save_test_status(case_id, 3)
-            case_log.execution_status = 3
+            case_log.execution_status = ExecutionStatus().get_execution_status_id_by_name(
+                'inprogress')
             case_log.save_to_db()
             if case_id.test_case_class == SupportedTestClass().get_test_class_id_by_name(
                     'datavalidation'):

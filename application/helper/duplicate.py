@@ -30,7 +30,6 @@ def qry_generator(columns, target_table):
                    ",COUNT(*) " \
                    "FROM {0} ".format(target_table) + \
                    "GROUP BY " + sub_endquery + " HAVING COUNT(*) >1"
-    # custom_query = "SELECT " + sub_startquery +",COUNT(*) FROM {0} ".format(target_table) + "GROUP BY " + sub_startquery +" HAVING COUNT(*)>1"
     print(custom_query)
     return custom_query
 
@@ -78,35 +77,26 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                 if column_name == []:
                     col_list.append("Duplicate Occurance")
                     print(all_results)
-                    for i in all_results:
-                        for x in range(0, len(i)):
-                            if i[x] == "None":
-                                i[x] = "Null"
-                            else:
-                                i[x] == i[x]
-                    print(all_results)
+                    for each_row in all_results:
+                        for x in range(0, len(each_row)):
+                            if each_row[x] == "None":
+                                each_row[x] = "Null"
 
                     all_results.insert(0, col_list)
-                    print("90", all_results[:2])
                 else:
                     column_name.append("Duplicate Occurance")
-                    for i in all_results:
-                        for x in range(0, len(i)):
-                            if i[x] == "None":
-                                i[x] = "Null"
-                            else:
-                                i[x] == i[x]
+                    for each_row in all_results:
+                        for x in range(0, len(each_row)):
+                            if each_row[x] == "None":
+                                each_row[x] = "Null"
                     all_results.insert(0, column_name)
-                    print("100", all_results[:2])
             else:
                 if "select * from" in (test_queries["targetqry"].lower()):
                     col_list.append("Duplicate Occurance")
-                    for i in all_results:
-                        for x in range(0, len(i)):
-                            if i[x] == "None":
-                                i[x] = "Null"
-                            else:
-                                i[x] == i[x]
+                    for each_row in all_results:
+                        for x in range(0, len(each_row)):
+                            if each_row[x] == "None":
+                                each_row[x] = "Null"
                     all_results.insert(0, col_list)
                     print("111", all_results[:2])
                 else:
@@ -122,32 +112,27 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                         column = columns.split(",")
                         print("column", column)
                         column.append("Duplicate Occurance")
-                        for i in all_results:
-                            for x in range(0, len(i)):
-                                if i[x] == "None":
-                                    i[x] = "Null"
+                        for each_row in all_results:
+                            for x in range(0, len(each_row)):
+                                if each_row[x] == "None":
+                                    each_row[x] = "Null"
                                 else:
-                                    i[x] == i[x]
+                                    each_row[x] == each_row[x]
                         all_results.insert(0, column)
-                        print("132", all_results[:2])
 
                     else:
                         col_list_custom = []
-                        print("column2", columns)
                         col_list_custom.append(columns)
                         col_list_custom.append("Duplicate Occurance")
-                        for i in all_results:
-                            for x in range(0, len(i)):
-                                if i[x] == "None":
-                                    i[x] = "Null"
-                                else:
-                                    i[x] == i[x]
+                        for each_row in all_results:
+                            for x in range(0, len(each_row)):
+                                if each_row[x] == "None":
+                                    each_row[x] = "Null"
                         all_results.insert(0, col_list_custom)
-                        print("146", all_results[:2])
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
                 "Execution_log": {"src_log": None,
-                                  "dest_log": all_results[:10]}})
+                                  "dest_log": all_results}})
         else:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'pass'),

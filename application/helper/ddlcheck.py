@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-from application.common.constants import ExecutionStatus
+from application.common.constants import SupportedDBType, ExecutionStatus
 
 
 def ddl_check(source_cursor, target_cursor, source_table, target_table,
@@ -18,14 +18,12 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
     Returns:
 
     """
-    print(source_cursor, target_cursor, source_table, target_table,
-          src_db_type, target_db_type)
     try:
         data1 = []
         data2 = []
         data3 = []
         data4 = []
-        if src_db_type == "oracle":
+        if src_db_type == SupportedDBType().get_db_id_by_name("oracle"):
             cursor = source_cursor
             cursor.execute(
                 "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = UPPER('{0}')".format(

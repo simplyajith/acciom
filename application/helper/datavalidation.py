@@ -50,13 +50,6 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     src_record_count = current_app.config.get('SPARK_SOURCE_RECORDS_COUNT')
     target_record_count = current_app.config.get('SPARK_TARGET_RECORDS_COUNT')
     thread_count = current_app.config.get('SPARK_THREAD_COUNT')
-    print("54", source_hostname, source_name, source_password, source_db,
-          source_table,
-          SupportedDBType().get_db_name_by_id(src_db_type),
-          destination_hostname, destination_name,
-          destination_password,
-          des_db, des_table,
-          des_db_type)
     app.logger.info(
         "Data validation Job start at = {}".format(datetime.datetime.now()))
 
