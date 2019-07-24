@@ -2,7 +2,7 @@ from io import BytesIO
 from openpyxl import load_workbook
 from flask import current_app
 
-from application.common.constants import ExecutionStatus
+from application.common.constants import ExecutionStatus,SupportedTestClass
 from application.common.createdbdetail import create_dbconnection
 from application.common.splitdbdetails import split_db
 from application.model.models import TestSuite, TestCase
@@ -105,13 +105,11 @@ def save_file_to_db(current_user, project_id, data, file):
                     else:
                         query["sourceqry"] = ""
                         query["targetqry"] = ""
-
             jsondict = {"column": column, "table": table, "query": query,
                         "src_db_id": src_db_id, "target_db_id": target_db_id}
             temp = TestCase(test_suite_id=temp_file.test_suite_id,
                             user_id=current_user,
-                            test_case_class=ExecutionStatus().get_execution_status_id_by_name(
-                                'new'),
+                            test_case_class=SupportedTestClass().get_test_class_id_by_name(temp_test_dict[current_app.config.get('TESTCLASS')][j].lower()),
                             test_case_detail=jsondict)
             temp.save_to_db()
             data = {

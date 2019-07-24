@@ -245,12 +245,12 @@ class TestCaseLog(db.Model):
     execution_log = db.Column(JSON, nullable=True)
     executed_at = db.Column(db.DateTime, default=datetime.now, index=True)
 
-    def __init__(self, test_case_id, execution_status, user_id,
-                 execution_log):
+    def __init__(self, test_case_id, user_id,execution_log,execution_status=ExecutionStatus().get_execution_status_id_by_name('new')):
         self.test_case_id = test_case_id
-        self.execution_status = execution_status
         self.user_id = user_id
         self.execution_log = execution_log
+        self.execution_status = execution_status
+
 
     def save_to_db(self):
         db.session.add(self)

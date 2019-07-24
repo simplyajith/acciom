@@ -1,0 +1,88 @@
+[2019-07-24 11:38:38,932] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
+DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
+
+[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
+[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:39:28,721] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
+DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
+
+[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
+[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:43:38,703] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
+DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
+
+[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
+[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:44:15,128] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
+DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
+
+[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
+[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:44:51,116] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "latest_execution_status" violates not-null constraint
+DETAIL:  Failing row contains (48, 88, 1, 1, null, f, {"column": {}, "table": {"src_inventory": "dest_inventory"}, "qu..., 2019-07-24 11:36:06.885002, 2019-07-24 11:36:06.885023).
+
+[SQL: UPDATE test_case SET latest_execution_status=%(latest_execution_status)s WHERE test_case.test_case_id = %(test_case_test_case_id)s]
+[parameters: {'latest_execution_status': None, 'test_case_test_case_id': 48}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:45:46,673] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
+DETAIL:  Failing row contains (1, 48, null, 1, null, 2019-07-24 11:45:46.660698).
+
+[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
+[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 11, 45, 46, 660698)}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 11:48:27,109] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
+DETAIL:  Failing row contains (2, 48, null, 1, null, 2019-07-24 11:48:27.107519).
+
+[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
+[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 11, 48, 27, 107519)}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 12:17:33,460] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "execution_status" violates not-null constraint
+DETAIL:  Failing row contains (3, 48, null, 1, null, 2019-07-24 12:17:33.459165).
+
+[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
+[parameters: {'test_case_id': 48, 'execution_status': None, 'user_id': 1, 'execution_log': 'null', 'executed_at': datetime.datetime(2019, 7, 24, 12, 17, 33, 459165)}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 12:20:44,284] ERROR in testcase/post/36: save_case_log() missing 1 required positional argument: 'execution_log'
+[2019-07-24 12:21:26,830] ERROR in testcase/post/36: save_case_log() missing 2 required positional arguments: 'user_id' and 'execution_log'
+[2019-07-24 12:24:10,687] ERROR in testcase/post/36: (psycopg2.IntegrityError) null value in column "user_id" violates not-null constraint
+DETAIL:  Failing row contains (4, 48, 1, null, 0, 2019-07-24 12:24:10.685998).
+
+[SQL: INSERT INTO test_case_log (test_case_id, execution_status, user_id, execution_log, executed_at) VALUES (%(test_case_id)s, %(execution_status)s, %(user_id)s, %(execution_log)s, %(executed_at)s) RETURNING test_case_log.test_case_log_id]
+[parameters: {'test_case_id': 48, 'execution_status': 1, 'user_id': None, 'execution_log': '0', 'executed_at': datetime.datetime(2019, 7, 24, 12, 24, 10, 685998)}]
+(Background on this error at: http://sqlalche.me/e/gkpj)
+[2019-07-24 13:30:25,545] ERROR in testcase/post/36: Entity '<class 'application.model.models.DbConnection'>' has no property 'db_id'
+[2019-07-24 13:31:16,746] ERROR in testcase/post/36: 'int' object has no attribute 'lower'
+[2019-07-24 13:58:35,806] ERROR in testcase/post/36: 'int' object has no attribute 'lower'
+[2019-07-24 14:01:58,528] ERROR in testcase/post/36: 'NoneType' object has no attribute 'cursor'
+[2019-07-24 14:03:49,139] ERROR in testcase/post/36: 'NoneType' object has no attribute 'cursor'
+[2019-07-24 14:04:54,023] ERROR in testcase/post/36: 'SupportedDBType' object has no attribute 'get_test_class_id_by_name'
+[2019-07-24 14:05:17,693] ERROR in testcase/post/36: (1045, "Access denied for user 'acciom_user'@'localhost' (using password: YES)")
+[2019-07-24 14:05:52,703] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:07:21,200] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:07:47,353] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:08:03,643] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:08:18,019] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:08:40,184] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:08:55,607] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:09:08,334] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:10:53,071] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:11:11,536] ERROR in testcase/post/36: malformed node or string: {'column': {}, 'table': {'src_inventory': 'dest_inventory'}, 'query': {}, 'src_db_id': 4, 'target_db_id': 5}
+[2019-07-24 14:11:29,854] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:11:30,000] INFO in countcheck/count_check/62: count check fail
+[2019-07-24 14:11:30,001] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:11:42,518] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:11:42,522] INFO in countcheck/count_check/62: count check fail
+[2019-07-24 14:11:42,522] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:12:13,418] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:12:13,421] INFO in countcheck/count_check/62: count check fail
+[2019-07-24 14:12:13,422] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:13:33,568] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:13:33,575] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:13:33,576] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
+[2019-07-24 14:13:52,692] DEBUG in countcheck/count_check/31: []
+[2019-07-24 14:13:52,697] INFO in countcheck/count_check/63: count check fail
+[2019-07-24 14:13:52,697] ERROR in testcase/post/36: 'TestCase' object has no attribute 'test_name'
