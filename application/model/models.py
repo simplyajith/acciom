@@ -241,6 +241,7 @@ class TestCaseLog(db.Model):
     execution_status = db.Column(db.SMALLINT, nullable=False)
     user_id = db.Column(db.ForeignKey('user.user_id'),
                         nullable=False)
+    dqi_percentage = db.Column(db.Float(precision=2), nullable=False)
     execution_log = db.Column(JSON, nullable=True)
     executed_at = db.Column(db.DateTime, default=datetime.now, index=True)
 
