@@ -26,7 +26,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         if src_db_type == SupportedDBType().get_db_id_by_name("oracle"):
             cursor = source_cursor
             cursor.execute(
-                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = UPPER('{0}')".format(
+                "SELECT COLUMN_NAME,DATA_TYPE,"
+                "NULLABLE FROM USER_TAB_COLUMNS "
+                "WHERE TABLE_NAME = UPPER('{0}')".format(
                     source_table)
             )
 
@@ -42,7 +44,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         else:
             cursor = source_cursor
             cursor.execute(
-                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM information_schema.columns WHERE table_name = '{}'".format(
+                "SELECT COLUMN_NAME, IS_NULLABLE,"
+                "DATA_TYPE FROM information_schema.columns"
+                " WHERE table_name = '{}'".format(
                     source_table)
             )
 
@@ -53,7 +57,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
 
             cursor1 = target_cursor
             cursor1.execute(
-                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = UPPER('{0}')".format(
+                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM"
+                " USER_TAB_COLUMNS WHERE TABLE_NAME = UPPER"
+                "('{0}')".format(
                     target_table))
 
             for row in cursor1:
@@ -69,7 +75,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
 
             cursor1 = target_cursor
             cursor1.execute(
-                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM information_schema.columns WHERE table_name = '{}'".format(
+                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM"
+                " information_schema.columns WHERE table_name = "
+                "'{}'".format(
                     target_table))
 
             for row in cursor1:
@@ -96,17 +104,17 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         if data1 == [] and data2 == []:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'pass'),
-                "Execution_log": {"src_log": src_result,
-                                  "dest_log": dest_result}})
+                "Execution_log": {"source_execution_log": src_result,
+                                  "dest_execution_log": dest_result}})
         else:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
-                "Execution_log": {"src_log": None,
-                                  "dest_log": None}})
+                "Execution_log": {"source_execution_log": None,
+                                  "dest_execution_log": None}})
 
     except Exception as e:
         app.logger.error(e)
         return ({"res": ExecutionStatus().get_execution_status_id_by_name(
             'error'),
-            "Execution_log": {"src_log": None,
-                              "dest_log": None}})
+            "Execution_log": {"source_execution_log": None,
+                              "dest_execution_log": None}})

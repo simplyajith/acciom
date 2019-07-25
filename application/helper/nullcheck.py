@@ -7,11 +7,15 @@ from application.common.constants import SupportedDBType, ExecutionStatus
 
 
 def qry_generator(columns, target_table):
-    '''
-    :param columns: columns (1 or more)
-    :param target_table: table name
-    :return: gives a custom query based for null check based on params.
-    '''
+    """
+    Method to generate a query
+    Args:
+        columns: columns
+        target_table: table details
+
+    Returns: Method to return the query
+
+    """
     sub_query = ""
     for each_col in columns:
         if sub_query == "":
@@ -19,6 +23,7 @@ def qry_generator(columns, target_table):
                 target_table) + each_col + " is NULL"
         else:
             sub_query = sub_query + " or " + each_col + " is NULL"
+    print(sub_query)
     return sub_query
 
 
@@ -64,13 +69,11 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
         else:
             flag = True
             if "select * from" in (test_queries["targetqry"].lower()):
-                print("* qry exists")
                 target_query = test_queries["targetqry"]
                 newlst.append(target_query)
                 target_cursor.execute(newlst[0])
             else:
                 flag = False
-                print("custom qry for cols.")
                 qry = (test_queries["targetqry"]).lower()
                 start = "select"
                 end = "from"
@@ -82,7 +85,6 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
                 else:
                     col_list_custom = []
                     col_list_custom.append(columns)
-                print(col_list_custom)
                 target_query = test_queries["targetqry"]
                 newlst.append(target_query)
                 target_cursor.execute(newlst[0])
@@ -92,17 +94,18 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
             all_results.append(list(map(str, row)))
 
         if all_results:
-            if flag == True:
+            if flag:
                 all_results.insert(0, col_list)
-            elif flag == False:
+            elif not flag:
                 all_results.insert(0, col_list_custom)
 
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
-                "Execution_log": {"src_log": None,
-                                  "dest_log": all_results[:10]}})
+                "Execution_log": {"Null_count": int(len(all_results) - 1),
+                                  "src_log": None,
+                                  "dest_log": all_results[:app.config.get(
+                                      'NULL_CHECK_MAX_RECORDS')]}})
         else:
-            print("109")
             return {"res": ExecutionStatus().get_execution_status_id_by_name(
                 'pass'), "Execution_log": None}
 

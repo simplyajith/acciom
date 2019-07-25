@@ -1,15 +1,20 @@
+import functools
+
 from flask import current_app as app
 
 from application.common.constants import SupportedDBType, ExecutionStatus
 
 
 def qry_generator(columns, target_table):
-    '''
+    """
 
-    :param columns: columns
-    :param target_table: table name
-    :return: custom query for duplication check
-    '''
+    Args:
+        columns: Columns provided from test_Case
+        target_table: table associated with the test_case.
+
+    Returns: custom query generated.
+
+    """
 
     sub_startquery = ""
     sub_endquery = ""
@@ -70,54 +75,46 @@ def duplication(target_cursor, target_table, column_name, test_queries,
 
         for row in target_cursor:
             all_results.append(list(map(str, row)))
-        import json
         if all_results:
             if (test_queries == {} or test_queries['targetqry'].isspace() or
                     test_queries['targetqry'] == ""):
                 if column_name == []:
                     col_list.append("Duplicate Occurance")
-                    print(all_results)
                     for each_row in all_results:
-                        for x in range(0, len(each_row)):
-                            if each_row[x] == "None":
-                                each_row[x] = "Null"
+                        for each_val in range(0, len(each_row)):
+                            if each_row[each_val] == "None":
+                                each_row[each_val] = "Null"
 
                     all_results.insert(0, col_list)
                 else:
                     column_name.append("Duplicate Occurance")
                     for each_row in all_results:
-                        for x in range(0, len(each_row)):
-                            if each_row[x] == "None":
-                                each_row[x] = "Null"
+                        for each_val in range(0, len(each_row)):
+                            if each_row[each_val] == "None":
+                                each_row[each_val] = "Null"
                     all_results.insert(0, column_name)
             else:
                 if "select * from" in (test_queries["targetqry"].lower()):
                     col_list.append("Duplicate Occurance")
                     for each_row in all_results:
-                        for x in range(0, len(each_row)):
-                            if each_row[x] == "None":
-                                each_row[x] = "Null"
+                        for each_val in range(0, len(each_row)):
+                            if each_row[each_val] == "None":
+                                each_row[each_val] = "Null"
                     all_results.insert(0, col_list)
-                    print("111", all_results[:2])
                 else:
-                    print("custom qry for cols.")
                     qry = (test_queries["targetqry"]).lower()
                     start = "by"
                     end = "having"
                     columns = qry[
                               qry.index(start) + len(start):
                               qry.index(end)]
-                    print("columns", columns)
                     if "," in columns:
                         column = columns.split(",")
-                        print("column", column)
                         column.append("Duplicate Occurance")
                         for each_row in all_results:
-                            for x in range(0, len(each_row)):
-                                if each_row[x] == "None":
-                                    each_row[x] = "Null"
-                                else:
-                                    each_row[x] == each_row[x]
+                            for each_val in range(0, len(each_row)):
+                                if each_row[each_val] == "None":
+                                    each_row[each_val] = "Null"
                         all_results.insert(0, column)
 
                     else:
@@ -125,18 +122,26 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                         col_list_custom.append(columns)
                         col_list_custom.append("Duplicate Occurance")
                         for each_row in all_results:
-                            for x in range(0, len(each_row)):
-                                if each_row[x] == "None":
-                                    each_row[x] = "Null"
+                            for each_val in range(0, len(each_row)):
+                                if each_row[each_val] == "None":
+                                    each_row[each_val] = "Null"
                         all_results.insert(0, col_list_custom)
+            sum_of_duplicate_records = functools.reduce(
+                lambda record_one, record_two: record_one + record_two,
+                [int(each_row[-1]) for each_row in
+                 all_results[1:]])
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
-                "Execution_log": {"src_log": None,
-                                  "dest_log": all_results}})
+                "Execution_log": {"Duplicate_count": sum_of_duplicate_records,
+                                  "source_execution_log": None,
+                                  "dest_execution_log": all_results[
+                                                        :app.config.get(
+                                                            'DUPLICATE_CHECK_MAX_RECORDS')]}})
         else:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'pass'),
-                "Execution_log": {"src_log": None, "dest_log": None}})
+                "Execution_log": {"source_execution_log": None,
+                                  "dest_execution_log": None}})
 
     except Exception as e:
         app.logger.error(e)

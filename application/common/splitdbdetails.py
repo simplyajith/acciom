@@ -13,23 +13,23 @@ def split_table(table_name):
     table_names = ast.literal_eval(table_name)
     table_list = {}
     tables = table_names["table"]
-    for key in tables:
-        table_list['src_table'] = key
-        table_list['target_table'] = tables[key]
+    for each_table in tables:
+        table_list['src_table'] = each_table
+        table_list['target_table'] = tables[each_table]
     return table_list
 
 
 def split_db(test_db_detail):
     """
-
     Args:
-        test_db_detail: Contains a String consist of DBDetails fetched from Excel
+        test_db_detail: Contains a String consist
+         of DBDetails fetched from Excel
 
-    Returns: A dictionary consist of keys(source_db,targetdb,sourcedbType,sourceServer
+    Returns: A dictionary consist
+     of keys(source_db,targetdb,sourcedbType,sourceServer
     targetServer,sourceuser,Targetuser)
 
     """
-
     temp_dblist = []
     db_detail = {}
     strip_db_detail = test_db_detail.split(";")

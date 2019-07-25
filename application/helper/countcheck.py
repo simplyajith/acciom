@@ -30,34 +30,32 @@ def count_check(source_cursor, target_cursor, source_table,
         else:
             src_query = test_query["sourceqry"]
             target_query = test_query["targetqry"]
-            qry_lst.append(src_query)
-            qry_lst.append(target_query)
-            source_cursor.execute(qry_lst[0])
-            target_cursor.execute(qry_lst[1])
-        for row in source_cursor:
-            for src_count in row:
+            print(src_query, target_query)
+            source_cursor.execute(src_query)
+            target_cursor.execute(target_query)
+        for each_row in source_cursor:
+            for src_count in each_row:
                 pass
-        for row in target_cursor:
-            for target_count in row:
+        for each_row in target_cursor:
+            for target_count in each_row:
                 pass
         if src_count == target_count:
-
-            execution_result = ExecutionStatus().get_execution_status_id_by_name(
-                'pass')
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('pass')
             payload = {"res": execution_result,
-                       "Execution_log": {"src_log": src_count,
-                                         "dest_log": target_count}}
-            app.logger.info("count check sucess")
+                       "Execution_log": {"source_execution_log": src_count,
+                                         "dest_execution_log": target_count}}
         else:
-            execution_result = ExecutionStatus().get_execution_status_id_by_name(
-                'fail')
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('fail')
             payload = {"res": execution_result,
-                       "Execution_log": {"src_log": src_count,
-                                         "dest_log": target_count}}
+                       "Execution_log": {"source_execution_log": src_count,
+                                         "dest_execution_log": target_count}}
             app.logger.info("count check fail")
+            print(payload)
     except Exception as e:
         app.logger.error(e)
-        return {
-            "res": ExecutionStatus().get_execution_status_id_by_name('error'),
-            "src_value": str(e), "des_value": str(e)}
+        payload = {"res": execution_result,
+                   "Execution_log": {"error_log": e}}
+
     return payload

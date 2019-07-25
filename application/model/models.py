@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from sqlalchemy.dialects.postgresql import JSON
+
 from application.common.constants import ExecutionStatus
 from index import db
-from sqlalchemy.dialects.postgresql import JSON
 
 supported_db_type = ("postgresql", "mysql", "mssql", "oracle", "sqlite")
 supported_test_class = ("countcheck", "nullcheck", "ddlcheck",
@@ -195,6 +196,8 @@ class TestSuite(db.Model):
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
+    test_case = db.relationship("TestCase",
+                                back_populates='test_suite', lazy=True)
 
     def __init__(self, project_id, user_id, excel_name, test_suite_name):
         self.project_id = project_id
@@ -216,12 +219,16 @@ class TestCase(db.Model):
     test_case_class = db.Column(db.SMALLINT, nullable=False)
     latest_execution_status = db.Column(db.SMALLINT,
                                         nullable=False,
-                                        default=ExecutionStatus().get_execution_status_id_by_name(
-                                            'new'))
+                                        default=ExecutionStatus().
+                                        get_execution_status_id_by_name('new'))
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     test_case_detail = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
+    test_suite = db.relationship(TestSuite,
+                                 back_populates='test_case', lazy=True)
+    test_case_log = db.relationship("TestCaseLog",
+                                    back_populates='test_cases', lazy=True)
 
     def __init__(self, test_suite_id, user_id, test_case_class,
                  test_case_detail):
@@ -244,13 +251,16 @@ class TestCaseLog(db.Model):
                         nullable=False)
     execution_log = db.Column(JSON, nullable=True)
     executed_at = db.Column(db.DateTime, default=datetime.now, index=True)
+    test_cases = db.relationship(TestCase,
+                                 back_populates='test_case_log', lazy=True)
 
-    def __init__(self, test_case_id, user_id,execution_log,execution_status=ExecutionStatus().get_execution_status_id_by_name('new')):
+    def __init__(self, test_case_id, user_id, execution_log,
+                 execution_status=ExecutionStatus().
+                 get_execution_status_id_by_name('new')):
         self.test_case_id = test_case_id
         self.user_id = user_id
         self.execution_log = execution_log
         self.execution_status = execution_status
-
 
     def save_to_db(self):
         db.session.add(self)
@@ -259,13 +269,11 @@ class TestCaseLog(db.Model):
 
 class PersonalToken(db.Model):
     __tablename__ = 'personal_token'
-    personal_token_id = db.Column(db.Integer, primary_key=True
-                                  )
+    personal_token_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.ForeignKey(User.user_id), index=True,
                         nullable=False)
     encrypted_personal_token = db.Column(db.String(256), unique=True,
-                                         index=True,
-                                         nullable=False)
+                                         index=True, nullable=False)
     note = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 

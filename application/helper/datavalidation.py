@@ -81,25 +81,3 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
             api_end_point),
         shell=True, universal_newlines=False)
     app.logger.debug(str(datetime.datetime.now()))
-
-# def process_response_for_none_record(dvresult):
-#     print("dvresult", dvresult)
-#     result = ast.literal_eval((dvresult))
-#     keys = set()
-#     for i in result:
-#         dic = ast.literal_eval(i)
-#         for key in dic.keys():
-#             keys.add(key)
-#
-#     print(keys)
-#     src_dic = []
-#     for i in result:
-#         dic = ast.literal_eval(i)
-#         fdic = {}
-#         for each_key in keys:
-#             fdic[each_key] = dic.get(each_key, None)
-#
-#         print("fdic", fdic)
-#         src_dic.append(fdic)
-#     print("src_dic", src_dic)
-#     return src_dic

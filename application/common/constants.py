@@ -24,6 +24,8 @@ class APIMessages:
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
     ADD_DATA = "Data Added"
+    RETURN_SUCCESS = "success"
+    PARSER_MESSAGE = "{} field is required"
 
 
 class TimeOuts:

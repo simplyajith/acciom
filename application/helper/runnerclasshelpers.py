@@ -1,6 +1,6 @@
 import ast
 
-from application.model.models import DbConnection
+from application.model.models import DbConnection, TestCase
 
 
 def db_details(db_id):
@@ -19,6 +19,7 @@ def db_details(db_id):
     db_id (foreign Key)
     """
     db_obj = DbConnection.query.filter_by(db_connection_id=db_id).first()
+    
     db_list['db_id'] = db_obj.db_connection_id
     db_list['db_type'] = db_obj.db_type
     db_list['db_name'] = db_obj.db_name
@@ -76,7 +77,8 @@ def get_column(columns):
     return column
 
 
-def save_case_log_information(case_log, source_count, src_to_dest, src_log,
+def save_case_log_information(case_log, case_log_execution_status,
+                              source_count, src_to_dest, src_log,
                               dest_count, dest_to_src, dest_log):
     """
     Save log information from spark to the TestCaseLog Table
@@ -92,8 +94,13 @@ def save_case_log_information(case_log, source_count, src_to_dest, src_log,
     Returns: Submit the log to the TestCaseLog Table
 
     """
-    print(case_log, source_count, src_to_dest, src_log,
+    print(case_log, type(source_count), src_to_dest, src_log,
           dest_count, dest_to_src, dest_log)
+    case_log.execution_status = case_log_execution_status
+    if src_log == '[]':
+        src_log = 'none'
+    elif dest_log == '[]':
+        dest_log = 'none'
     spark_job_data = {"src_execution_log": src_log,
                       "dest_execution_log": dest_log,
                       "src_count": source_count,
@@ -102,6 +109,21 @@ def save_case_log_information(case_log, source_count, src_to_dest, src_log,
                       "dest_to_src_count": dest_to_src}
     case_log.execution_log = spark_job_data
     case_log.save_to_db()
+
+
+def save_case_log(case, case_status):
+    """
+
+    Args:
+        case:
+
+    Returns:
+
+    """
+    case = TestCase.query.filter_by(
+        test_case_id=case_log.test_case_id).first()
+    case.test_status = case_status
+    case.save_to_db()
 
 
 def args_as_list(list_args):

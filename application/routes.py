@@ -4,8 +4,12 @@ from flask import send_from_directory
 
 from application.api.login import (Login, LogOut, AddUser)
 from application.api.testcase import TestCaseJob, TestCaseSparkJob
-from application.api.testsuite import AddTestSuite
+from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
+                                       ExportTestLog)
+from application.model.models import db
 from index import (app, api, static_folder)
+
+db
 
 
 @app.route('/', defaults={'path': ''})
@@ -29,3 +33,6 @@ api.add_resource(AddTestSuite, '/api/test-suite')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
                  '/api/spark-job-status/<int:test_case_log_id>')
+api.add_resource(TestCaseLogDetail,
+                 '/api/test-case-log/<int:test_case_log_id>')
+api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')

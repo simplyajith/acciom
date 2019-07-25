@@ -1,15 +1,15 @@
 from io import BytesIO
-from openpyxl import load_workbook
-from flask import current_app
 
-from application.common.constants import ExecutionStatus,SupportedTestClass
+from flask import current_app
+from openpyxl import load_workbook
+
+from application.common.constants import SupportedTestClass
 from application.common.createdbdetail import create_dbconnection
 from application.common.splitdbdetails import split_db
 from application.model.models import TestSuite, TestCase
 
 
 def save_file_to_db(current_user, project_id, data, file):
-
     """
 
     Args:
@@ -49,12 +49,13 @@ def save_file_to_db(current_user, project_id, data, file):
                                             db_list['sourcedbType'].lower(),
                                             db_list['sourcedb'],
                                             db_list['sourceServer'].lower(),
-                                            db_list['sourceuser'])
+                                            db_list['sourceuser'], project_id)
             target_db_id = create_dbconnection(current_user,
                                                db_list['targetdbType'].lower(),
                                                db_list['targetdb'],
                                                db_list['targetServer'].lower(),
-                                               db_list['Targetuser'])
+                                               db_list['Targetuser'],
+                                               project_id)
             columndata = temp_test_dict[current_app.config.get('COLUMNS')][j]
             column = {}
             if columndata == "None" or columndata.isspace():
@@ -109,7 +110,11 @@ def save_file_to_db(current_user, project_id, data, file):
                         "src_db_id": src_db_id, "target_db_id": target_db_id}
             temp = TestCase(test_suite_id=temp_file.test_suite_id,
                             user_id=current_user,
-                            test_case_class=SupportedTestClass().get_test_class_id_by_name(temp_test_dict[current_app.config.get('TESTCLASS')][j].lower()),
+                            test_case_class=SupportedTestClass().
+                            get_test_class_id_by_name(
+                                temp_test_dict[
+                                    current_app.config.get('TESTCLASS')][
+                                    j].lower()),
                             test_case_detail=jsondict)
             temp.save_to_db()
             data = {

@@ -21,25 +21,25 @@ def dbconnection(db_name, db_type, host_name, db_username, db_password):
     """
     if db_type == SupportedDBType().get_db_id_by_name('mssql'):
         database = db_name
-        cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
-                              ';SERVER=' + host_name + ';DATABASE=' + database +
-                              ';UID=' + db_username +
-                              ';PWD=' + db_password)
-        return cnxn
+        connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
+                                    ';SERVER=' + host_name +
+                                    ';DATABASE=' + database +
+                                    ';UID=' + db_username +
+                                    ';PWD=' + db_password)
+        return connection
     elif db_type == SupportedDBType().get_db_id_by_name('mysql'):
-        print("18")
-        cnxn = pymysql.connect(host=host_name,
-                               user=db_username,
-                               password=db_password,
-                               db=db_name)
-        return cnxn
+        connection = pymysql.connect(host=host_name,
+                                     user=db_username,
+                                     password=db_password,
+                                     db=db_name)
+        return connection
     elif db_type == SupportedDBType().get_db_id_by_name('postgresql'):
-        cnxn = psycopg2.connect(host=host_name,
-                                database=db_name, user=db_username,
-                                password=db_password)
-        return cnxn
+        connection = psycopg2.connect(host=host_name,
+                                      database=db_name, user=db_username,
+                                      password=db_password)
+        return connection
     elif db_type == SupportedDBType().get_db_id_by_name('oracle'):
-        con = cx_Oracle.connect(
+        connection = cx_Oracle.connect(
             "{0}/{1}@{2}/{3}".format(db_username, db_password,
                                      host_name, db_name))
-        return con
+        return connection
