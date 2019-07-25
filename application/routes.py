@@ -6,6 +6,8 @@ from application.api.project import ProjectAPI
 from application.api.organization import OrganizationAPI
 from application.api.login import (Login, LogOut, AddUser)
 from application.model.models import db
+from application.api.dbdetail import DbDetails
+from application.api.checkconnection import CheckConnection
 from index import (app, api, static_folder)
 
 db
@@ -36,6 +38,7 @@ def serve(path):
 
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
-api.add_resource(AddUser, '/api/adduser/<string:email>')
 api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
+api.add_resource(DbDetails,'/api/db-detail')
+api.add_resource(CheckConnection, '/api/check-connection')
