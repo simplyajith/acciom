@@ -10,29 +10,6 @@ from application.helper.encrypt import encrypt
 from application.model.models import DbConnection
 from index import db
 
-post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
-post_db_detail_parser.add_argument('project_id', required=True, type=int,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'project_id'))
-post_db_detail_parser.add_argument('connection_name', required=False, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'connection_name'))
-post_db_detail_parser.add_argument('db_type_name', required=True, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'db_type'))
-post_db_detail_parser.add_argument('db_name', required=True, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'db_name'))
-post_db_detail_parser.add_argument('db_hostname', required=True, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'db_hostname'))
-post_db_detail_parser.add_argument('db_username', required=True, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'db_username'))
-post_db_detail_parser.add_argument('db_password', required=True, type=str,
-                                   help=APIMessages.PARSER_MESSAGE.format(
-                                       'db_password'))
-
 
 class DbDetails(Resource):
     """
@@ -52,6 +29,35 @@ class DbDetails(Resource):
             Standard API Response with message, data and http status code.
         """
         try:
+            post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
+            post_db_detail_parser.add_argument('project_id', required=True,
+                                               type=int,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('project_id'))
+            post_db_detail_parser.add_argument('connection_name',
+                                               required=False, type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('connection_name'))
+            post_db_detail_parser.add_argument('db_type_name', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('db_type'))
+            post_db_detail_parser.add_argument('db_name', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('db_name'))
+            post_db_detail_parser.add_argument('db_hostname', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('db_hostname'))
+            post_db_detail_parser.add_argument('db_username', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('db_username'))
+            post_db_detail_parser.add_argument('db_password', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE
+                                               .format('db_password'))
             db_detail = post_db_detail_parser.parse_args()
             list_of_args = [arg.name for arg in post_db_detail_parser.args]
             # Checking if fields are empty
@@ -65,7 +71,7 @@ class DbDetails(Resource):
             db_password = encrypt(db_detail["db_password"])
 
             new_db = DbConnection(project_id=db_detail["project_id"],
-                                  user_id=session.user_id,
+                                  owner_id=session.user_id,
                                   db_connection_name=db_detail[
                                       'connection_name'],
                                   db_type=SupportedDBType().get_db_id_by_name(
@@ -179,7 +185,7 @@ class DbDetails(Resource):
     @token_required
     def put(self, session):
         """
-         Put call to update database details.
+        Update database details.
 
         Args:
             session (object):It use to get user id.
@@ -188,27 +194,23 @@ class DbDetails(Resource):
             Standard API Response with message, data and http status code.
         """
         put_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
+        put_db_detail_parser.add_argument('db_connection_id', required=True,
+                                          type=int)
         put_db_detail_parser.add_argument('db_connection_name', type=str)
         put_db_detail_parser.add_argument('db_type', type=str)
         put_db_detail_parser.add_argument('db_name', type=str)
         put_db_detail_parser.add_argument('db_hostname', type=str)
         put_db_detail_parser.add_argument('db_username', type=str)
         put_db_detail_parser.add_argument('db_password', type=str)
-
-        put_dbdetail_parser = reqparse.RequestParser()
-        put_dbdetail_parser.add_argument('db_connection_id', required=False,
-                                         type=int,
-                                         location='args')
-        dbconnection_id = put_dbdetail_parser.parse_args()
-        db_connection_id = dbconnection_id.get("db_connection_id")
+        db_detail = put_db_detail_parser.parse_args()
+        db_connection_id = db_detail["db_connection_id"]
 
         try:
             if db_connection_id:
                 db_obj = DbConnection.query.filter_by(
                     db_connection_id=db_connection_id).first()
+                del db_detail["db_connection_id"]
                 if db_obj:
-                    db_detail = put_db_detail_parser.parse_args()
-
                     for key, value in db_detail.items():
                         if value and value.strip():
                             # checking if value provided by user is
