@@ -255,15 +255,17 @@ class Job(db.Model):
     test_suite_id = db.Column(db.ForeignKey('test_suite.test_suite_id'),
                               nullable=False, index=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    is_external_trigger = db.Column(db.Boolean, nullable=False)
     execution_status = db.Column(db.SMALLINT, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, test_suite_id, owner_id,
+    def __init__(self, test_suite_id, owner_id, is_external_trigger=False,
                  execution_status=ExecutionStatus(
                  ).get_execution_status_id_by_name("new")):
         self.test_suite_id = test_suite_id
         self.owner_id = owner_id
+        self.is_external_trigger = is_external_trigger
         self.execution_status = execution_status
 
     def save_to_db(self):
