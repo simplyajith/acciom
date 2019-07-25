@@ -27,6 +27,7 @@ class APIMessages:
     PARSER_MESSAGE = "{} field is required"
     UPDATE_RESOURCE = "{} is updated successfully"
     SUCCESS = "success"
+    NO_RESOURCE = "{} is not available"
 
 
 class TimeOuts:
@@ -40,7 +41,8 @@ class TimeOuts:
 class SupportedDBType:
     """Class to return Name and Id of the DataBase."""
 
-    supported_db_type = {1: "postgresql", 2: "mysql", 3: "mssql", 4: "oracle", 5: "sqlite"}
+    supported_db_type = {1: "postgresql", 2: "mysql", 3: "mssql", 4: "oracle",
+                         5: "sqlite"}
 
     def get_db_name_by_id(self, db_id):
         """
@@ -52,7 +54,8 @@ class SupportedDBType:
         Returns:(str) name of the database
 
         """
-        return self.supported_db_type.get(db_id)  # Returns None if Id does not exist
+        # Returns None if Id does not exist
+        return self.supported_db_type.get(db_id)
 
     def get_db_id_by_name(self, name):
         """
@@ -64,7 +67,8 @@ class SupportedDBType:
         Returns: (int) Id of the database
         """
         for key, value in self.supported_db_type.items():
-            if value == name.lower():  # Name will be converted to lower case and compared
+            # Name will be converted to lower case and compared
+            if value == name.lower():
                 return key
             # Returns None if Name does not exist
 
@@ -72,7 +76,8 @@ class SupportedDBType:
 class SupportedTestClass:
     """Class to return Test Class Name and Id."""
 
-    supported_test_class = {1: "countcheck", 2: "nullcheck", 3: "ddlcheck", 4: "duplicatecheck", 5: "datavalidation"}
+    supported_test_class = {1: "countcheck", 2: "nullcheck", 3: "ddlcheck",
+                            4: "duplicatecheck", 5: "datavalidation"}
 
     def get_test_class_name_by_id(self, test_class_id):
         """
@@ -102,7 +107,8 @@ class SupportedTestClass:
 class ExecutionStatus:
     """Class to return Name and Id of the DataBase."""
 
-    execution_status = {0: "inprogress", 1: "pass", 2: "fail", 3: "error", 4: "new"}
+    execution_status = {0: "inprogress", 1: "pass", 2: "fail", 3: "error",
+                        4: "new"}
 
     def get_execution_status_by_id(self, execution_id):
         """

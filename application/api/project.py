@@ -1,7 +1,7 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
-                                         STATUS_OK)
+                                         STATUS_OK, STATUS_UNAUTHORIZED)
 from application.common.constants import APIMessages
 from application.common.token import token_required
 from application.model.models import Project
@@ -77,13 +77,25 @@ class ProjectAPI(Resource):
             # Storing all active projects in a listr
             list_of_active_project = Project.query.filter_by(
                 org_id=get_project_data['org_id'], is_deleted=False).all()
-            # list of projects to be returned in the response
-            projects_to_return = list()
+            if not list_of_active_project:
+                return api_response(False,
+                                    APIMessages.NO_RESOURCE.format('Project'),
+                                    STATUS_UNAUTHORIZED)
+            # dict of org and list of projects to be returned in the response
+            projects_to_return = dict()
+            # list of projects to be sent in response
+            project_details_list = list()
+            organization_id_in_database = None
             for each_project in list_of_active_project:
-                projects_to_return.append(
+                # Store each project details in a list
+                project_details_list.append(
                     {'project_id': each_project.project_id,
-                     'project_name': each_project.project_name,
-                     'org_id': each_project.org_id})
+                     'project_name': each_project.project_name})
+                # Store Organization Id
+                organization_id_in_database = each_project.org_id
+            projects_to_return.update(
+                {'org_id': organization_id_in_database,
+                 'project_details': project_details_list})
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})

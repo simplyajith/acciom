@@ -1,7 +1,7 @@
 """File to handle OraganizationAPI calls."""
 from flask_restful import Resource, reqparse
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
-                                         STATUS_OK)
+                                         STATUS_OK, STATUS_UNAUTHORIZED)
 from application.common.constants import APIMessages
 from application.common.token import token_required
 from application.model.models import Organization
@@ -67,6 +67,10 @@ class OrganizationAPI(Resource):
             # Storing all active projects in a list
             list_of_active_orgs = Organization.query.filter_by(
                 is_deleted=False).all()
+            if not list_of_active_orgs:
+                return api_response(
+                    False, APIMessages.NO_RESOURCE.format('Organization'),
+                    STATUS_OK, STATUS_UNAUTHORIZED)
             # list of projects to be returned in the response
             org_details_to_return = list()
             for each_project in list_of_active_orgs:
