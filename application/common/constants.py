@@ -24,6 +24,24 @@ class APIMessages:
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
 
+    DB_DETAILS_ADDED = "DbDetails added successfully"
+    DATA_LOADED = "Data loaded successfully"
+    DBID_NOT_IN_DB = "DB details for DB ID {},does not exist"
+    DB_DETAILS_UPDATED = "DB details updated for connection id {} successfully"
+    ABSENCE_OF_DBID = "Please pass DB Connection ID"
+    CONNECTION_CREATE = "Connection can be created"
+    CONNECTION_CANNOT_CREATE = "Connection could not be created"
+    NO_DB_UNDER_PROJECT = "No db details exist under this project id"
+    PASS_DBID_or_PROJECTID = "Please pass db id or project id"
+    RETURN_SUCCESS = "success"
+    PARSER_MESSAGE = "{} field is required"
+    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases are postgresql, mysql, mssql, oracle, sqlite"
+
+
+class GenericStrings:
+    """Class to store generic strings that are referenced in code."""
+    ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
+
 
 class TimeOuts:
     """Timeouts to be referenced in the code."""
@@ -36,7 +54,8 @@ class TimeOuts:
 class SupportedDBType:
     """Class to return Name and Id of the DataBase."""
 
-    supported_db_type = {1: "postgresql", 2: "mysql", 3: "mssql", 4: "oracle", 5: "sqlite"}
+    supported_db_type = {1: "postgresql", 2: "mysql", 3: "mssql", 4: "oracle",
+                         5: "sqlite"}
 
     def get_db_name_by_id(self, db_id):
         """
@@ -48,7 +67,8 @@ class SupportedDBType:
         Returns:(str) name of the database
 
         """
-        return self.supported_db_type.get(db_id)  # Returns None if Id does not exist
+        return self.supported_db_type.get(
+            db_id)  # Returns None if Id does not exist
 
     def get_db_id_by_name(self, name):
         """
@@ -68,7 +88,8 @@ class SupportedDBType:
 class SupportedTestClass:
     """Class to return Test Class Name and Id."""
 
-    supported_test_class = {1: "countcheck", 2: "nullcheck", 3: "ddlcheck", 4: "duplicatecheck", 5: "datavalidation"}
+    supported_test_class = {1: "countcheck", 2: "nullcheck", 3: "ddlcheck",
+                            4: "duplicatecheck", 5: "datavalidation"}
 
     def get_test_class_name_by_id(self, test_class_id):
         """
@@ -98,7 +119,8 @@ class SupportedTestClass:
 class ExecutionStatus:
     """Class to return Name and Id of the DataBase."""
 
-    execution_status = {0: "inprogress", 1: "pass", 2: "fail", 3: "error", 4: "new"}
+    execution_status = {0: "inprogress", 1: "pass", 2: "fail", 3: "error",
+                        4: "new"}
 
     def get_execution_status_by_id(self, execution_id):
         """
