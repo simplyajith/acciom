@@ -7,7 +7,7 @@ from application.common.constants import SupportedDBType, ExecutionStatus
 
 def qry_generator(columns, target_table):
     """
-
+    Method wil parse the query
     Args:
         columns: Columns provided from test_Case
         target_table: table associated with the test_case.
@@ -15,7 +15,6 @@ def qry_generator(columns, target_table):
     Returns: custom query generated.
 
     """
-
     sub_startquery = ""
     sub_endquery = ""
     for each_col in range(len(columns)):

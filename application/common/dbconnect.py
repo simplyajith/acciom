@@ -10,11 +10,11 @@ def dbconnection(db_name, db_type, host_name, db_username, db_password):
     """
     Method will return a db curor
     Args:
-        db_name: database name
-        db_type: database type
-        host_name:db host name
-        db_username: db username
-        db_password: db password
+        db_name(str): database name
+        db_type(int): database type
+        host_name(str):db host name
+        db_username(str): db username
+        db_password(str): db password
 
     Returns: db Cursor
 

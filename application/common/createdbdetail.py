@@ -6,16 +6,16 @@ def create_dbconnection(current_user, db_type, db_name, hostname,
                         username, project_id):
     """
     Method will either create a NewDBCOnenction or give the dbconecction id
+
     Args:
-        current_user:  user_id of the current user
-        db_type: db_type (mysql,mssql,postgres,oracle)
-        db_name: db name
-        hostname: server name
-        username: user name
+        current_user(Object):  user_id of the current user
+        db_type(Int): db_type (mysql,mssql,postgres,oracle)
+        db_name(str): db name
+        hostname(str): server name
+        username(str): user name
 
     Returns:return either a db_connection_id map to
      the arguments or create a new db_connection with the given arguments
-
     """
     temp_connection = DbConnection.query.filter_by(user_id=current_user,
                                                    db_type=SupportedDBType().

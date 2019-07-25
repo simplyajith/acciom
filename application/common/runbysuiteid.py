@@ -4,9 +4,11 @@ from application.model.models import TestSuite
 
 def run_by_suite_id(current_user, suite_id):
     """
+    Method will run suite by Id
+
     Args:
-        current_user: user object
-        suite_id: suite_id of the suite.
+        current_user(Object): user object
+        suite_id(int): suite_id of the suite.
 
     Returns: Runs each job in the test suite
 

@@ -17,23 +17,23 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     DataValidation function will submit the job to spark and execute the job
 
     Args:
-        source_db:
-        source_table:
-        src_db_type:
-        des_db:
-        des_table:
-        des_db_type:
-        source_name:
-        source_password:
-        source_hostname:
-        destination_name:
-        destination_password:
-        destination_hostname:
-        srcqry:
-        targetqry:
-        case_log:
+        source_db: source_db of case
+        source_table: source_table of case
+        src_db_type: src_db_type of case
+        des_db: des_db of case
+        des_table: des_db of case
+        des_db_type: des_db of case
+        source_name: source_name of case
+        source_password: source_password of case
+        source_hostname: source_hostname of case
+        destination_name: destination_name of case
+        destination_password: destination_password of case
+        destination_hostname: destination_hostname of case
+        srcqry: srcqry of case
+        targetqry: targetqry of case
+        case_log: case_log of case
 
-    Returns:
+    Returns: Submit the Job to spark
 
     """
     print("reached datavalidation")

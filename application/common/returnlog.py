@@ -5,11 +5,11 @@ from application.model.models import TestCaseLog
 def return_all_log(case_log_id):
     """
     Method to return Case_log of a case_log_id
+
     Args:
-        case_log_id: Accepts test_Case_log_id as argument
+        case_log_id(int): Accepts test_Case_log_id as argument
 
     Returns: return Case_log
-
     """
 
     def test_case_log_json(case_log):

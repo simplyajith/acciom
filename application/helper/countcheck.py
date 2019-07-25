@@ -6,13 +6,13 @@ from application.common.constants import ExecutionStatus
 def count_check(source_cursor, target_cursor, source_table,
                 target_table, test_query):
     """
-
+    Method will perform countcheck on data
     Args:
-        source_cursor: source_cursor object
-        target_cursor: target cursor object
-        source_table: source table
-        target_table: target table
-        test_query: Source and target query.
+        source_cursor(object): source_cursor object
+        target_cursor(object): target cursor object
+        source_table(str): source table
+        target_table(str): target table
+        test_query(str): Source and target query.
 
     Returns: Result (pass,fail ) on the particular details.
 

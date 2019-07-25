@@ -4,8 +4,9 @@ import ast
 def split_table(table_name):
     """
     Method to convert data from excel to src,target tables
+
     Args:
-        table_name: Table name as argument in Text Format
+        table_name(str): Table name as argument in Text Format
 
     Returns: src,target tables
 

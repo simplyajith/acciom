@@ -6,6 +6,7 @@ from flask import request
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages, ExecutionStatus
+from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
 from application.common.response import api_response
 from application.common.runbysuiteid import run_by_suite_id
 from application.common.token import (token_required)
@@ -24,11 +25,11 @@ class TestCaseJob(Resource):
     def post(self, session):
         """
         Executes Job either by suite_id or case_id
+
         Args:
-            session:
+            session(Object): session gives user ID
 
         Returns: Return api response ,either succesfull job run or error.
-
         """
         try:
             user_id = session.user_id
@@ -44,7 +45,8 @@ class TestCaseJob(Resource):
             if execution_data['suite_id'] and not (execution_data['case_id']):
                 run_by_suite_id(user_id, execution_data['suite_id'])
                 suite_data = {"suite_id": execution_data['suite_id']}
-                return api_response(True, APIMessages.RETURN_SUCCESS, 200,
+                return api_response(True, APIMessages.RETURN_SUCCESS,
+                                    STATUS_CREATED,
                                     suite_data)
 
             elif not (execution_data['suite_id']) \
@@ -52,15 +54,18 @@ class TestCaseJob(Resource):
                 print(execution_data["case_id"])
                 run_by_case_id(execution_data['case_id'], user_id)
                 case_data = {"case_id": execution_data["case_id"]}
-                return api_response(True, APIMessages.RETURN_SUCCESS, 200,
+                return api_response(True, APIMessages.RETURN_SUCCESS,
+                                    STATUS_CREATED,
                                     case_data)
 
             else:
-                return api_response(False, APIMessages.INTERNAL_ERROR, 500)
+                return api_response(False, APIMessages.INTERNAL_ERROR,
+                                    STATUS_SERVER_ERROR)
 
         except Exception as e:
             app.logger.error(e)
-            return api_response(False, APIMessages.INTERNAL_ERROR, 500)
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR)
 
 
 class TestCaseSparkJob(Resource):
@@ -71,11 +76,11 @@ class TestCaseSparkJob(Resource):
     def post(self, test_case_log_id):
         """
         Accepts result from spark execution and stores result in table
+
         Args:
-            test_case_log_id: test_case_log_id of the job being executed
+            test_case_log_id (Int): test_case_log_id of the job being executed
 
         Returns: Stores result in the db given by the spark job.
-        
         """
         case_log = TestCaseLog.query.filter_by(
             test_case_log_id=test_case_log_id).first()

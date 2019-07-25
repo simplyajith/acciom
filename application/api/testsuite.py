@@ -3,6 +3,7 @@ from flask import request
 from flask_restful import reqparse, Resource
 
 from application.common.constants import APIMessages
+from application.common.response import (STATUS_CREATED)
 from application.common.response import api_response
 from application.common.returnlog import return_all_log
 from application.common.runbysuiteid import run_by_suite_id
@@ -21,11 +22,12 @@ class AddTestSuite(Resource):
     @token_required
     def post(self, session):
         """
+        Method will add a suite to database
+
         Args:
-            session: contains User_id.
+            session(Object): contains User_id.
 
         Returns: Add suite to Database
-
         """
         parser = reqparse.RequestParser()
         parser.add_argument('sheet_name',
@@ -56,37 +58,37 @@ class AddTestSuite(Resource):
         if int(test_suite_data['execute']) == 1:
             run_by_suite_id(current_user,
                             suite_result['suite_name'].test_suite_id)
-        return api_response(True, APIMessages.ADD_DATA, 201)
+        return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required
     def get(self, session):
         """
+        Method will give suite details of the user
 
         Args:
-            session: session contains user_id
+            session(Object): session contains user_id
 
         Returns: returns suite level details of associated user
-
         """
         try:
             uid = session.user_id
             data = {"suites": return_all_suites(uid)}
-            return api_response(True, "success", 200, data)
+            return api_response(True, "success", STATUS_CREATED, data)
 
         except Exception as e:
             app.logger.debug(str(e))
-            api_response(True, APIMessages.INTERNAL_ERROR, 200)
+            api_response(True, APIMessages.INTERNAL_ERROR, STATUS_CREATED)
 
 
 class TestCaseLogDetail(Resource):
     def get(self, test_case_log_id):
         """
-        get call will return the log of the case_log_id.
+        Method call will return the log of the case_log_id.
+
         Args:
-            test_case_log_id: test_Case_log_id of the case
+            test_case_log_id(Int): test_Case_log_id of the case
 
         Returns: return the log of the case_log_id
-
         """
         return {"test_case_log": return_all_log(test_case_log_id),
                 "success": True}
@@ -99,11 +101,11 @@ class ExportTestLog(Resource):
 
     def get(self, case_log_id):
         """
+        Method will Export log to Excel
 
         Args:
             case_log_id:Export log to Excel based on the case_log_id
 
         Returns:
-
         """
         return export_test_case_log(case_log_id)
