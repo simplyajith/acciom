@@ -23,6 +23,11 @@ class APIMessages:
     NEW_TOKEN = "Access Token is generated"
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
+    CREATE_RESOURCE = "{} is successfully created"
+    PARSER_MESSAGE = "{} field is required"
+    UPDATE_RESOURCE = "{} is updated successfully"
+    SUCCESS = "success"
+    NO_RESOURCE = "{} is not available"
 
     DB_DETAILS_ADDED = "DbDetails added successfully"
     DATA_LOADED = "Data loaded successfully"
@@ -67,8 +72,8 @@ class SupportedDBType:
         Returns:(str) name of the database
 
         """
-        return self.supported_db_type.get(
-            db_id)  # Returns None if Id does not exist
+        # Returns None if Id does not exist
+        return self.supported_db_type.get(db_id)
 
     def get_db_id_by_name(self, name):
         """
@@ -80,7 +85,8 @@ class SupportedDBType:
         Returns: (int) Id of the database
         """
         for key, value in self.supported_db_type.items():
-            if value == name.lower():  # Name will be converted to lower case and compared
+            # Name will be converted to lower case and compared
+            if value == name.lower():
                 return key
             # Returns None if Name does not exist
 
