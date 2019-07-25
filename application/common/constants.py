@@ -23,6 +23,10 @@ class APIMessages:
     NEW_TOKEN = "Access Token is generated"
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
+    CREATE_RESOURCE = "{} is successfully created"
+    PARSER_MESSAGE = "{} field is required"
+    UPDATE_RESOURCE = "{} is updated successfully"
+    SUCCESS = "success"
 
 
 class TimeOuts:
