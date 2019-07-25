@@ -2,10 +2,10 @@ from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.constants import APIMessages, SupportedDBType
-from application.common.miscellaneous import validate_empty_fields
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_SERVER_ERROR, STATUS_CREATED)
 from application.common.token import token_required
+from application.common.utils import validate_empty_fields
 from application.helper.encrypt import encrypt
 from application.model.models import DbConnection
 from index import db
@@ -20,13 +20,14 @@ class DbDetails(Resource):
     @token_required
     def post(self, session):
         """
-        Post call to store Database Details.
+        Method to store the Database Details provided by the user into the DB.
 
         Args:
-            session (object):It use to get user id.
+             session (object):By using this object we can get the user_id.
 
         Returns:
-            Standard API Response with message, data and http status code.
+            Standard API Response with message(returns message saying
+            that db details added successfully), data and http status code.
         """
         try:
             post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
@@ -96,13 +97,15 @@ class DbDetails(Resource):
     @token_required
     def get(self, session):
         """
-        Get call to fetch all connections for project_id.
+        Method to fetch all connections for the given project_id or
+        particular connection for the db id
 
         Args:
-            session (object):It use to get user id.
+            session (object):By using this object we can get the user_id.
 
         Returns:
-            Standard API Response with message, data and http status code.
+            Standard API Response with message, data(returns dbdetails for the
+            user passed id) and http status code.
         """
         get_db_detail_parser = reqparse.RequestParser()
         get_db_detail_parser.add_argument('project_id', required=False,
@@ -185,13 +188,15 @@ class DbDetails(Resource):
     @token_required
     def put(self, session):
         """
-        Update database details.
+        Method to Update database details into the DB based on the db id
+        provided by the user.
 
         Args:
-            session (object):It use to get user id.
+            session (object):By using this object we can get the user_id.
 
         Returns:
-            Standard API Response with message, data and http status code.
+            Standard API Response with message(returns message db details
+            uploaded successfully), data and http status code.
         """
         put_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
         put_db_detail_parser.add_argument('db_connection_id', required=True,

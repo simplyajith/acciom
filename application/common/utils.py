@@ -3,7 +3,7 @@ from application.common.constants import APIMessages
 
 def validate_empty_fields(data_json, list_of_args):
     """
-    Validate empty fields on request payload.
+    Validate the fields provided by user is empty or not on request payload.
 
     Args:
         data_json(dict): Dictionary of payload sent by user

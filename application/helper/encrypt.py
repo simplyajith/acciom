@@ -13,13 +13,13 @@ BS = 16
 
 def get_private_key(password):
     """
-    Method to generate private key.
+    Method to generate the private key for the provided Encryption key .
 
     Args:
         password(str): DB Encryption key.
 
     Returns:
-          Returns a private key.
+          Returns a private key which is used to generate encrypted password.
 
     """
     salt = b"this is a salt"
@@ -30,10 +30,10 @@ def get_private_key(password):
 
 def encrypt(raw):
     """
-    Method to generate encrypted password.
+    Method to generate encrypted password for the user given password.
 
-    Args:
-        raw: Password provided by user.
+    Args(str):
+        raw: Password provided by the user.
 
     Returns:
          Returns Encrypted password.

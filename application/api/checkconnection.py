@@ -2,27 +2,29 @@ from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.constants import APIMessages, SupportedDBType
-from application.common.miscellaneous import validate_empty_fields
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_SERVER_ERROR, STATUS_CREATED)
 from application.common.token import token_required
+from application.common.utils import validate_empty_fields
 from application.helper.connection_check import connection_check
 from index import db
 
 
 class CheckConnection(Resource):
-    """Class to handle POST,to check database connectivity."""
+    """To handle POST method,to check the database connectivity."""
 
     @token_required
     def post(self, session):
         """
-          Post call to check database connectivity.
+          This method to check database connectivity for the given database
+          details.
 
         Args:
-            session (object):It use to get user id.
+            session (object):By using this object we can get the user_id.
 
         Returns:
-             Standard API Response with message, data and http status code.
+             Standard API Response with message,data( it returns proper message
+             either it success or false) and http status code.
 
         """
         check_connection_parser = reqparse.RequestParser()

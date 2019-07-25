@@ -12,15 +12,16 @@ from application.common.response import api_response, STATUS_SERVER_ERROR
 def connection_check(db_type_id, db_hostname, db_username, db_password,
                      db_name):
     """
-    Helper method to check database connectivity.
+    Helper method to check the database connectivity for the given database
+    details.
 
     Args:
-        db_type_id(int): type of the db
+        db_type_id(int): type of the database
         db_hostname(str): database hostname
         db_username(str): database username
         db_password(str): database password
         db_name(str): database name
-    Returns:
+    Returns(str):
         Returns success only if connection can be establish
     """
     try:
