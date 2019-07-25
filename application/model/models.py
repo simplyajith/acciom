@@ -1,8 +1,8 @@
 from datetime import datetime
 
-# from flask import current_app
 from sqlalchemy.dialects.postgresql import JSON
 
+from application.common.constants import ExecutionStatus
 from index import db
 
 supported_db_type = ("postgresql", "mysql", "mssql", "oracle", "sqlite")
@@ -43,7 +43,7 @@ class Organization(db.Model):
     __tablename__ = 'organization'
     org_id = db.Column(db.Integer, primary_key=True)
     org_name = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
@@ -52,9 +52,9 @@ class Organization(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, org_name, user_id):
+    def __init__(self, org_name, owner_id):
         self.org_name = org_name
-        self.user_id = user_id
+        self.owner_id = owner_id
 
 
 class Project(db.Model):
@@ -63,7 +63,7 @@ class Project(db.Model):
     project_name = db.Column(db.String(50), nullable=False)
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
-    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
@@ -72,10 +72,10 @@ class Project(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, project_name, org_id, user_id):
+    def __init__(self, project_name, org_id, owner_id):
         self.project_name = project_name
         self.org_id = org_id
-        self.user_id = user_id
+        self.owner_id = owner_id
 
 
 class Group(db.Model):
@@ -84,11 +84,14 @@ class Group(db.Model):
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
     name = db.Column(db.String(50), nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, project_name, org_id, user_id):
+    def __init__(self, project_name, org_id, owner_id):
         self.project_name = project_name
         self.org_id = org_id
-        self.user_id = user_id
+        self.owner_id = owner_id
 
     def save_to_db(self):
         db.session.add(self)
@@ -105,12 +108,16 @@ class UserGroup(db.Model):
                            primary_key=True, index=True)
     group_id = db.Column(db.ForeignKey('group.group_id'), nullable=False,
                          primary_key=True, index=True)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, user_id, org_id, project_id, group_id):
+    def __init__(self, user_id, org_id, project_id, group_id, owner_id):
         self.user_id = user_id
         self.org_id = org_id
         self.project_id = project_id
         self.group_id = group_id
+        self.owner_id = owner_id
 
     def save_to_db(self):
         db.session.add(self)
@@ -122,10 +129,14 @@ class Permission(db.Model):
     permission_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, name, description):
+    def __init__(self, name, description, owner_id):
         self.name = name
         self.description = description
+        self.owner_id = owner_id
 
     def save_to_db(self):
         db.session.add(self)
@@ -140,11 +151,15 @@ class GroupPermission(db.Model):
                          nullable=False, primary_key=True, index=True)
     permission_id = db.Column(db.ForeignKey('permission.permission_id'),
                               nullable=False, primary_key=True, index=True)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, org_id, group_id, permission_id):
+    def __init__(self, org_id, group_id, permission_id, owner_id):
         self.org_id = org_id
         self.group_id = group_id
         self.permission_id = permission_id
+        self.owner_id = owner_id
 
     def save_to_db(self):
         db.session.add(self)
@@ -156,7 +171,7 @@ class DbConnection(db.Model):
     db_connection_id = db.Column(db.Integer, primary_key=True, )
     project_id = db.Column(db.ForeignKey('project.project_id'),
                            nullable=False, index=True)
-    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     db_connection_name = db.Column(db.Text)
     db_type = db.Column(db.SMALLINT, nullable=False)
     db_name = db.Column(db.String(80), nullable=False)
@@ -167,11 +182,11 @@ class DbConnection(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, project_id, user_id, db_connection_name,
+    def __init__(self, project_id, owner_id, db_connection_name,
                  db_type, db_name,
                  db_hostname, db_username, db_encrypted_password):
         self.project_id = project_id
-        self.user_id = user_id
+        self.owner_id = owner_id
         self.db_connection_name = db_connection_name
         self.db_type = db_type
         self.db_name = db_name
@@ -189,17 +204,17 @@ class TestSuite(db.Model):
     test_suite_id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.ForeignKey('project.project_id'),
                            nullable=False, index=True)
-    user_id = db.Column(db.ForeignKey('user.user_id'),
-                        nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'),
+                         nullable=False)
     excel_name = db.Column(db.Text, nullable=False)
     test_suite_name = db.Column(db.Text, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, project_id, user_id, excel_name, test_suite_name):
+    def __init__(self, project_id, owner_id, excel_name, test_suite_name):
         self.project_id = project_id
-        self.user_id = user_id
+        self.owner_id = owner_id
         self.excel_name = excel_name
         self.test_suite_name = test_suite_name
 
@@ -211,9 +226,9 @@ class TestSuite(db.Model):
 class TestCase(db.Model):
     __tablename__ = "test_case"
     test_case_id = db.Column(db.Integer, primary_key=True)
-    test_suite_id = db.Column(db.ForeignKey(TestSuite.test_suite_id),
+    test_suite_id = db.Column(db.ForeignKey('test_suite.test_suite_id'),
                               nullable=False, index=True)
-    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     test_case_class = db.Column(db.SMALLINT, nullable=False)
     latest_execution_status = db.Column(db.SMALLINT,
                                         nullable=False, default='new')
@@ -226,30 +241,53 @@ class TestCase(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, test_suite_id, user_id, test_case_class,
+    def __init__(self, test_suite_id, owner_id, test_case_class,
                  test_case_detail):
         self.test_suite_id = test_suite_id
-        self.user_id = user_id
+        self.owner_id = owner_id
         self.test_case_class = test_case_class
         self.test_case_detail = test_case_detail
+
+
+class Job(db.Model):
+    __tablename__ = "job"
+    job_id = db.Column(db.Integer, primary_key=True)
+    test_suite_id = db.Column(db.ForeignKey('test_suite.test_suite_id'),
+                              nullable=False, index=True)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    execution_status = db.Column(db.SMALLINT, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
+
+    def __init__(self, test_suite_id, owner_id,
+                 execution_status=ExecutionStatus(
+                 ).get_execution_status_id_by_name("new")):
+        self.test_suite_id = test_suite_id
+        self.owner_id = owner_id
+        self.execution_status = execution_status
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class TestCaseLog(db.Model):
     __tablename__ = "test_case_log"
     test_case_log_id = db.Column(db.Integer, primary_key=True)
-    test_case_id = db.Column(db.ForeignKey(TestCase.test_case_id), index=True)
+    test_case_id = db.Column(db.ForeignKey('test_case.test_case_id'),
+                             index=True)
+    job_id = db.Column(db.ForeignKey('job.job_id'), index=True)
     execution_status = db.Column(db.SMALLINT, nullable=False)
-    user_id = db.Column(db.ForeignKey('user.user_id'),
-                        nullable=False)
-    execution_log = db.Column(JSON, nullable=True)
-    executed_at = db.Column(db.DateTime, default=datetime.now, index=True)
+    dqi_percentage = db.Column(db.Float(precision=2), nullable=True)
+    execution_log = db.Column(JSON, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now, index=True)
 
-    def __init__(self, test_case_id, execution_status, user_id,
-                 execution_log):
+    def __init__(self, test_case_id, job_id, execution_status=ExecutionStatus(
+    ).get_execution_status_id_by_name("new")):
         self.test_case_id = test_case_id
+        self.job_id = job_id
         self.execution_status = execution_status
-        self.user_id = user_id
-        self.execution_log = execution_log
 
     def save_to_db(self):
         db.session.add(self)
@@ -258,9 +296,8 @@ class TestCaseLog(db.Model):
 
 class PersonalToken(db.Model):
     __tablename__ = 'personal_token'
-    personal_token_id = db.Column(db.Integer, primary_key=True
-                                  )
-    user_id = db.Column(db.ForeignKey(User.user_id), index=True,
+    personal_token_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('user.user_id'), index=True,
                         nullable=False)
     encrypted_personal_token = db.Column(db.String(256), unique=True,
                                          index=True,
@@ -284,14 +321,15 @@ class Session(db.Model):
     """
     __tablename__ = 'session'
     session_id = db.Column(db.BigInteger, primary_key=True)
-    user_id = db.Column(db.ForeignKey(User.user_id), nullable=False)
+    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created = db.Column(db.DateTime, default=datetime.now())
 
     # sqlalchemy ORM relation
     user = db.relationship("User", back_populates='session', lazy=True)
 
     def __init__(self, user_id):
-        """Create Session Object
+        """
+        Create Session Object
 
         Args:
             user_id (int): User Id from user table
