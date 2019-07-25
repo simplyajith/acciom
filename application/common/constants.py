@@ -27,7 +27,7 @@ class APIMessages:
     DB_DETAILS_ADDED = "DbDetails added successfully"
     DATA_LOADED = "Data loaded successfully"
     DBID_NOT_IN_DB = "DB details for DB ID {},does not exist"
-    DB_DETAILS_UPDATED = "DB details updtaed successfully"
+    DB_DETAILS_UPDATED = "DB details updated for connection id {} successfully"
     ABSENCE_OF_DBID = "Please pass DB Connection ID"
     CONNECTION_CREATE = "Connection can be created"
     CONNECTION_CANNOT_CREATE = "Connection could not be created"

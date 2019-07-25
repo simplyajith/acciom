@@ -231,15 +231,8 @@ class DbDetails(Resource):
                                 db_obj.db_username = value
                     db_obj.save_to_db()
                     return api_response(
-                        True, APIMessages.DB_DETAILS_UPDATED, STATUS_CREATED,
-                        {'project_id': db_obj.project_id,
-                         'connection_name': db_obj.db_connection_name,
-                         'db_type_name': SupportedDBType().get_db_name_by_id(
-                             db_obj.db_type),
-                         'db_type': db_obj.db_type,
-                         "db_name": db_obj.db_name,
-                         'db_hostname': db_obj.db_hostname,
-                         'db_username': db_obj.db_username})
+                        True, APIMessages.DB_DETAILS_UPDATED.format(
+                            db_connection_id), STATUS_CREATED)
                 else:
                     return api_response(False,
                                         APIMessages.DBID_NOT_IN_DB.format(
