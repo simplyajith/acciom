@@ -202,6 +202,8 @@ def upgrade():
                     sa.Column('job_id', sa.Integer(), nullable=False),
                     sa.Column('test_suite_id', sa.Integer(), nullable=False),
                     sa.Column('owner_id', sa.Integer(), nullable=False),
+                    sa.Column('is_external_trigger', sa.Boolean(),
+                              nullable=False),
                     sa.Column('execution_status', sa.SMALLINT(),
                               nullable=False),
                     sa.Column('created_at', sa.DateTime(), nullable=True),
