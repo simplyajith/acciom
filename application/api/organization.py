@@ -8,7 +8,7 @@ from application.model.models import Organization
 from application.common.response import api_response
 
 
-class OraganizationAPI(Resource):
+class OrganizationAPI(Resource):
     """Class to handle Organization related GET, POST and PUT API."""
 
     @token_required
@@ -21,7 +21,7 @@ class OraganizationAPI(Resource):
         create_org_data = create_org_parser.parse_args()
         try:
             create_organization = Organization(
-                org_name=create_org_data['org_name'], user_id=session.user_id)
+                org_name=create_org_data['org_name'], owner_id=session.user_id)
             create_organization.save_to_db()
             organization_data = {'org_id': create_organization.org_id,
                                  'org_name': create_organization.org_name}
@@ -64,7 +64,7 @@ class OraganizationAPI(Resource):
             # TODO: Currently, get call will give all
             #  organizations which are active
             # TODO: Implement a logic to return organizations that user is part
-            # Storing all active projects in a listr
+            # Storing all active projects in a list
             list_of_active_orgs = Organization.query.filter_by(
                 is_deleted=False).all()
             # list of projects to be returned in the response

@@ -3,7 +3,7 @@ import os
 
 from flask import send_from_directory
 from application.api.project import ProjectAPI
-from application.api.organization import OraganizationAPI
+from application.api.organization import OrganizationAPI
 from application.api.login import (Login, LogOut, AddUser)
 from application.model.models import db
 from index import (app, api, static_folder)
@@ -38,4 +38,4 @@ api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
 api.add_resource(AddUser, '/api/adduser/<string:email>')
 api.add_resource(ProjectAPI, '/api/project')
-api.add_resource(OraganizationAPI, '/api/organization/')
+api.add_resource(OrganizationAPI, '/api/organization/')
