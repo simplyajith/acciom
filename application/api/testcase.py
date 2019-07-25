@@ -18,18 +18,22 @@ from application.model.models import TestCaseLog, TestCase
 
 class TestCaseJob(Resource):
     """
-    TestCaseJob Executes the Job
+    TestCaseJob Executes either particular suite or a case, based on the either
+    test_case_id or suite_id and
     """
 
     @token_required
     def post(self, session):
         """
-        Executes Job either by suite_id or case_id
+        Executes either particular suite or a case either by suite_id
+        or case_id, returns Success reponse on Execution or error log
+        in case of a error
 
         Args:
-            session(Object): session gives user ID
+            session(Object): session gives user ID of the owner
+            who is execution the job
 
-        Returns: Return api response ,either succesfull job run or error.
+        Returns: Return api response ,either successful job run or error.
         """
         try:
             user_id = session.user_id
@@ -70,7 +74,8 @@ class TestCaseJob(Resource):
 
 class TestCaseSparkJob(Resource):
     """
-    TestCaseSparkJob class Store log generated from sparkJob
+    TestCaseSparkJob class Store log generated from sparkJob , it will reflect
+    test_case ,testcaselog table
     """
 
     def post(self, test_case_log_id):

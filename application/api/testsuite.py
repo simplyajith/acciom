@@ -63,7 +63,8 @@ class AddTestSuite(Resource):
     @token_required
     def get(self, session):
         """
-        Method will give suite details of the user
+        Method will give suite details, case details  of the user based on the
+        token of the user
 
         Args:
             session(Object): session contains user_id
@@ -83,7 +84,8 @@ class AddTestSuite(Resource):
 class TestCaseLogDetail(Resource):
     def get(self, test_case_log_id):
         """
-        Method call will return the log of the case_log_id.
+        Method call will return the log of the Executed case based on its
+        test_case_log_id
 
         Args:
             test_case_log_id(Int): test_Case_log_id of the case
@@ -96,12 +98,14 @@ class TestCaseLogDetail(Resource):
 
 class ExportTestLog(Resource):
     """
-    Class to Export log to Excel
+    Class to Export log to Excel of the executed case based on the
+     test_case_log_id
     """
 
     def get(self, case_log_id):
         """
-        Method will Export log to Excel
+        Method will Export log to Excel based on the test_case_log_id of the
+        executed job
 
         Args:
             case_log_id:Export log to Excel based on the case_log_id

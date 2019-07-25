@@ -27,6 +27,11 @@ def save_test_status(test_case_id, status):
     return True
 
 
+def save_job_status(test_suite_id, user_id):
+    pass
+    # return job_id
+
+
 def save_case_log(test_case_id, user_id, execution_log, execution_status):
     """
 
@@ -59,12 +64,15 @@ def run_by_case_id(test_case_id, user_id):
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
     print(test_case)
+    # print(test_case.test_suite_id)
+    # test_suite_id = test_case.test_suite_id
     res = run_test(test_case, user_id)
+    # run_test(test_case,user_id,test_suite)
     return {"status": True, "result": res}
 
 
 def run_test(case_id, user_id):
-    print(case_id, user_id)
+    # run_test(case_id, user_id, test_suite_id)
     """
     This method implements the execution of job
 
@@ -76,7 +84,10 @@ def run_test(case_id, user_id):
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
     save_test_status(case_id, inprogress)
+    # save_job_status(suite_id, user_id)
+    # use job_id in save_case_log
     case_log = save_case_log(case_id.test_case_id, user_id, None, inprogress)
+    # save JOB() HERE AND ADD JOB ID TO THE CASE_LOG FIELD.
     if case_id.latest_execution_status == ExecutionStatus(). \
             get_execution_status_id_by_name('inprogress'):
 
@@ -174,11 +185,11 @@ def run_test(case_id, user_id):
             print(result['Execution_log'])
             save_test_status(case_id, pass_status)
             case_log.execution_status = pass_status
-            print(result['Execution_log'])
-
             data = result['Execution_log']
             case_log.execution_log = data
             case_log.save_to_db()
+            # update job table too
+            # job.execution_status
 
         elif result[
             'res'] == ExecutionStatus(). \
@@ -189,6 +200,8 @@ def run_test(case_id, user_id):
             data = result['Execution_log']
             case_log.execution_log = data
             case_log.save_to_db()
+            # update job table too
+            # job.execution_status
 
         elif result[
             'res'] == ExecutionStatus(). \
@@ -199,6 +212,8 @@ def run_test(case_id, user_id):
             case_log.execution_status = error
             case_log.execution_log = result['Execution_log']
             case_log.save_to_db()
+            # update job table too
+            # job.execution_status
 
         elif result[
             'res'] == ExecutionStatus(). \
