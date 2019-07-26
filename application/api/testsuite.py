@@ -3,7 +3,7 @@ from flask import request
 from flask_restful import reqparse, Resource
 
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_CREATED)
+from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
 from application.common.response import api_response
 from application.common.returnlog import return_all_log
 from application.common.runbysuiteid import run_by_suite_id
@@ -74,11 +74,13 @@ class AddTestSuite(Resource):
         try:
             uid = session.user_id
             data = {"suites": return_all_suites(uid)}
-            return api_response(True, "success", STATUS_CREATED, data)
+            return api_response(True, APIMessages.RETURN_SUCCESS,
+                                STATUS_CREATED, data)
 
         except Exception as e:
             app.logger.debug(str(e))
-            api_response(True, APIMessages.INTERNAL_ERROR, STATUS_CREATED)
+            return api_response(True, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR)
 
 
 class TestCaseLogDetail(Resource):
@@ -92,8 +94,13 @@ class TestCaseLogDetail(Resource):
 
         Returns: return the log of the case_log_id
         """
-        return {"test_case_log": return_all_log(test_case_log_id),
-                "success": True}
+        try:
+            log_data = {"test_case_log": return_all_log(test_case_log_id),
+                        "success": True}
+            return api_response(True, APIMessages.RETURN_SUCCESS,
+                                STATUS_CREATED, log_data)
+        except Exception as e:
+            return api_response(True, APIMessages.INTERNAL_ERROR, str(e))
 
 
 class ExportTestLog(Resource):

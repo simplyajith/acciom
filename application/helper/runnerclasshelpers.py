@@ -1,6 +1,7 @@
 import ast
 
-from application.model.models import DbConnection, TestCase
+from application.helper.encrypt import decrypt
+from application.model.models import DbConnection, TestCase, Job
 
 
 def db_details(db_id):
@@ -13,16 +14,19 @@ def db_details(db_id):
 
     """
     db_list = {}
+    print("@17")
     db_obj = DbConnection.query.filter_by(db_connection_id=db_id).first()
-
+    encrypted_password = db_obj.db_encrypted_password.encode()
+    decrypted = decrypt(encrypted_password)
+    decrypted_password = bytes.decode(decrypted)
+    print(decrypted_password)
     db_list['db_id'] = db_obj.db_connection_id
     db_list['db_type'] = db_obj.db_type
     db_list['db_name'] = db_obj.db_name
     db_list['db_hostname'] = db_obj.db_hostname
     db_list['db_username'] = db_obj.db_username
-    db_list['db_password'] = db_obj.db_encrypted_password
-    print(db_list)
-
+    db_list['db_password'] = 'acciom_password'
+    print("@26 runnerclasshelper", db_list)
     return db_list
 
 
@@ -93,10 +97,10 @@ def save_case_log_information(case_log, case_log_execution_status,
           dest_count, dest_to_src, dest_log)
     case_log.execution_status = case_log_execution_status
     if src_log == '[]':
-        src_log = 'none'
+        src_log = None
     elif dest_log == '[]':
-        dest_log = 'none'
-    spark_job_data = {"src_execution_log": src_log,
+        dest_log = None
+    spark_job_data = {"source_execution_log": src_log,
                       "dest_execution_log": dest_log,
                       "src_count": source_count,
                       "src_to_dest_count": src_to_dest,
@@ -120,6 +124,23 @@ def save_case_log(case_log, case_log_execution_status):
         test_case_id=case_log.test_case_id).first()
     case.test_status = case_log_execution_status
     case.save_to_db()
+
+
+def save_job_status(case_log, case_log_execution_status):
+    """
+    Method will save job_status in Jobs table of the db ,it accepts case_log_id
+    and case_log_Execution_Status
+    Args:
+        case_log(obj): case_log object of the case_log table
+        case_log_execution_status(int): case_log_Execution status of the table
+        in int
+
+    Returns:
+
+    """
+    Job_obj = Job.query.filter_by(job_id=case_log.job_id).first()
+    Job_obj.execution_status = case_log_execution_status
+    Job_obj.save_to_db()
 
 
 def args_as_list(list_args):

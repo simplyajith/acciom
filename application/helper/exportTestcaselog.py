@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 from flask import Response
 from openpyxl import Workbook
 
+from application.common.constants import SupportedTestClass
 from application.model.models import TestCaseLog
 
 
@@ -22,43 +23,47 @@ def export_test_case_log(case_log_id):
         test_case_log_id=case_log_id).first()
     test_case = case_log.test_cases
 
-    if test_case.test_name == 'Datavalidation':
-        source_data = case_log.execution_log["src_execution_log"]
-        destination_data = case_log.execution_log["dest_execution_log"]
-
-        if source_data["result"] != 'none':
-            source_data
+    if test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            'Datavalidation'):
+        log_data = case_log.execution_log  # dict
+        if log_data["source_execution_log"]:
             export_response.append(['Source Table'])
-            for each_row in source_data:
+            dict_src = ast.literal_eval(log_data["source_execution_log"])
+            for each_row in dict_src:
+                print(each_row)
                 dict_key = ast.literal_eval(each_row)
+                print(dict_key)
                 key_list = [key for key in dict_key.keys()]
             export_response.append(key_list)
-            for each_row in source_data:
+            for each_row in dict_src:
                 dict_key = ast.literal_eval(each_row)
                 value_list = [val for val in dict_key.values()]
                 export_response.append(value_list)
 
-        if destination_data["result"] != 'none':
-            destination_data
+        if log_data["dest_execution_log"]:
             export_response.append(['Target Table'])
-            for each_row in destination_data:
+            dict_dest = ast.literal_eval(log_data["dest_execution_log"])
+            for each_row in dict_dest:
                 dict_key = ast.literal_eval(each_row)
                 key_list = [key for key in dict_key.keys()]
             export_response.append(key_list)
-            for each_row in destination_data:
+            for each_row in dict_dest:
                 dict_key = ast.literal_eval(each_row)
                 value_list = [val for val in dict_key.values()]
                 export_response.append(value_list)
 
         response = json.dumps(export_response)
-    elif test_case.test_name == 'CountCheck':
-        src_response = case_log.execution_log["src_execution_log"]
+    elif test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            'CountCheck'):
+        src_response = case_log.execution_log["source_execution_log"]
         des_response = case_log.execution_log["dest_execution_log"]
         res = [['Source Count', 'destination Count']]
         res.append([src_response, des_response])
         response = json.dumps(res)
 
-    elif test_case.test_name == 'DuplicateCheck' or 'NullCheck':
+    elif test_case.test_name == SupportedTestClass().get_test_class_id_by_name(
+            'DuplicateCheck') or SupportedTestClass().get_test_class_id_by_name(
+        'NullCheck'):
         response = case_log.execution_log["dest_Execution_log"]
 
     work_book = Workbook()
@@ -72,10 +77,11 @@ def export_test_case_log(case_log_id):
         work_book.save(tmp_file.name)
         tmp_file.seek(0)
         stream = tmp_file.read()
+        case_name = SupportedTestClass().get_test_class_name_by_id(
+            test_case.test_case_class)
     return Response(
         stream,
         mimetype="application/vnd.openxmlformats-officedocument."
                  "spreadsheetml.sheet",
         headers={"Content-disposition": "attachment; "
-                                        "filename={}.xlsx".format(
-            test_case.test_name)})
+                                        "filename={}.xlsx".format(case_name)})

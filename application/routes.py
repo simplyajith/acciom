@@ -1,8 +1,13 @@
+"""File to handle API routes."""
 import os
 
 from flask import send_from_directory
 
+from application.api.checkconnection import CheckConnection
+from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser)
+from application.api.organization import OrganizationAPI
+from application.api.project import ProjectAPI
 from application.api.testcase import TestCaseJob, TestCaseSparkJob
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
@@ -15,6 +20,15 @@ db
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    """
+    Serve HTML/React Static content i.e. HTML, CSS, JS, image, font files.
+
+    Args:
+        path(str): path for static folder or resource in case of backend api
+
+    Returns: return HTML/React Static content i.e. HTML, CSS, JS file
+
+    """
     if path != "" and os.path.exists(
             static_folder + path):  # for UI path ex: /login, /register
         return send_from_directory(static_folder, path)
@@ -36,3 +50,7 @@ api.add_resource(TestCaseSparkJob,
 api.add_resource(TestCaseLogDetail,
                  '/api/test-case-log/<int:test_case_log_id>')
 api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')
+api.add_resource(ProjectAPI, '/api/project')
+api.add_resource(OrganizationAPI, '/api/organization/')
+api.add_resource(DbDetails, '/api/db-detail')
+api.add_resource(CheckConnection, '/api/check-connection')

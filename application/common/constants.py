@@ -26,6 +26,28 @@ class APIMessages:
     ADD_DATA = "Data Added"
     RETURN_SUCCESS = "success"
     PARSER_MESSAGE = "{} field is required"
+    CREATE_RESOURCE = "{} is successfully created"
+    UPDATE_RESOURCE = "{} is updated successfully"
+    SUCCESS = "success"
+    NO_RESOURCE = "{} is not available"
+
+    DB_DETAILS_ADDED = "DbDetails added successfully"
+    DATA_LOADED = "Data loaded successfully"
+    DBID_NOT_IN_DB = "DB details for DB ID {},does not exist"
+    DB_DETAILS_UPDATED = "DB details updated for connection id {} successfully"
+    ABSENCE_OF_DBID = "Please pass DB Connection ID"
+    CONNECTION_CREATE = "Connection can be created"
+    CONNECTION_CANNOT_CREATE = "Connection could not be created"
+    NO_DB_UNDER_PROJECT = "No db details exist under this project id"
+    PASS_DBID_or_PROJECTID = "Please pass db id or project id"
+    RETURN_SUCCESS = "success"
+    PARSER_MESSAGE = "{} field is required"
+    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases are postgresql, mysql, mssql, oracle, sqlite"
+
+
+class GenericStrings:
+    """Class to store generic strings that are referenced in code."""
+    ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
 
 
 class TimeOuts:
@@ -51,8 +73,9 @@ class SupportedDBType:
 
         Returns:(str) name of the database
         """
-        return self.supported_db_type.get(
-            db_id)  # Returns None if Id does not exist
+
+        # Returns None if Id does not exist
+        return self.supported_db_type.get(db_id)
 
     def get_db_id_by_name(self, name):
         """
@@ -63,7 +86,8 @@ class SupportedDBType:
         Returns: (int) Id of the database
         """
         for key, value in self.supported_db_type.items():
-            if value == name.lower():  # Name will be converted to lower case and compared
+            # Name will be converted to lower case and compared
+            if value == name.lower():
                 return key
             # Returns None if Name does not exist
 

@@ -22,7 +22,7 @@ def save_file_to_db(current_user, project_id, data, file):
     Returns: Parse Excel and save data to db.
 
     """
-    temp_file = TestSuite(project_id=project_id, user_id=current_user,
+    temp_file = TestSuite(project_id=project_id, owner_id=current_user,
                           excel_name=file.filename,
                           test_suite_name=data['suite_name'])
     temp_file.save_to_db()
@@ -59,8 +59,8 @@ def save_file_to_db(current_user, project_id, data, file):
                                                db_list['targetServer'].lower(),
                                                db_list['Targetuser'],
                                                project_id)
-            columndata = temp_test_dict
-            [current_app.config.get('COLUMNS')][each_row]
+            columndata = temp_test_dict[current_app.config.get('COLUMNS')][
+                each_row]
             column = {}
             if columndata == "None" or columndata.isspace():
                 pass
@@ -113,7 +113,7 @@ def save_file_to_db(current_user, project_id, data, file):
             jsondict = {"column": column, "table": table, "query": query,
                         "src_db_id": src_db_id, "target_db_id": target_db_id}
             temp = TestCase(test_suite_id=temp_file.test_suite_id,
-                            user_id=current_user,
+                            owner_id=current_user,
                             test_case_class=SupportedTestClass().
                             get_test_class_id_by_name(
                                 temp_test_dict[

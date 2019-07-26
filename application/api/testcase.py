@@ -11,8 +11,9 @@ from application.common.response import api_response
 from application.common.runbysuiteid import run_by_suite_id
 from application.common.token import (token_required)
 from application.helper.runnerclass import (run_by_case_id)
-from application.helper.runnerclasshelpers import save_case_log_information, \
-    save_case_log
+from application.helper.runnerclasshelpers import (save_case_log_information,
+                                                   save_case_log,
+                                                   save_job_status)
 from application.model.models import TestCaseLog, TestCase
 
 
@@ -120,15 +121,17 @@ class TestCaseSparkJob(Resource):
                                           parsed_log['dest_count'][0],
                                           (target_count), None)
                 save_case_log(case_log, case_log_execution_status)
+                save_job_status(case_log, case_log_execution_status)
 
             elif result_count != 0:
                 case_log_execution_status = ExecutionStatus(). \
                     get_execution_status_id_by_name('fail')
                 save_case_log_information(case_log, case_log_execution_status,
-                                          parsed_log['src_count'],
+                                          parsed_log['src_count'][0],
                                           src_count, result_src,
-                                          parsed_log['dest_count'],
+                                          parsed_log['dest_count'][0],
                                           target_count,
                                           result_des)
 
                 save_case_log(case_log, case_log_execution_status)
+                save_job_status(case_log, case_log_execution_status)

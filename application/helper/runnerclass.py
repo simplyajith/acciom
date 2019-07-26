@@ -2,14 +2,14 @@ from flask import current_app as app
 
 from application.common.constants import ExecutionStatus, SupportedTestClass
 from application.common.dbconnect import dbconnection
-from application.helper.countcheck import count_check
-from application.helper.datavalidation import datavalidation
-from application.helper.ddlcheck import ddl_check
-from application.helper.duplicate import duplication
-from application.helper.nullcheck import null_check
+from application.helper.corefunctions.countcheck import count_check
+from application.helper.corefunctions.datavalidation import datavalidation
+from application.helper.corefunctions.ddlcheck import ddl_check
+from application.helper.corefunctions.duplicate import duplication
+from application.helper.corefunctions.nullcheck import null_check
 from application.helper.runnerclasshelpers import (db_details, split_table,
                                                    get_query, get_column)
-from application.model.models import TestCaseLog, TestCase
+from application.model.models import (TestCaseLog, TestCase, Job)
 
 
 def save_test_status(test_case_id, status):
@@ -28,11 +28,14 @@ def save_test_status(test_case_id, status):
 
 
 def save_job_status(test_suite_id, user_id):
-    pass
+    job = Job(test_suite_id=test_suite_id, owner_id=user_id)
+    job.save_to_db()
+    return job, job.job_id
     # return job_id
 
 
-def save_case_log(test_case_id, user_id, execution_log, execution_status):
+def save_case_log(test_case_id, execution_status,
+                  job_id):
     """
 
     Args:
@@ -45,9 +48,9 @@ def save_case_log(test_case_id, user_id, execution_log, execution_status):
 
     """
     temp_log = TestCaseLog(test_case_id=test_case_id,
-                           user_id=user_id,
-                           execution_log=execution_log,
+                           job_id=job_id,
                            execution_status=execution_status)
+    temp_log.execution_log = None
     temp_log.save_to_db()
     return temp_log
 
@@ -63,14 +66,14 @@ def run_by_case_id(test_case_id, user_id):
        """
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
-    # print(test_case.test_suite_id)
-    # test_suite_id = test_case.test_suite_id
-    res = run_test(test_case, user_id)
+    print(test_case.test_suite_id)
+    test_suite_id = test_case.test_suite_id
+    res = run_test(test_case, user_id, test_suite_id)
     # run_test(test_case,user_id,test_suite)
     return {"status": True, "result": res}
 
 
-def run_test(case_id, user_id):
+def run_test(case_id, user_id, test_suite_id):
     # run_test(case_id, user_id, test_suite_id)
     """
     This method implements the execution of job
@@ -82,13 +85,14 @@ def run_test(case_id, user_id):
     """
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
-    save_test_status(case_id, inprogress)
-    # save_job_status(suite_id, user_id)
+    save_test_status(case_id, inprogress)  # case_id saved
+    (job, job_id) = save_job_status(test_suite_id, user_id)
+    print(job_id)
     # use job_id in save_case_log
-    case_log = save_case_log(case_id.test_case_id, user_id, None, inprogress)
-    # save JOB() HERE AND ADD JOB ID TO THE CASE_LOG FIELD.
-    if case_id.latest_execution_status == ExecutionStatus(). \
-            get_execution_status_id_by_name('inprogress'):
+    case_log = save_case_log(case_id.test_case_id, inprogress,
+                             job_id)
+    if case_id.latest_execution_status == ExecutionStatus().get_execution_status_id_by_name(
+            'inprogress'):
 
         if case_id.test_case_class == SupportedTestClass(). \
                 get_test_class_id_by_name('countcheck'):
@@ -173,8 +177,9 @@ def run_test(case_id, user_id):
                                target_detail['db_type'])
         if case_id.test_case_class == SupportedTestClass(). \
                 get_test_class_id_by_name('datavalidation'):
-            result = {'res': ExecutionStatus.get_execution_status_id_by_name(
+            result = {'res': ExecutionStatus().get_execution_status_id_by_name(
                 'inprogress'), "Execution_log": None}
+            print(result)
 
         if result['res'] == ExecutionStatus().get_execution_status_id_by_name(
                 'pass'):
@@ -185,41 +190,50 @@ def run_test(case_id, user_id):
             data = result['Execution_log']
             case_log.execution_log = data
             case_log.save_to_db()
+            job.execution_status = pass_status
+            job.save_to_db()
             # update job table too
             # job.execution_status
 
         elif result[
-            'res'] == ExecutionStatus(). \
-                get_execution_status_id_by_name('fail'):
+            'res'] == ExecutionStatus().get_execution_status_id_by_name(
+            'fail'):
             fail = ExecutionStatus().get_execution_status_id_by_name('fail')
             save_test_status(case_id, fail)
             case_log.execution_status = fail
             data = result['Execution_log']
             case_log.execution_log = data
             case_log.save_to_db()
+            job.execution_status = fail
+            job.save_to_db()
+
             # update job table too
             # job.execution_status
 
         elif result[
-            'res'] == ExecutionStatus(). \
-                get_execution_status_id_by_name('error'):
-            error = ExecutionStatus().get_execution_status_id_by_name(
-                'error')
+            'res'] == ExecutionStatus().get_execution_status_id_by_name(
+            'error'):
+            error = ExecutionStatus().get_execution_status_id_by_name('error')
             save_test_status(case_id, error)
             case_log.execution_status = error
             case_log.execution_log = result['Execution_log']
             case_log.save_to_db()
+            job.execution_status = error
+            job.save_to_db()
             # update job table too
             # job.execution_status
 
         elif result[
-            'res'] == ExecutionStatus(). \
-                get_execution_status_id_by_name('inprogress'):
+            'res'] == ExecutionStatus().get_execution_status_id_by_name(
+            'inprogress'):
             save_test_status(case_id, inprogress)
             case_log.execution_status = inprogress
             case_log.save_to_db()
+            job.execution_status = inprogress
+            job.save_to_db()
             if case_id.test_case_class == SupportedTestClass(). \
                     get_test_class_id_by_name('datavalidation'):
+                print("@235")
                 src_detail = db_details(
                     case_id.test_case_detail['src_db_id'])
                 target_detail = db_details(
