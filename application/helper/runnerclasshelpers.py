@@ -25,8 +25,7 @@ def db_details(db_id):
     db_list['db_name'] = db_obj.db_name
     db_list['db_hostname'] = db_obj.db_hostname
     db_list['db_username'] = db_obj.db_username
-    db_list['db_password'] = 'acciom_password'
-    print("@26 runnerclasshelper", db_list)
+    db_list['db_password'] = decrypted_password
     return db_list
 
 
