@@ -1,3 +1,4 @@
+"""File to handle Database connection operations."""
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -13,8 +14,9 @@ from index import db
 
 class DbDetails(Resource):
     """
-    Class to handle GET, POST, PUT APIs for storing, getting
-     and updating Database Details.
+    Class to handle GET, POST, PUT APIs.
+
+    Helper Methods for storing, getting, and Updating DB Details.
     """
 
     @token_required
@@ -33,32 +35,25 @@ class DbDetails(Resource):
             post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
             post_db_detail_parser.add_argument('project_id', required=True,
                                                type=int,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('project_id'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('connection_name',
                                                required=False, type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('connection_name'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_type_name', required=True,
                                                type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('db_type'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_name', required=True,
                                                type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('db_name'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_hostname', required=True,
                                                type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('db_hostname'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_username', required=True,
                                                type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('db_username'))
+                                               help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_password', required=True,
                                                type=str,
-                                               help=APIMessages.PARSER_MESSAGE
-                                               .format('db_password'))
+                                               help=APIMessages.PARSER_MESSAGE)
             db_detail = post_db_detail_parser.parse_args()
             list_of_args = [arg.name for arg in post_db_detail_parser.args]
             # Checking if fields are empty
@@ -97,8 +92,9 @@ class DbDetails(Resource):
     @token_required
     def get(self, session):
         """
-        Method to fetch all connections for the given project_id or
-        particular connection for the db id
+        Method to fetch all connections for the given project_id.
+
+        or particular connection for the db id
 
         Args:
             session (object):By using this object we can get the user_id.
@@ -150,8 +146,9 @@ class DbDetails(Resource):
                             'project_id': projectid.project_id,
                             'connection_name': projectid.db_connection_name,
                             'db_type_id': projectid.db_connection_id,
-                            'db_type_name': SupportedDBType().get_db_name_by_id(
-                                projectid.db_type),
+                            'db_type_name':
+                                SupportedDBType().get_db_name_by_id(
+                                    projectid.db_type),
                             'db_type': projectid.db_type,
                             'db_name': projectid.db_name,
                             'db_hostname': projectid.db_hostname,
@@ -188,7 +185,8 @@ class DbDetails(Resource):
     @token_required
     def put(self, session):
         """
-        Method to Update database details into the DB based on the db id
+        Method to Update database details into the DB based on the db id.
+
         provided by the user.
 
         Args:

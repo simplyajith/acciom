@@ -13,20 +13,28 @@ class ProjectAPI(Resource):
 
     @token_required
     def post(self, session):
-        """Post call to create Project with name and organization Id."""
+        """
+        Post call to create Project with name and organization Id.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
         create_project_parser = reqparse.RequestParser(bundle_errors=True)
         create_project_parser.add_argument(
             'project_name',
-            help=APIMessages.PARSER_MESSAGE.format('project_name'),
+            help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         create_project_parser.add_argument(
-            'organization_id',
-            help=APIMessages.PARSER_MESSAGE.format('project_name'),
-            required=True, type=str)
+            'org_id',
+            help=APIMessages.PARSER_MESSAGE,
+            required=True, type=int)
         create_project_data = create_project_parser.parse_args()
         try:
             new_project = Project(create_project_data['project_name'],
-                                  create_project_data['organization_id'],
+                                  create_project_data['org_id'],
                                   session.user_id)
             new_project.save_to_db()
             project_payload = {'project_name': new_project.project_name,
@@ -42,14 +50,22 @@ class ProjectAPI(Resource):
 
     @token_required
     def put(self, session):
-        """PUT call to update project name."""
+        """
+        PUT call to update project name.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
         update_project_parser = reqparse.RequestParser(bundle_errors=True)
         update_project_parser.add_argument(
-            'project_id', help=APIMessages.PARSER_MESSAGE.format('project_id'),
-            required=True, type=int, location='args')
+            'project_id', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=int)
         update_project_parser.add_argument(
             'project_name',
-            help=APIMessages.PARSER_MESSAGE.format('project_name'),
+            help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         update_project_data = update_project_parser.parse_args()
         try:
@@ -67,14 +83,23 @@ class ProjectAPI(Resource):
 
     @token_required
     def get(self, session):
-        """GET call to retrieve project details."""
+        """
+        GET call to retrieve project details.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
         get_project_parser = reqparse.RequestParser()
         get_project_parser.add_argument(
-            'org_id', help=APIMessages.PARSER_MESSAGE.format('org_id'),
+            'org_id', help=APIMessages.PARSER_MESSAGE,
             required=True, type=int, location='args')
         get_project_data = get_project_parser.parse_args()
         try:
-            # Storing all active projects in a listr
+            # TODO: Check if organization is active and called has access
+            # Storing all active projects in a list
             list_of_active_project = Project.query.filter_by(
                 org_id=get_project_data['org_id'], is_deleted=False).all()
             if not list_of_active_project:

@@ -24,11 +24,10 @@ class APIMessages:
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
     CREATE_RESOURCE = "{} is successfully created"
-    PARSER_MESSAGE = "{} field is required"
+    PARSER_MESSAGE = "field is required"
     UPDATE_RESOURCE = "{} is updated successfully"
     SUCCESS = "success"
     NO_RESOURCE = "{} is not available"
-
     DB_DETAILS_ADDED = "DbDetails added successfully"
     DATA_LOADED = "Data loaded successfully"
     DBID_NOT_IN_DB = "DB details for DB ID {},does not exist"
@@ -39,12 +38,13 @@ class APIMessages:
     NO_DB_UNDER_PROJECT = "No db details exist under this project id"
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
     RETURN_SUCCESS = "success"
-    PARSER_MESSAGE = "{} field is required"
-    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases are postgresql, mysql, mssql, oracle, sqlite"
+    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
+                   " are postgresql, mysql, mssql, oracle, sqlite"
 
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
+
     ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
 
 
