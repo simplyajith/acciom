@@ -55,4 +55,4 @@ def return_all_suites(user_id):
     return {'test_suite_details': list(
         map(lambda suite_id: test_suite_to_json(suite_id),
             TestSuite.query.filter_by(
-                user_id=user_id)))}
+                owner_id=user_id)))}
