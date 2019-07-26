@@ -1,4 +1,5 @@
 from application.common.constants import ExecutionStatus
+from application.common.constants import SupportedTestClass
 from application.model.models import TestSuite
 
 
@@ -12,6 +13,13 @@ def return_all_suites(user_id):
 
     """
 
+    def test_log_to_json(case_log_id):
+        return {
+            'test_case_log_id': case_log_id.test_case_log_id,
+            'test_execution_status': case_log_id.execution_status,
+            'executed_at': str(case_log_id.modified_at)[0:19]
+        }
+
     def test_case_to_json(case_id):
         """
         Method will provide testcase table details as json for
@@ -24,12 +32,15 @@ def return_all_suites(user_id):
 
         """
         return {
-            'test_suite_id': case_id.test_suite_id,
             'test_case_id': case_id.test_case_id,
-            'test_name': case_id.test_case_class,
+            'test_class_name': SupportedTestClass().get_test_class_name_by_id(
+                case_id.test_case_class),
+            'test_class_id': case_id.test_case_class,
             'test_status': ExecutionStatus().get_execution_status_by_id(
                 case_id.latest_execution_status),
-            'test_case_detail': case_id.test_case_detail,
+            'test_case_log': list(map(lambda each_case:
+                                      test_log_to_json(each_case),
+                                      case_id.test_case_log))
         }
 
     def test_suite_to_json(suite_id):
