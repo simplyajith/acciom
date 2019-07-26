@@ -30,7 +30,6 @@ def count_check(source_cursor, target_cursor, source_table,
         else:
             src_query = test_query["sourceqry"]
             target_query = test_query["targetqry"]
-            print(src_query, target_query)
             source_cursor.execute(src_query)
             target_cursor.execute(target_query)
         for each_row in source_cursor:
@@ -52,7 +51,6 @@ def count_check(source_cursor, target_cursor, source_table,
                        "Execution_log": {"source_execution_log": src_count,
                                          "dest_execution_log": target_count}}
             app.logger.info("count check fail")
-            print(payload)
     except Exception as e:
         app.logger.error(e)
         payload = {"res": execution_result,

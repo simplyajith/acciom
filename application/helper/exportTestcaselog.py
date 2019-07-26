@@ -30,9 +30,7 @@ def export_test_case_log(case_log_id):
             export_response.append(['Source Table'])
             dict_src = ast.literal_eval(log_data["source_execution_log"])
             for each_row in dict_src:
-                print(each_row)
                 dict_key = ast.literal_eval(each_row)
-                print(dict_key)
                 key_list = [key for key in dict_key.keys()]
             export_response.append(key_list)
             for each_row in dict_src:

@@ -24,7 +24,6 @@ def qry_generator(columns, target_table):
                 target_table) + each_col + " is NULL"
         else:
             sub_query = sub_query + " or " + each_col + " is NULL"
-    print(sub_query)
     return sub_query
 
 

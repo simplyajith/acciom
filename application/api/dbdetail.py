@@ -30,7 +30,6 @@ class DbDetails(Resource):
             that db details added successfully), data and http status code.
         """
         try:
-            print("@came here")
             post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
             post_db_detail_parser.add_argument('project_id', required=True,
                                                type=int,

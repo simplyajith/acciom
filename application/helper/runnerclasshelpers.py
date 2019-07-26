@@ -14,12 +14,10 @@ def db_details(db_id):
 
     """
     db_list = {}
-    print("@17")
     db_obj = DbConnection.query.filter_by(db_connection_id=db_id).first()
     encrypted_password = db_obj.db_encrypted_password.encode()
     decrypted = decrypt(encrypted_password)
     decrypted_password = bytes.decode(decrypted)
-    print(decrypted_password)
     db_list['db_id'] = db_obj.db_connection_id
     db_list['db_type'] = db_obj.db_type
     db_list['db_name'] = db_obj.db_name
@@ -92,8 +90,6 @@ def save_case_log_information(case_log, case_log_execution_status,
     Returns: Submit the log to the TestCaseLog Table
 
     """
-    print(case_log, type(source_count), src_to_dest, src_log,
-          dest_count, dest_to_src, dest_log)
     case_log.execution_status = case_log_execution_status
     if src_log == '[]':
         src_log = None

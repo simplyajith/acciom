@@ -56,7 +56,6 @@ class TestCaseJob(Resource):
 
             elif not (execution_data['suite_id']) \
                     and execution_data['case_id']:
-                print(execution_data["case_id"])
                 run_by_case_id(execution_data['case_id'], user_id)
                 case_data = {"case_id": execution_data["case_id"]}
                 return api_response(True, APIMessages.RETURN_SUCCESS,

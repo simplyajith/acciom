@@ -34,7 +34,6 @@ def qry_generator(columns, target_table):
                    ",COUNT(*) " \
                    "FROM {0} ".format(target_table) + \
                    "GROUP BY " + sub_endquery + " HAVING COUNT(*) >1"
-    print(custom_query)
     return custom_query
 
 

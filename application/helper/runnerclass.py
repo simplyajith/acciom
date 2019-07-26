@@ -66,10 +66,8 @@ def run_by_case_id(test_case_id, user_id):
        """
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
-    print(test_case.test_suite_id)
     test_suite_id = test_case.test_suite_id
     res = run_test(test_case, user_id, test_suite_id)
-    # run_test(test_case,user_id,test_suite)
     return {"status": True, "result": res}
 
 
@@ -87,8 +85,6 @@ def run_test(case_id, user_id, test_suite_id):
         'inprogress')
     save_test_status(case_id, inprogress)  # case_id saved
     (job, job_id) = save_job_status(test_suite_id, user_id)
-    print(job_id)
-    # use job_id in save_case_log
     case_log = save_case_log(case_id.test_case_id, inprogress,
                              job_id)
     if case_id.latest_execution_status == ExecutionStatus().get_execution_status_id_by_name(
@@ -179,7 +175,6 @@ def run_test(case_id, user_id, test_suite_id):
                 get_test_class_id_by_name('datavalidation'):
             result = {'res': ExecutionStatus().get_execution_status_id_by_name(
                 'inprogress'), "Execution_log": None}
-            print(result)
 
         if result['res'] == ExecutionStatus().get_execution_status_id_by_name(
                 'pass'):
@@ -233,7 +228,6 @@ def run_test(case_id, user_id, test_suite_id):
             job.save_to_db()
             if case_id.test_case_class == SupportedTestClass(). \
                     get_test_class_id_by_name('datavalidation'):
-                print("@235")
                 src_detail = db_details(
                     case_id.test_case_detail['src_db_id'])
                 target_detail = db_details(

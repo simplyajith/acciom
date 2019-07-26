@@ -33,7 +33,6 @@ def check_status(case_log_id_list):
 
 def start_test(case_log_id_list):
     for each_log in case_log_id_list:
-        print(case_log_id_list)
         # db.session.commit()
         testcase_log_id = TestCaseLog.query.filter_by(
             test_case_log_id=each_log).first()
@@ -51,13 +50,10 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
     Test_src_table = []
     Test_target_table = []
     Test_status = []
-
-    print(case_log_id_list, email)
     while not check_status(case_log_id_list):
         db.session.commit()
         time.sleep(10)
     suite = TestSuite.query.filter_by(test_suite_id=suite_id).first()
-    print(suite)
     for each_test in suite.test_case:
         print(each_test)
         Test_Name.append(each_test.test_case_id)
@@ -75,9 +71,7 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
     render_list['Test_Description'] = Test_Description
     render_list['src_tables'] = Test_src_table
     render_list['dest_tables'] = Test_target_table
-    print(render_list)
     payload = {"status": True, "message": "send Mail"}
-    print(payload)
     msg = Message('Quality Suite Result',
                   sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[email])
