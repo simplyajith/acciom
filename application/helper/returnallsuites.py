@@ -14,11 +14,13 @@ def return_all_suites(user_id):
 
     def test_case_to_json(case_id):
         """
-
+        Method will provide testcase table details as json for
+         particular case id
         Args:
-            case_id: case_id associated with the suite
+            case_id (int): case_id associated with the suite
 
-        Returns:
+        Returns:will provide testcase table details as json for
+         particular case id
 
         """
         return {
@@ -32,7 +34,8 @@ def return_all_suites(user_id):
 
     def test_suite_to_json(suite_id):
         """
-
+        Method will provide testsuite table details as json for
+        particular suite id
         Args:
             suite_id: suite id associated with user.
 
