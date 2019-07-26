@@ -1,3 +1,6 @@
+import json
+from collections import OrderedDict
+
 from flask import current_app as app
 
 from application.common.constants import SupportedDBType, ExecutionStatus
@@ -5,113 +8,97 @@ from application.common.constants import SupportedDBType, ExecutionStatus
 
 def ddl_check(source_cursor, target_cursor, source_table, target_table,
               src_db_type, target_db_type):
-    """
-
-    Args:
-        source_cursor:
-        target_cursor:
-        source_table:
-        target_table:
-        src_db_type:
-        target_db_type:
-
-    Returns:
-
-    """
     try:
-        data1 = []
-        data2 = []
-        data3 = []
-        data4 = []
+        source_schema = []
+        target_schema = []
+        temp_oracle_source_schema = []
+        temp_oracle_target_schema = []
+
         if src_db_type == SupportedDBType().get_db_id_by_name("oracle"):
-            cursor = source_cursor
-            cursor.execute(
-                "SELECT COLUMN_NAME,DATA_TYPE,"
-                "NULLABLE FROM USER_TAB_COLUMNS "
-                "WHERE TABLE_NAME = UPPER('{0}')".format(
-                    source_table)
-            )
-
-            for row in cursor:
-                row = [x.lower() for x in row]
-                data3.append(row)
-            for i in data3:
-                if i[2] == "y":
-                    i = (i[0], i[1], "YES")
+            src_cursor = source_cursor
+            src_cursor.execute(
+                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS "
+                "WHERE TABLE_NAME = UPPER('{0}')".format(source_table))
+            for schema in src_cursor:
+                schema = [single_schema.lower() for single_schema in schema]
+                temp_oracle_source_schema.append(schema)
+            for temp_schema in temp_oracle_source_schema:
+                if temp_schema[2] == "y":
+                    temp_schema = (temp_schema[0], temp_schema[1], "YES")
                 else:
-                    i = (i[0], i[1], "NO")
-                data1.append(i)
+                    temp_schema = (temp_schema[0], temp_schema[1], "NO")
+                source_schema.append(temp_schema)
         else:
-            cursor = source_cursor
-            cursor.execute(
-                "SELECT COLUMN_NAME, IS_NULLABLE,"
-                "DATA_TYPE FROM information_schema.columns"
-                " WHERE table_name = '{}'".format(
-                    source_table)
-            )
-
-            for row in cursor:
-                data1.append(tuple(row))
+            src_cursor = source_cursor
+            src_cursor.execute(
+                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM information_"
+                "schema.columns WHERE table_name = '{}'".format(source_table))
+            for schema in src_cursor:
+                source_schema.append(tuple(schema))
 
         if target_db_type == "oracle":
-
-            cursor1 = target_cursor
-            cursor1.execute(
-                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM"
-                " USER_TAB_COLUMNS WHERE TABLE_NAME = UPPER"
-                "('{0}')".format(
-                    target_table))
-
-            for row in cursor1:
-                row = [x.lower() for x in row]
-                data4.append(row)
-            for i in data4:
-                if i[2] == "y":
-                    i = (i[0], i[1], "YES")
+            dest_cursor = target_cursor
+            dest_cursor.execute(
+                "SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS"
+                " WHERE TABLE_NAME = UPPER('{0}')".format(target_table))
+            for schema in dest_cursor:
+                schema = [single_schema.lower() for single_schema in schema]
+                temp_oracle_target_schema.append(schema)
+            for temp_schema in temp_oracle_target_schema:
+                if temp_schema[2] == "y":
+                    temp_schema = (temp_schema[0], temp_schema[1], "YES")
                 else:
-                    i = (i[0], i[1], "NO")
-                data2.append(i)
+                    temp_schema = (temp_schema[0], temp_schema[1], "NO")
+                target_schema.append(temp_schema)
         else:
-
-            cursor1 = target_cursor
-            cursor1.execute(
-                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM"
-                " information_schema.columns WHERE table_name = "
-                "'{}'".format(
+            dest_cursor = target_cursor
+            dest_cursor.execute(
+                "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM "
+                "information_schema.columns WHERE table_name = '{}'".format(
                     target_table))
+            for schema in dest_cursor:
+                target_schema.append(tuple(schema))
 
-            for row in cursor1:
-                data2.append(tuple(row))
-        set_1, set_2 = set(data1), set(data2)
-        a = list(set_1 & set_2)
-        for item in a:
-            data1.remove(item)
-            data2.remove(item)
+        source_schema_set, target_schema_set = set(source_schema), set(
+            target_schema)
+        schema_list = list(source_schema_set & target_schema_set)
+        for item in schema_list:
+            source_schema.remove(item)
+            target_schema.remove(item)
 
-        from collections import OrderedDict
+        source_schema_dict = OrderedDict(
+            {column_name: (column_name, nullable, datatype) for
+             column_name, nullable, datatype in source_schema})
+        target_schema_dict = OrderedDict(
+            {column_name: (column_name, nullable, datatype) for
+             column_name, nullable, datatype in target_schema})
 
-        d1 = OrderedDict({a: (a, b, c) for a, b, c in data1})
-        d2 = OrderedDict({a: (a, b, c) for a, b, c in data2})
+        all_keys = set(source_schema_dict) | set(target_schema_dict)
 
-        all_keys = set(d1) | set(d2)
+        source_schema_orderdict = OrderedDict(
+            {key: source_schema_dict.get(key, ("missing",)) for key in
+             all_keys})
+        target_schema_orderdict = OrderedDict(
+            {key: target_schema_dict.get(key, ("missing",)) for key in
+             all_keys})
 
-        x = OrderedDict({k: d1.get(k, ("missing",)) for k in all_keys})
-        y = OrderedDict({k: d2.get(k, ("missing",)) for k in all_keys})
+        source_schema_values = list(source_schema_orderdict.values())
+        target_schema_values = list(target_schema_orderdict.values())
 
-        src_result = list(x.values())
-        dest_result = list(y.values())
+        source_schema_results = json.dumps(source_schema_values)
+        target_schema_results = json.dumps(target_schema_values)
 
-        if data1 == [] and data2 == []:
+        if source_schema == [] and target_schema == []:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'pass'),
-                "Execution_log": {"source_execution_log": src_result,
-                                  "dest_execution_log": dest_result}})
+                "Execution_log": {
+                    "source_execution_log": source_schema_results,
+                    "dest_execution_log": target_schema_results}})
         else:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
                 "Execution_log": {"source_execution_log": None,
                                   "dest_execution_log": None}})
-
     except Exception as e:
         app.logger.error(e)
         return ({"res": ExecutionStatus().get_execution_status_id_by_name(

@@ -36,7 +36,6 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     Returns: Submit the Job to spark
 
     """
-    print("reached datavalidation")
     api_end_point = "datavalidation=" + current_app.config.get(
         'API_END_POINT') + "/api/spark-job-status/{0}".format(
         case_log.test_case_log_id)
@@ -46,7 +45,7 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     mysql_connector = basedir + "/spark/mysql-connector-java.jar"
     postgres_connector = basedir + "/spark/postgresql-42.2.5.jar"
     oracle_db_connector = basedir + "/spark/ojdbc6.jar"
-    py_spark_file = basedir + "/spark/spark_dw.py"
+    py_spark_file = basedir + current_app.config.get('SPARK_FILE')
     src_record_count = current_app.config.get('SPARK_SOURCE_RECORDS_COUNT')
     target_record_count = current_app.config.get('SPARK_TARGET_RECORDS_COUNT')
     thread_count = current_app.config.get('SPARK_THREAD_COUNT')

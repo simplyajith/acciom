@@ -8,12 +8,13 @@ from application.common.constants import SupportedDBType, ExecutionStatus
 
 def qry_generator(columns, target_table):
     """
-    Method to generate a query
+    Method to generate a query from the colums and the table name provided in
+    the args using the algorithm
     Args:
-        columns: columns
-        target_table: table details
+        columns (str): columns of the associted case details
+        target_table(str): table details
 
-    Returns: Method to return the query
+    Returns: Method to return the query generated
 
     """
     sub_query = ""

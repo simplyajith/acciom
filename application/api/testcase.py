@@ -102,7 +102,7 @@ class TestCaseSparkJob(Resource):
             case_log.save_to_db()
             case_test_status = case_log.execution_status = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
-            save_case_log(case, case_log, case_test_status)
+            save_case_log(case_log, case_test_status)
 
         else:
             result_src = json.dumps(parsed_log['result']['src_to_dest'])
@@ -119,7 +119,7 @@ class TestCaseSparkJob(Resource):
                                           (src_count), None,
                                           parsed_log['dest_count'][0],
                                           (target_count), None)
-                save_case_log(case, case_log, case_log_execution_status)
+                save_case_log(case_log, case_log_execution_status)
 
             elif result_count != 0:
                 case_log_execution_status = ExecutionStatus(). \
@@ -131,4 +131,4 @@ class TestCaseSparkJob(Resource):
                                           target_count,
                                           result_des)
 
-                save_case_log(case, case_log, case_log_execution_status)
+                save_case_log(case_log, case_log_execution_status)

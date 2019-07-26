@@ -35,7 +35,7 @@ def export_test_case_log(case_log_id):
             export_response.append(key_list)
             for each_row in source_data:
                 dict_key = ast.literal_eval(each_row)
-                value_list = [x for x in dict_key.values()]
+                value_list = [val for val in dict_key.values()]
                 export_response.append(value_list)
 
         if destination_data["result"] != 'none':
@@ -47,7 +47,7 @@ def export_test_case_log(case_log_id):
             export_response.append(key_list)
             for each_row in destination_data:
                 dict_key = ast.literal_eval(each_row)
-                value_list = [x for x in dict_key.values()]
+                value_list = [val for val in dict_key.values()]
                 export_response.append(value_list)
 
         response = json.dumps(export_response)

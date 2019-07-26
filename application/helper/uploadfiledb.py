@@ -11,12 +11,13 @@ from application.model.models import TestSuite, TestCase
 
 def save_file_to_db(current_user, project_id, data, file):
     """
-
+    Method will save suite details provided in the Excel in the tables(
+    test_case,test_suite_
     Args:
-        current_user:  user_id of current user
-        project_id: project id passed associated with the user
-        data:
-        file:Excel file
+        current_user(Object):  user_id of current user
+        project_id(int): project id passed associated with the user
+        data(data provided in the args parser):
+        file(Excel file object):Excel file
 
     Returns: Parse Excel and save data to db.
 
@@ -26,25 +27,27 @@ def save_file_to_db(current_user, project_id, data, file):
                           test_suite_name=data['suite_name'])
     temp_file.save_to_db()
     sheet = data['sheet_name']
-    wb = load_workbook(filename=BytesIO(file.read()))
-    sheet_index = wb.sheetnames.index(sheet)
-    ws = wb.worksheets[sheet_index]
-    temp_test1 = [str(i - 2) for i in range(2, ws.max_row)]
-    temp_test1.append('-1')
+    workbook = load_workbook(filename=BytesIO(file.read()))
+    sheet_index = workbook.sheetnames.index(sheet)
+    worksheet = workbook.worksheets[sheet_index]
+    temp_data_array = [str(rows - 2) for rows in range(2, worksheet.max_row)]
+    temp_data_array.append('-1')
     # row+1 to avoid index out of range error! Need to change.
     temp_test_dict = {}
-    for i in range(0, ws.max_column):
-        if ((ws[1][i].value) != 'None'):
-            temp_test_dict.update({str(ws[1][i].value): [str(ws[x][i].value)
-                                                         for x in range(2,
-                                                                        ws.max_row)]})
+    for each_col in range(0, worksheet.max_column):
+        if worksheet[1][each_col].value != 'None':
+            temp_test_dict.update(
+                {str(worksheet[1][each_col].value): [
+                    str(worksheet[rows][each_col].value)
+                    for rows in range(2,
+                                      worksheet.max_row)]})
 
     test_case_list = data['selected_case']
-    for j in range(ws.max_row - 1):
-        if int(temp_test1[j]) in test_case_list:
-            test_case_list.remove(int(temp_test1[j]))
+    for each_row in range(worksheet.max_row - 1):
+        if int(temp_data_array[each_row]) in test_case_list:
+            test_case_list.remove(int(temp_data_array[each_row]))
             db_list = split_db(
-                temp_test_dict[current_app.config.get('DBDETAILS')][j])
+                temp_test_dict[current_app.config.get('DBDETAILS')][each_row])
             src_db_id = create_dbconnection(current_user,
                                             db_list['sourcedbType'].lower(),
                                             db_list['sourcedb'],
@@ -56,7 +59,8 @@ def save_file_to_db(current_user, project_id, data, file):
                                                db_list['targetServer'].lower(),
                                                db_list['Targetuser'],
                                                project_id)
-            columndata = temp_test_dict[current_app.config.get('COLUMNS')][j]
+            columndata = temp_test_dict
+            [current_app.config.get('COLUMNS')][each_row]
             column = {}
             if columndata == "None" or columndata.isspace():
                 pass
@@ -64,8 +68,8 @@ def save_file_to_db(current_user, project_id, data, file):
                 if ":" in columndata.strip():
                     remove_column_space = \
                         temp_test_dict[current_app.config.get('COLUMNS')][
-                            j].replace(" ",
-                                       "")
+                            each_row].replace(" ",
+                                              "")
                     split_columns = remove_column_space.split(";")
                     for each_column in split_columns:
                         column_split = each_column.split(":")
@@ -74,34 +78,34 @@ def save_file_to_db(current_user, project_id, data, file):
                 else:
                     remove_column_space = \
                         temp_test_dict[current_app.config.get('COLUMNS')][
-                            j].replace(" ",
-                                       "")
+                            each_row].replace(" ",
+                                              "")
                     column_list = remove_column_space.split(";")
                     column = {}
                     for each_col in range(len(column_list)):
                         column[column_list[each_col]] = column_list[each_col]
             table_list = temp_test_dict[current_app.config.get('TABLES')][
-                j].replace(" ", "").split(":")
+                each_row].replace(" ", "").split(":")
             table = {}
             table[table_list[0]] = table_list[1]
             query = {}
-            custom_queries = temp_test_dict['Custom queries'][j]
+            custom_queries = temp_test_dict['Custom queries'][each_row]
             if not (custom_queries == "None" or custom_queries.isspace()):
                 if ";" in custom_queries:
                     query_split = custom_queries.split(";")
-                    final = [a.split(":") for a in query_split]
+                    final = [each_qry.split(":") for each_qry in query_split]
                     query["sourceqry"] = final[0][1] if 'srcqry' in final[
                         0] else ""
                     query["targetqry"] = final[1][1] if 'targetqry' in final[
                         1] else ""
                 else:
                     if "srcqry:" in custom_queries.lower():
-                        q = custom_queries.strip("srcqry:")
-                        query["sourceqry"] = q
+                        strip_result = custom_queries.strip("srcqry:")
+                        query["sourceqry"] = strip_result
                         query['targetqry'] = ""
                     elif "targetqry:" in custom_queries.lower():
-                        q = custom_queries.strip("targetqry:")
-                        query["targetqry"] = q
+                        strip_result = custom_queries.strip("targetqry:")
+                        query["targetqry"] = strip_result
                         query['sourceqry'] = ""
                     else:
                         query["sourceqry"] = ""
@@ -114,7 +118,7 @@ def save_file_to_db(current_user, project_id, data, file):
                             get_test_class_id_by_name(
                                 temp_test_dict[
                                     current_app.config.get('TESTCLASS')][
-                                    j].lower()),
+                                    each_row].lower()),
                             test_case_detail=jsondict)
             temp.save_to_db()
             data = {

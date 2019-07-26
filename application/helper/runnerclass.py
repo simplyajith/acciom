@@ -63,7 +63,6 @@ def run_by_case_id(test_case_id, user_id):
        """
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
-    print(test_case)
     # print(test_case.test_suite_id)
     # test_suite_id = test_case.test_suite_id
     res = run_test(test_case, user_id)
@@ -166,7 +165,6 @@ def run_test(case_id, user_id):
                                          target_detail['db_username'],
                                          target_detail[
                                              'db_password']).cursor()
-            print("@156")
             result = ddl_check(source_cursor,
                                target_cursor,
                                table_name['src_table'],
@@ -175,14 +173,13 @@ def run_test(case_id, user_id):
                                target_detail['db_type'])
         if case_id.test_case_class == SupportedTestClass(). \
                 get_test_class_id_by_name('datavalidation'):
-            table_name = split_table(case_id.test_case_detail)
-            result = {'res': 0, "Execution_log": None}
+            result = {'res': ExecutionStatus.get_execution_status_id_by_name(
+                'inprogress'), "Execution_log": None}
 
         if result['res'] == ExecutionStatus().get_execution_status_id_by_name(
                 'pass'):
             pass_status = ExecutionStatus().get_execution_status_id_by_name(
                 'pass')
-            print(result['Execution_log'])
             save_test_status(case_id, pass_status)
             case_log.execution_status = pass_status
             data = result['Execution_log']

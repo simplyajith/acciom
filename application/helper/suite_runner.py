@@ -18,6 +18,13 @@ mail = Mail(app)
 
 
 def check_status(case_log_id_list):
+    """
+    Args:
+        case_log_id_list (int):
+
+    Returns:
+
+    """
     if not start_test(case_log_id_list):
         return False
     else:
@@ -84,14 +91,3 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
             suite_name=suite.test_suite_name, suite_id=suite.test_suite_id,
             executed_at=str(current_time.strftime("%c")))
         mail.send(msg)
-
-# def execute_suite_by_id(suite_id, email):
-#     case_log_id_list = []
-#     test_suite = TestSuite.query.filter_by(
-#         test_suite_id=suite_id).first()
-#     for each_test in test_suite.test_case:
-#         res = run_by_case_id(each_test.test_case_id)
-#         case_log_id_list.append(res['result']['test_case_log_id'])
-#
-#     print("After Executing Test all logs:", case_log_id_list)
-#     return_result(case_log_id_list, email, suite_id)
