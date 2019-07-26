@@ -56,7 +56,6 @@ class DbDetails(Resource):
                                                help=APIMessages.PARSER_MESSAGE)
             db_detail = post_db_detail_parser.parse_args()
             list_of_args = [arg.name for arg in post_db_detail_parser.args]
-            # Checking if fields are empty
             request_data_validation = validate_empty_fields(db_detail,
                                                             list_of_args)
             if request_data_validation:
@@ -65,7 +64,6 @@ class DbDetails(Resource):
                                     http_status_code=STATUS_BAD_REQUEST,
                                     data={})
             db_password = encrypt(db_detail["db_password"])
-
             new_db = DbConnection(project_id=db_detail["project_id"],
                                   owner_id=session.user_id,
                                   db_connection_name=db_detail[

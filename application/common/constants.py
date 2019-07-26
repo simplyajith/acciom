@@ -23,8 +23,10 @@ class APIMessages:
     NEW_TOKEN = "Access Token is generated"
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
-    CREATE_RESOURCE = "{} is successfully created"
+    ADD_DATA = "Data Added"
+    RETURN_SUCCESS = "success"
     PARSER_MESSAGE = "field is required"
+    CREATE_RESOURCE = "{} is successfully created"
     UPDATE_RESOURCE = "{} is updated successfully"
     SUCCESS = "success"
     NO_RESOURCE = "{} is not available"
@@ -37,7 +39,6 @@ class APIMessages:
     CONNECTION_CANNOT_CREATE = "Connection could not be created"
     NO_DB_UNDER_PROJECT = "No db details exist under this project id"
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
-    RETURN_SUCCESS = "success"
     DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
                    " are postgresql, mysql, mssql, oracle, sqlite"
 
@@ -70,7 +71,6 @@ class SupportedDBType:
             db_id: (int) Id of the DB
 
         Returns:(str) name of the database
-
         """
         # Returns None if Id does not exist
         return self.supported_db_type.get(db_id)
@@ -81,7 +81,6 @@ class SupportedDBType:
 
         Args:
             name: (str) name of the database
-
         Returns: (int) Id of the database
         """
         for key, value in self.supported_db_type.items():
@@ -103,7 +102,6 @@ class SupportedTestClass:
 
         Args:
             test_class_id: (int) Id of the test class
-
         Returns: (str) name of the test class
         """
         return self.supported_test_class.get(test_class_id)
@@ -114,7 +112,6 @@ class SupportedTestClass:
 
         Args:
             name: (str) name of the test class
-
         Returns: (int) Id of the test class
         """
         for key, value in self.supported_test_class.items():
@@ -136,7 +133,6 @@ class ExecutionStatus:
             execution_id: (int) Id of the status
 
         Returns:(str) Execution status
-
         """
         return self.execution_status.get(execution_id)
 

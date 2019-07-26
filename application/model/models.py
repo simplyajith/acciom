@@ -211,6 +211,8 @@ class TestSuite(db.Model):
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
+    test_case = db.relationship("TestCase",
+                                back_populates='test_suite', lazy=True)
 
     def __init__(self, project_id, owner_id, excel_name, test_suite_name):
         self.project_id = project_id
@@ -231,15 +233,17 @@ class TestCase(db.Model):
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     test_case_class = db.Column(db.SMALLINT, nullable=False)
     latest_execution_status = db.Column(db.SMALLINT,
-                                        nullable=False, default='new')
+                                        nullable=False,
+                                        default=ExecutionStatus().
+                                        get_execution_status_id_by_name('new'))
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     test_case_detail = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
-
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
+    test_suite = db.relationship(TestSuite,
+                                 back_populates='test_case', lazy=True)
+    test_case_log = db.relationship("TestCaseLog",
+                                    back_populates='test_cases', lazy=True)
 
     def __init__(self, test_suite_id, owner_id, test_case_class,
                  test_case_detail):
@@ -247,6 +251,10 @@ class TestCase(db.Model):
         self.owner_id = owner_id
         self.test_case_class = test_case_class
         self.test_case_detail = test_case_detail
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Job(db.Model):
@@ -284,6 +292,8 @@ class TestCaseLog(db.Model):
     execution_log = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now, index=True)
+    test_cases = db.relationship(TestCase,
+                                 back_populates='test_case_log', lazy=True)
 
     def __init__(self, test_case_id, job_id, execution_status=ExecutionStatus(
     ).get_execution_status_id_by_name("new")):
@@ -299,11 +309,11 @@ class TestCaseLog(db.Model):
 class PersonalToken(db.Model):
     __tablename__ = 'personal_token'
     personal_token_id = db.Column(db.Integer, primary_key=True)
+
     user_id = db.Column(db.ForeignKey('user.user_id'), index=True,
                         nullable=False)
     encrypted_personal_token = db.Column(db.String(256), unique=True,
-                                         index=True,
-                                         nullable=False)
+                                         index=True, nullable=False)
     note = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 

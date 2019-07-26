@@ -1,9 +1,8 @@
-from flask_restful import Resource
-
 from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
 from application.model.models import User
+from flask_restful import Resource
 
 
 class Login(Resource):

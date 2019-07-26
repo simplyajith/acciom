@@ -2,14 +2,13 @@ import functools
 import logging
 from base64 import b64decode
 
+from application.common.constants import APIMessages
+from application.common.response import api_response
+from application.model.models import User
 from flask import current_app
 from flask_restful import reqparse
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, SignatureExpired, BadSignature)
-
-from application.common.constants import APIMessages
-from application.common.response import api_response
-from application.model.models import User
 
 logger = logging.getLogger(__name__)
 
