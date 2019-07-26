@@ -2,12 +2,16 @@
 import os
 
 from flask import send_from_directory
-from application.api.project import ProjectAPI
-from application.api.organization import OrganizationAPI
-from application.api.login import (Login, LogOut, AddUser)
-from application.model.models import db
-from application.api.dbdetail import DbDetails
+
 from application.api.checkconnection import CheckConnection
+from application.api.dbdetail import DbDetails
+from application.api.login import (Login, LogOut, AddUser)
+from application.api.organization import OrganizationAPI
+from application.api.project import ProjectAPI
+from application.api.testcase import TestCaseJob, TestCaseSparkJob
+from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
+                                       ExportTestLog)
+from application.model.models import db
 from index import (app, api, static_folder)
 
 db
@@ -38,7 +42,15 @@ def serve(path):
 
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
+api.add_resource(AddUser, '/api/adduser/<string:email>')
+api.add_resource(AddTestSuite, '/api/test-suite')
+api.add_resource(TestCaseJob, '/api/test-case-job')
+api.add_resource(TestCaseSparkJob,
+                 '/api/spark-job-status/<int:test_case_log_id>')
+api.add_resource(TestCaseLogDetail,
+                 '/api/test-case-log/<int:test_case_log_id>')
+api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')
 api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
-api.add_resource(DbDetails,'/api/db-detail')
+api.add_resource(DbDetails, '/api/db-detail')
 api.add_resource(CheckConnection, '/api/check-connection')

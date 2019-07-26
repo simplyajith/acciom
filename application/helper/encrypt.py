@@ -1,4 +1,3 @@
-"""File to handle encrypt operations."""
 import base64
 
 from Crypto import Random
@@ -7,8 +6,9 @@ from Crypto.Protocol.KDF import PBKDF2
 
 from index import app
 
-pad = lambda s: bytes(s + (BS - len(s) % BS) * chr(BS - len(s) % BS), 'utf-8')
 BS = 16
+pad = lambda s: bytes(s + (BS - len(s) % BS) * chr(BS - len(s) % BS), 'utf-8')
+unpad = lambda s: s[0:-ord(s[-1:])]
 
 
 def get_private_key(password):
@@ -38,10 +38,27 @@ def encrypt(raw):
     Returns:
          Returns Encrypted password.
     """
-    print("raw", raw)
     private_key = get_private_key(
         app.config.get('DB_ENCRYPTION_KEY'))
     raw = pad(raw)
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(private_key, AES.MODE_CBC, iv)
-    return base64.b64encode(iv + cipher.encrypt(raw))
+    base64_encoded = base64.b64encode(iv + cipher.encrypt(raw))
+    return str(base64_encoded, 'utf-8')
+
+
+def decrypt(enc):
+    """
+    Method will convert encrypted text from bytes to string format
+    Args:
+        enc(bytes): Recieves encrypted text in bytes.
+
+    Returns: Returns a string format of text from encrypted text
+
+    """
+    private_key = get_private_key(
+        app.config.get('DB_ENCRYPTION_KEY'))
+    enc = base64.b64decode(enc)
+    iv = enc[:16]
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[16:]))
