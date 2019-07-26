@@ -40,11 +40,9 @@ class TestCaseJob(Resource):
             user_id = session.user_id
             parser = reqparse.RequestParser()
             parser.add_argument('suite_id', type=int, required=False,
-                                help=APIMessages.PARSER_MESSAGE.format(
-                                    'suite_id'))
+                                help=APIMessages.PARSER_MESSAGE)
             parser.add_argument('case_id', type=int, required=False,
-                                help=APIMessages.PARSER_MESSAGE.format(
-                                    'case_id'))
+                                help=APIMessages.PARSER_MESSAGE)
             execution_data = parser.parse_args()
 
             if execution_data['suite_id'] and not (execution_data['case_id']):

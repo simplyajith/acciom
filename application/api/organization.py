@@ -1,4 +1,4 @@
-"""File to handle OraganizationAPI calls."""
+"""File to handle Organization API calls."""
 from flask_restful import Resource, reqparse
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
                                          STATUS_OK, STATUS_UNAUTHORIZED)
@@ -13,15 +13,23 @@ class OrganizationAPI(Resource):
 
     @token_required
     def post(self, session):
-        """Post call to create Organization with name and organization Id."""
+        """
+        Post call to create Organization with name.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
         create_org_parser = reqparse.RequestParser(bundle_errors=True)
         create_org_parser.add_argument(
-            'org_name', help=APIMessages.PARSER_MESSAGE.format('org_name'),
+            'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         create_org_data = create_org_parser.parse_args()
         try:
-            create_organization = Organization(
-                org_name=create_org_data['org_name'], owner_id=session.user_id)
+            create_organization = Organization(create_org_data['org_name'],
+                                               session.user_id)
             create_organization.save_to_db()
             organization_data = {'org_id': create_organization.org_id,
                                  'org_name': create_organization.org_name}
@@ -35,13 +43,21 @@ class OrganizationAPI(Resource):
 
     @token_required
     def put(self, session):
-        """PUT call to Update Organization name."""
+        """
+        PUT call to Update Organization name.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
         update_org_parser = reqparse.RequestParser(bundle_errors=True)
         update_org_parser.add_argument(
-            'org_id', help=APIMessages.PARSER_MESSAGE.format('org_id'),
-            required=True, type=int, location='args')
+            'org_id', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=int)
         update_org_parser.add_argument(
-            'org_name', help=APIMessages.PARSER_MESSAGE.format('org_name'),
+            'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         update_org_data = update_org_parser.parse_args()
         try:
@@ -59,7 +75,14 @@ class OrganizationAPI(Resource):
 
     @token_required
     def get(self, session):
-        """PUT call to Update Organization name."""
+        """
+        GET call to retrieve all Organizations.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+        """
         try:
             # TODO: Currently, get call will give all
             #  organizations which are active
@@ -79,7 +102,7 @@ class OrganizationAPI(Resource):
                      'org_name': each_project.org_name})
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
-                {"organization_details_for_user": org_details_to_return})
+                {"organization_details": org_details_to_return})
         except Exception as e:
             return api_response(
                 False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,

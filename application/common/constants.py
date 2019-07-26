@@ -25,12 +25,11 @@ class APIMessages:
     DELETED_USER = "Please contact Admin, your account is not active."
     ADD_DATA = "Data Added"
     RETURN_SUCCESS = "success"
-    PARSER_MESSAGE = "{} field is required"
+    PARSER_MESSAGE = "field is required"
     CREATE_RESOURCE = "{} is successfully created"
     UPDATE_RESOURCE = "{} is updated successfully"
     SUCCESS = "success"
     NO_RESOURCE = "{} is not available"
-
     DB_DETAILS_ADDED = "DbDetails added successfully"
     DATA_LOADED = "Data loaded successfully"
     DBID_NOT_IN_DB = "DB details for DB ID {},does not exist"
@@ -40,13 +39,13 @@ class APIMessages:
     CONNECTION_CANNOT_CREATE = "Connection could not be created"
     NO_DB_UNDER_PROJECT = "No db details exist under this project id"
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
-    RETURN_SUCCESS = "success"
-    PARSER_MESSAGE = "{} field is required"
-    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases are postgresql, mysql, mssql, oracle, sqlite"
+    DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
+                   " are postgresql, mysql, mssql, oracle, sqlite"
 
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
+
     ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
 
 
@@ -73,7 +72,6 @@ class SupportedDBType:
 
         Returns:(str) name of the database
         """
-
         # Returns None if Id does not exist
         return self.supported_db_type.get(db_id)
 
