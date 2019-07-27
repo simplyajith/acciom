@@ -53,8 +53,7 @@ def login_required(method):
         if user_detail.is_deleted:
             return api_response(False, APIMessages.DELETED_USER, 401)
 
-        # TODO: Varify Password
-        if not verify_hash(password, user_detail.password):
+        if not verify_hash(password, user_detail.password_hash):
             return api_response(False, APIMessages.DELETED_USER, 401)
 
         return method(self, user_detail)
