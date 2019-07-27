@@ -1,7 +1,9 @@
 import logging
 import os
 from logging.handlers import RotatingFileHandler
+
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
@@ -33,8 +35,8 @@ def create_app():
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 static_folder = basedir + '/static/acciom_ui/'
-
 app = create_app()
+CORS(app)
 app.url_map.strict_slashes = False
 db = SQLAlchemy(app)
 api = Api(app)
