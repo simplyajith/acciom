@@ -42,6 +42,9 @@ class APIMessages:
     DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
                    " are postgresql, mysql, mssql, oracle, sqlite"
 
+    SOURCE = "source"
+    DESTINATION = "destination"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
