@@ -46,7 +46,7 @@ def serve(path):
 
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
-api.add_resource(AddUser, '/api/adduser/<string:email>')
+api.add_resource(AddUser, '/api/register')
 api.add_resource(AddTestSuite, '/api/test-suite')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,

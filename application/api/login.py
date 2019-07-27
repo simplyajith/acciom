@@ -36,7 +36,7 @@ class LogOut(Resource):
 
 
 class AddUser(Resource):
-    def get(self, email):
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('email',
                             help='This field cannot be blank',
