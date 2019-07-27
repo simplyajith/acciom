@@ -2,13 +2,15 @@ import functools
 import logging
 from base64 import b64decode
 
-from application.common.constants import APIMessages
-from application.common.response import api_response
-from application.model.models import User
 from flask import current_app
 from flask_restful import reqparse
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, SignatureExpired, BadSignature)
+
+from application.common.constants import APIMessages
+from application.common.response import api_response
+from application.helper.generatehash import verify_hash
+from application.model.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +54,8 @@ def login_required(method):
             return api_response(False, APIMessages.DELETED_USER, 401)
 
         # TODO: Varify Password
+        if not verify_hash(password, user_detail.password):
+            return api_response(False, APIMessages.DELETED_USER, 401)
 
         return method(self, user_detail)
 

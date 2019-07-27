@@ -44,6 +44,9 @@ class APIMessages:
     INVALID_PROJECT_ID = " the given project does not exist"
     INVALID_ORG_ID = "the given Organization does not exist "
 
+    SOURCE = "source"
+    DESTINATION = "destination"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""

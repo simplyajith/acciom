@@ -1,8 +1,11 @@
+from flask_restful import Resource
+from flask_restful import reqparse
+
 from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
+from application.helper.generatehash import generate_hash
 from application.model.models import User
-from flask_restful import Resource
 
 
 class Login(Resource):
@@ -34,9 +37,26 @@ class LogOut(Resource):
 
 class AddUser(Resource):
     def get(self, email):
-        user = User(email, email, email, email, True)
-        user.save_to_db()
+        parser = reqparse.RequestParser()
+        parser.add_argument('email',
+                            help='This field cannot be blank',
+                            required=True)
+        parser.add_argument('first_name',
+                            help='This field cannot be blank',
+                            required=True)
 
+        parser.add_argument('last_name',
+                            help='This field cannot be blank',
+                            required=True)
+        parser.add_argument('password',
+                            help='This field cannot be blank',
+                            required=True)
+        user_data = parser.parse_args()
+        user = User(user_data['email'], user_data['first_name'],
+                    user_data['last_name'],
+                    generate_hash(user_data['password']),
+                    True)
+        user.save_to_db()
         data = {"status": True,
                 "message": "success",
                 "data": {"user_id": user.user_id}
