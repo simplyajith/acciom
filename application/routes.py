@@ -11,6 +11,8 @@ from application.api.project import ProjectAPI
 from application.api.testcase import TestCaseJob, TestCaseSparkJob
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
+from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
+from application.api.dashboard import SideBarMenu
 from application.model.models import db
 from index import (app, api, static_folder)
 
@@ -54,3 +56,6 @@ api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')
 api.add_resource(CheckConnection, '/api/check-connection')
+api.add_resource(SideBarMenu, '/api/sidebar-menu')
+api.add_resource(ProjectDQI, '/api/project-data-quality-index')
+api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')

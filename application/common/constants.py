@@ -41,6 +41,8 @@ class APIMessages:
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
     DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
                    " are postgresql, mysql, mssql, oracle, sqlite"
+    INVALID_PROJECT_ID = " the given project does not exist"
+    INVALID_ORG_ID = "the given Organization does not exist "
 
 
 class GenericStrings:
