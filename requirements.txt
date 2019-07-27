@@ -21,7 +21,7 @@ openpyxl==2.5.12
 psycopg2==2.8.3
 psycopg2-binary==2.8.3
 py4j==0.10.7
-pycrypto==2.6.1
+pycryptodome==3.8.2
 PyMySQL==0.9.3
 pyodbc==4.0.26
 pyspark==2.4.3
