@@ -54,7 +54,7 @@ def login_required(method):
             return api_response(False, APIMessages.DELETED_USER, 401)
 
         if not verify_hash(password, user_detail.password_hash):
-            return api_response(False, APIMessages.DELETED_USER, 401)
+            return api_response(False, APIMessages.INVALID_EMAIL_PASSWORD, 401)
 
         return method(self, user_detail)
 
