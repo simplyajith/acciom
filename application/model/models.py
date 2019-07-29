@@ -102,9 +102,9 @@ class UserGroup(db.Model):
     __tablename__ = "user_group"
     user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False,
                         primary_key=True, index=True)
-    org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
+    org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=True,
                        primary_key=True, index=True)
-    project_id = db.Column(db.ForeignKey('project.project_id'), nullable=False,
+    project_id = db.Column(db.ForeignKey('project.project_id'), nullable=True,
                            primary_key=True, index=True)
     group_id = db.Column(db.ForeignKey('group.group_id'), nullable=False,
                          primary_key=True, index=True)
