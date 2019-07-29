@@ -43,6 +43,10 @@ class APIMessages:
     RETURN_SUCCESS = "success"
     PARSER_MESSAGE = "{} field is required"
     DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases are postgresql, mysql, mssql, oracle, sqlite"
+    TEST_CASE_DELETED = "Test case with test case id {} deleted successfully"
+    PASS_TESTCASEID = "Please pass test case id"
+    TEST_CASE_NOT_IN_DB = "Test case details fot TestCase ID {},does not exist"
+    TEST_CASE_DETAILS_UPDATED = "Test case details updated successfully"
 
 
 class GenericStrings:

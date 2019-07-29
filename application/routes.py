@@ -8,7 +8,8 @@ from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser)
 from application.api.organization import OrganizationAPI
 from application.api.project import ProjectAPI
-from application.api.testcase import TestCaseJob, TestCaseSparkJob
+from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
+    EditTestCase
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
 from application.model.models import db
@@ -54,3 +55,4 @@ api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')
 api.add_resource(CheckConnection, '/api/check-connection')
+api.add_resource(EditTestCase, '/api/edit-test-case')
