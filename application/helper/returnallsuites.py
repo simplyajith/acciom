@@ -38,9 +38,9 @@ def return_all_suites(user_id):
             'test_class_id': case_id.test_case_class,
             'test_status': ExecutionStatus().get_execution_status_by_id(
                 case_id.latest_execution_status),
-            'test_case_log': list(map(lambda each_case:
-                                      test_log_to_json(each_case),
-                                      case_id.test_case_log))
+            'test_case_log_list': list(map(lambda each_case:
+                                           test_log_to_json(each_case),
+                                           case_id.test_case_log))
         }
 
     def test_suite_to_json(suite_id):
@@ -57,13 +57,13 @@ def return_all_suites(user_id):
             'test_suite_id': suite_id.test_suite_id,
             'excel_name': suite_id.excel_name,
             'test_suite_name': suite_id.test_suite_name,
-            'created': str(suite_id.created_at)[0:19],
+            'created_at': str(suite_id.created_at)[0:19],
             'test_case_list': list(map(lambda each_case:
                                        test_case_to_json(each_case),
                                        suite_id.test_case))
         }
 
-    return {'test_suite_details': list(
+    return {'test_suite_details_list': list(
         map(lambda suite_id: test_suite_to_json(suite_id),
             TestSuite.query.filter_by(
                 owner_id=user_id)))}
