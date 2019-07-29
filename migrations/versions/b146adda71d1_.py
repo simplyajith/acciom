@@ -173,8 +173,8 @@ def upgrade():
                     ['project_id'], unique=False)
     op.create_table('user_group',
                     sa.Column('user_id', sa.Integer(), nullable=False),
-                    sa.Column('org_id', sa.Integer(), nullable=False),
-                    sa.Column('project_id', sa.Integer(), nullable=False),
+                    sa.Column('org_id', sa.Integer(), nullable=True),
+                    sa.Column('project_id', sa.Integer(), nullable=True),
                     sa.Column('group_id', sa.Integer(), nullable=False),
                     sa.Column('owner_id', sa.Integer(), nullable=False),
                     sa.Column('created_at', sa.DateTime(), nullable=True),
