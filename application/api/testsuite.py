@@ -31,23 +31,19 @@ class AddTestSuite(Resource):
         """
         parser = reqparse.RequestParser()
         parser.add_argument('sheet_name',
-                            help=APIMessages.PARSER_MESSAGE.format(
-                                'sheet_name'),
+                            help=APIMessages.PARSER_MESSAGE,
                             required=True, type=str)
         parser.add_argument('selected_case',
-                            help=APIMessages.PARSER_MESSAGE.format(
-                                'selected_case'),
+                            help=APIMessages.PARSER_MESSAGE,
                             required=True, type=args_as_list, default=[])
         parser.add_argument('suite_name',
-                            help=APIMessages.PARSER_MESSAGE.format(
-                                'suite_name'),
+                            help=APIMessages.PARSER_MESSAGE,
                             required=True, type=str)
         parser.add_argument('execute',
-                            help=APIMessages.PARSER_MESSAGE.format('execute'),
+                            help=APIMessages.PARSER_MESSAGE,
                             required=True)
         parser.add_argument('project_id',
-                            help=APIMessages.PARSER_MESSAGE.format(
-                                "project_id"),
+                            help=APIMessages.PARSER_MESSAGE,
                             required=True)
         test_suite_data = parser.parse_args()
         current_user = session.user_id

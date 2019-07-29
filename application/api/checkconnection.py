@@ -1,3 +1,4 @@
+"""File to check Database connection."""
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -16,8 +17,7 @@ class CheckConnection(Resource):
     @token_required
     def post(self, session):
         """
-          This method to check database connectivity for the given database
-          details.
+          Method to check database connectivity for the given database.
 
         Args:
             session (object):By using this object we can get the user_id.
@@ -30,24 +30,19 @@ class CheckConnection(Resource):
         check_connection_parser = reqparse.RequestParser()
         check_connection_parser.add_argument('db_type_name', required=True,
                                              type=str,
-                                             help=APIMessages.PARSER_MESSAGE
-                                             .format('db_type_name'))
+                                             help=APIMessages.PARSER_MESSAGE)
         check_connection_parser.add_argument('db_hostname', required=True,
                                              type=str,
-                                             help=APIMessages.PARSER_MESSAGE
-                                             .format('db_hostname'))
+                                             help=APIMessages.PARSER_MESSAGE)
         check_connection_parser.add_argument('db_username', required=True,
                                              type=str,
-                                             help=APIMessages.PARSER_MESSAGE
-                                             .format('db_username'))
+                                             help=APIMessages.PARSER_MESSAGE)
         check_connection_parser.add_argument('db_password', required=True,
                                              type=str,
-                                             help=APIMessages.PARSER_MESSAGE
-                                             .format('db_password'))
+                                             help=APIMessages.PARSER_MESSAGE)
         check_connection_parser.add_argument('db_name', required=True,
                                              type=str,
-                                             help=APIMessages.PARSER_MESSAGE
-                                             .format('db_name'))
+                                             help=APIMessages.PARSER_MESSAGE)
         try:
             db_data = check_connection_parser.parse_args()
             list_of_args = [arg.name for arg in check_connection_parser.args]

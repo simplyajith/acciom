@@ -4,6 +4,10 @@ import os
 from flask import send_from_directory
 
 from application.api.checkconnection import CheckConnection
+from application.api.connectiondetail import (ConnectionDetails,
+                                              SelectConnection)
+from application.api.dashboard import SideBarMenu
+from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
 from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser)
 from application.api.organization import OrganizationAPI
@@ -43,7 +47,7 @@ def serve(path):
 
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/loginout')
-api.add_resource(AddUser, '/api/adduser/<string:email>')
+api.add_resource(AddUser, '/api/register')
 api.add_resource(AddTestSuite, '/api/test-suite')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
@@ -55,4 +59,10 @@ api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')
 api.add_resource(CheckConnection, '/api/check-connection')
+
 api.add_resource(EditTestCase, '/api/edit-test-case')
+api.add_resource(ConnectionDetails, '/api/connection-detail/<int:suite_id>')
+api.add_resource(SelectConnection, '/api/select-connection')
+api.add_resource(SideBarMenu, '/api/sidebar-menu')
+api.add_resource(ProjectDQI, '/api/project-data-quality-index')
+api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
