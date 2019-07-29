@@ -28,7 +28,7 @@ def connection_details(current_user, suite_id):
     return payload
 
 
-def select_connection(data, user):
+def select_connection(case_data, user):
     """
     Method will select connection according to condition
     Args:
@@ -37,20 +37,22 @@ def select_connection(data, user):
     Returns: select connection according to condition
 
     """
-    if data['connection_type'] == (APIMessages.SOURCE).lower():
-        for each_case in data['case_id']:
-            testcase = TestCase.query.filter_by(test_case_id=each_case,
-                                                owner_id=user).first()
-            testcase.test_case_detail['src_db_id'] = int(data["db_id"])
-            payload = {"src_db_id": int(data["db_id"])}
-            testcase.test_case_detail.update(payload)
-            testcase.save_to_db()
+    if case_data['connection_type'] == (APIMessages.SOURCE).lower():
+        for each_case in case_data['case_id_list']:
+            testcase_object = TestCase.query.filter_by(test_case_id=each_case,
+                                                       owner_id=user).first()
+            test_case_detail = testcase_object.test_case_detail
+            test_case_detail['src_db_id'] = int(case_data["db_id"])
+            testcase_object.save_to_db()
 
-    elif data['connection_type'] == (APIMessages.DESTINATION).lower():
-        for each_case in data['case_id']:
-            testcase = TestCase.query.filter_by(test_case_id=each_case,
-                                                owner_id=user).first()
-            testcase.test_case_detail['target_db_id'] = data["db_id"]
-            testcase.save_to_db()
+    elif case_data['connection_type'] == (APIMessages.DESTINATION).lower():
+        for each_case in case_data['case_id_list']:
+            testcase_object = TestCase.query.filter_by(test_case_id=each_case,
+                                                       owner_id=user).first()
+            test_case_detail = testcase_object.test_case_detail
+            test_case_detail['target_db_id'] = int(case_data["db_id"])
+            testcase_object.save_to_db()
 
+    testcase_object.test_case_detail = test_case_detail
+    testcase_object.save_to_db()
     return True

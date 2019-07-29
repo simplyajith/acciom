@@ -44,7 +44,7 @@ class SelectConnection(Resource):
             parser.add_argument('connection_type',
                                 help='This field cannot be blank',
                                 required=True)
-            parser.add_argument('case_id',
+            parser.add_argument('case_id_list',
                                 help='This field cannot be blank',
                                 required=True,
                                 type=args_as_list, default=[])

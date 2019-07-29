@@ -33,13 +33,13 @@ class AddTestSuite(Resource):
         parser.add_argument('sheet_name',
                             help=APIMessages.PARSER_MESSAGE,
                             required=True, type=str)
-        parser.add_argument('selected_case',
+        parser.add_argument('case_id_list',
                             help=APIMessages.PARSER_MESSAGE,
                             required=True, type=args_as_list, default=[])
         parser.add_argument('suite_name',
                             help=APIMessages.PARSER_MESSAGE,
                             required=True, type=str)
-        parser.add_argument('execute',
+        parser.add_argument('upload_and_execute',
                             help=APIMessages.PARSER_MESSAGE,
                             required=True)
         parser.add_argument('project_id',
@@ -51,7 +51,7 @@ class AddTestSuite(Resource):
         suite_result = save_file_to_db(current_user,
                                        test_suite_data['project_id'],
                                        test_suite_data, file)
-        if int(test_suite_data['execute']) == 1:
+        if int(test_suite_data['upload_and_execute']) == 1:
             run_by_suite_id(current_user,
                             suite_result['suite_name'].test_suite_id)
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
