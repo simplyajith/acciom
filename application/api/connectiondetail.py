@@ -14,10 +14,16 @@ class ConnectionDetails(Resource):
     """
 
     @token_required
-    def get(self, suite_id, session):
+    def get(self, session):
         try:
+            get_connection_detail = reqparse.RequestParser()
+            get_connection_detail.add_argument('suite_id', required=False,
+                                               type=int,
+                                               location='args')
+            connection_detail = get_connection_detail.parse_args()
             current_user = session.user_id
-            payload = connection_details(current_user, suite_id)
+            payload = connection_details(current_user,
+                                         connection_detail['suite_id'])
             return api_response(True, "success", APIMessages.SUCCESS, payload)
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
@@ -41,19 +47,20 @@ class SelectConnection(Resource):
         """
         try:
             parser = reqparse.RequestParser()
-            parser.add_argument('connection_type',
-                                help='This field cannot be blank',
+            parser.add_argument('connection_reference',
+                                help=APIMessages.PARSER_MESSAGE,
                                 required=True)
             parser.add_argument('case_id_list',
-                                help='This field cannot be blank',
+                                help=APIMessages.PARSER_MESSAGE,
                                 required=True,
                                 type=args_as_list, default=[])
-            parser.add_argument('db_id',
-                                help='This field cannot be blank',
+            parser.add_argument('db_connection_id',
+                                help=APIMessages.PARSER_MESSAGE,
                                 required=True)
             data = parser.parse_args()
             user = session.user_id
             select_connection(data, user)
+
             return api_response("success", True, 200,
                                 APIMessages.RETURN_SUCCESS)
 

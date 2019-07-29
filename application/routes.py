@@ -45,7 +45,7 @@ def serve(path):
 
 
 api.add_resource(Login, '/api/login')
-api.add_resource(LogOut, '/api/loginout')
+api.add_resource(LogOut, '/api/logout')
 api.add_resource(AddUser, '/api/register')
 api.add_resource(AddTestSuite, '/api/test-suite')
 api.add_resource(TestCaseJob, '/api/test-case-job')
@@ -58,7 +58,7 @@ api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')
 api.add_resource(CheckConnection, '/api/check-connection')
-api.add_resource(ConnectionDetails, '/api/connection-detail/<int:suite_id>')
+api.add_resource(ConnectionDetails, '/api/connection-detail')
 api.add_resource(SelectConnection, '/api/select-connection')
 api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')

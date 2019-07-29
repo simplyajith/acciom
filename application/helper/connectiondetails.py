@@ -37,20 +37,22 @@ def select_connection(case_data, user):
     Returns: select connection according to condition
 
     """
-    if case_data['connection_type'] == (APIMessages.SOURCE).lower():
+    if case_data['connection_reference'] == (APIMessages.SOURCE).lower():
         for each_case in case_data['case_id_list']:
             testcase_object = TestCase.query.filter_by(test_case_id=each_case,
                                                        owner_id=user).first()
             test_case_detail = testcase_object.test_case_detail
-            test_case_detail['src_db_id'] = int(case_data["db_id"])
+            test_case_detail['src_db_id'] = int(case_data["db_connection_id"])
             testcase_object.save_to_db()
 
-    elif case_data['connection_type'] == (APIMessages.DESTINATION).lower():
+    elif case_data['connection_reference'] == (
+            APIMessages.DESTINATION).lower():
         for each_case in case_data['case_id_list']:
             testcase_object = TestCase.query.filter_by(test_case_id=each_case,
                                                        owner_id=user).first()
             test_case_detail = testcase_object.test_case_detail
-            test_case_detail['target_db_id'] = int(case_data["db_id"])
+            test_case_detail['target_db_id'] = int(
+                case_data["db_connection_id"])
             testcase_object.save_to_db()
 
     testcase_object.test_case_detail = test_case_detail
