@@ -53,6 +53,7 @@ class APIMessages:
     SOURCE = "source"
     DESTINATION = "destination"
     PROJECT_NOT_EXIST = "Project does not exists"
+    SUITE_NOT_EXIST = "suite does not exists"
 
 
 class GenericStrings:
