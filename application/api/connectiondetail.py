@@ -55,6 +55,7 @@ class DbConnection(Resource):
      associated with the project_id
     """
 
+    @token_required
     def get(self):
         """
         Method will give all the db_connection_ids associated with the
@@ -91,6 +92,7 @@ class CaseDetails(Resource):
     test_Suite_id
     """
 
+    @token_required
     def get(self):
         """
         Method will return all the case_ids associated with

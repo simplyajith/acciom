@@ -7,7 +7,7 @@ def return_all_suites(project_id):
     """
     Method that returns all the suite, case details associated with the user.
     Args:
-        user_id: user_id of the api caller
+        project_id (int): project_id of the api caller
 
     Returns: returns suite details and test_case details of the user
 
