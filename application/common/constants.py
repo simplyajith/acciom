@@ -52,6 +52,9 @@ class APIMessages:
 
     SOURCE = "source"
     DESTINATION = "destination"
+    EMAIL_NOT_CORRECT = "Your Email id is not correct"
+    MAIL_SENT = "Mail sent your Email id"
+    PAGE_TO_PASSWORD_RESET = "Page to password reset"
 
 
 class GenericStrings:

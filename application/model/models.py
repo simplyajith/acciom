@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.dialects.postgresql import JSON
 
 from application.common.constants import ExecutionStatus
@@ -37,6 +39,10 @@ class User(db.Model):
         self.last_name = last_name
         self.password_hash = password_hash
         self.is_verified = is_verified
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config.get('SECRET_KEY'), expires_sec)
+        return s.dumps({'user_id': self.user_id}).decode('utf-8')
 
 
 class Organization(db.Model):
