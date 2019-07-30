@@ -1,11 +1,16 @@
+import secrets
+
 from flask_restful import Resource
 from flask_restful import reqparse
 
+from application.common.constants import APIMessages
+from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
 from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
+from application.helper.encrypt import encrypt
 from application.helper.generatehash import generate_hash
-from application.model.models import User
+from application.model.models import User, PersonalToken
 
 
 class Login(Resource):
@@ -62,3 +67,44 @@ class AddUser(Resource):
                 "data": {"user_id": user.user_id}
                 }
         return data, 200
+
+
+class GetToken(Resource):
+    """
+     Class will be used to generate a unique token for the user to be used in
+      jenkins and stored procedure related calls
+    """
+
+    @token_required
+    def get(self, session):
+        """
+        Method will be a get call used to generate a token for the user and
+        store that with the user reference in the PersonalToken page.
+
+        Args:
+            session (Obj): session Object will contain the user detail used to
+            associate the user with the token.
+
+        Returns: generate a token that will be associated to the user
+
+        """
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('message',
+                                help=APIMessages.PARSER_MESSAGE,
+                                required=True)
+            token_generation_data = parser.parse_args()
+            token = secrets.token_hex()
+            encrypt_token = encrypt(token)
+            message = token_generation_data['message']
+            user_id = session.user_id
+            personal_token_obj = PersonalToken(user_id, encrypt_token, message)
+            personal_token_obj.save_to_db()
+            payload = {"personal_access_token": token}
+            return api_response(
+                True, APIMessages.CREATE_RESOURCE.format('token'),
+                STATUS_CREATED, payload)
+        except Exception as e:
+            return api_response(
+                False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
+                {'error_log': str(e)})
