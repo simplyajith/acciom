@@ -9,11 +9,12 @@ from application.api.connectiondetail import (SelectConnection, DbConnection,
 from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
 from application.api.dbdetail import DbDetails
-from application.api.login import (Login, LogOut, AddUser, ChangePassword)
+from application.api.login import (Login, LogOut, AddUser, GetToken,
+                                   ChangePassword)
 from application.api.organization import OrganizationAPI
 from application.api.project import ProjectAPI
-from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
-    EditTestCase
+from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
+                                      EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
 from application.model.models import db
@@ -66,4 +67,6 @@ api.add_resource(SelectConnection, '/api/select-connection')
 api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')
 api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
+api.add_resource(GetToken, '/api/generate-token')
+api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
 api.add_resource(ChangePassword, '/api/change-password')
