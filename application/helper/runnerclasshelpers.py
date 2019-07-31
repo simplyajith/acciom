@@ -73,38 +73,6 @@ def get_column(columns):
     return column
 
 
-def save_case_log_information(case_log, case_log_execution_status,
-                              source_count, src_to_dest, src_log,
-                              dest_count, dest_to_src, dest_log):
-    """
-    Save log information from spark to the TestCaseLog Table
-    Args:
-        case_log: caselog object
-        source_count: source table count
-        src_to_dest: source and target table diffrence
-        src_log: source log
-        dest_count: target table count
-        dest_to_src: target and source table diffrence
-        dest_log: target table log
-
-    Returns: Submit the log to the TestCaseLog Table
-
-    """
-    case_log.execution_status = case_log_execution_status
-    if src_log == '[]':
-        src_log = None
-    elif dest_log == '[]':
-        dest_log = None
-    spark_job_data = {"source_execution_log": src_log,
-                      "dest_execution_log": dest_log,
-                      "src_count": source_count,
-                      "src_to_dest_count": src_to_dest,
-                      "dest_count": dest_count,
-                      "dest_to_src_count": dest_to_src}
-    case_log.execution_log = spark_job_data
-    case_log.save_to_db()
-
-
 def save_case_log(case_log, case_log_execution_status):
     """
     Methods to store case_log execution details in testcase table

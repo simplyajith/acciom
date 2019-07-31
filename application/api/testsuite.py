@@ -53,7 +53,7 @@ class AddTestSuite(Resource):
                                        test_suite_data, file)
         if int(test_suite_data['upload_and_execute']) == 1:
             run_by_suite_id(current_user,
-                            suite_result['suite_name'].test_suite_id)
+                            suite_result['Suite'].test_suite_id)
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required
