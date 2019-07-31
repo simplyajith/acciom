@@ -49,6 +49,8 @@ class APIMessages:
                    " are postgresql, mysql, mssql, oracle, sqlite"
     INVALID_PROJECT_ID = " the given project does not exist"
     INVALID_ORG_ID = "the given Organization does not exist "
+    RESOURCE_EXISTS = "{} already exists"
+    NO_PERMISSION = "User does not have required permissions"
 
     SOURCE = "source"
     DESTINATION = "destination"

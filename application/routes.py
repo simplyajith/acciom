@@ -12,6 +12,7 @@ from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser)
 from application.api.organization import OrganizationAPI
 from application.api.project import ProjectAPI
+from application.api.group import GroupAPI
 from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
     EditTestCase
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
@@ -66,3 +67,4 @@ api.add_resource(SelectConnection, '/api/select-connection')
 api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')
 api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
+api.add_resource(GroupAPI, '/api/group')

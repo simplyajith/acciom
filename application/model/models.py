@@ -88,8 +88,8 @@ class Group(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, project_name, org_id, owner_id):
-        self.project_name = project_name
+    def __init__(self, name, org_id, owner_id):
+        self.name = name
         self.org_id = org_id
         self.owner_id = owner_id
 
@@ -133,6 +133,10 @@ class Permission(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
+    # sqlalchemy ORM relation
+    group_permission = db.relationship("GroupPermission",
+                                 back_populates='permission', lazy=True)
+
     def __init__(self, name, description, owner_id):
         self.name = name
         self.description = description
@@ -154,6 +158,10 @@ class GroupPermission(db.Model):
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
+
+    # sqlalchemy ORM relation
+    permission = db.relationship("Permission",
+                                 back_populates='group_permission', lazy=True)
 
     def __init__(self, org_id, group_id, permission_id, owner_id):
         self.org_id = org_id
