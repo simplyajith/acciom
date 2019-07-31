@@ -19,7 +19,8 @@ from application.helper.runnerclass import (run_by_case_id)
 from application.helper.runnerclasshelpers import (save_case_log_information,
                                                    save_case_log,
                                                    save_job_status)
-from application.model.models import TestCaseLog, TestCase, DbConnection
+from application.model.models import TestCaseLog, TestCase, DbConnection, \
+    PersonalToken
 from index import db
 
 
@@ -371,6 +372,54 @@ class EditTestCase(Resource):
                                 STATUS_SERVER_ERROR,
                                 {'error_log': str(e)})
         except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
+class TestCaseJobExternal(Resource):
+    """
+    class to  Execute the job from external source
+    """
+
+    @token_required
+    def post(self, session):
+        """
+        Method to execute the job from external source by the use of token
+        generated from the user
+        Args:
+            session (Obj): session obj will give the user_id
+
+        Returns:  execute the job from external source by the use of token
+        generated from the user
+
+        """
+        try:
+            user_id = session.user_id
+            parser = reqparse.RequestParser()
+            parser.add_argument('suite_id', type=int, required=False,
+                                help=APIMessages.PARSER_MESSAGE)
+            # parser.add_argument('case_id', type=int, required=False,
+            #                     help=APIMessages.PARSER_MESSAGE)
+            # todo pass [] of case
+            parser.add_argument('token', type=str, required=True,
+                                help=APIMessages.PARSER_MESSAGE)
+            execution_data = parser.parse_args()
+            token = execution_data['token']
+
+            personal_token_obj = PersonalToken.query.filter_by(
+                encrypted_personal_token=token).first()
+            if personal_token_obj.user_id == user_id:
+                is_external = True
+                run_by_suite_id(user_id, execution_data['suite_id'],
+                                is_external)
+                return api_response(True, APIMessages.RETURN_SUCCESS,
+                                    STATUS_CREATED)
+            else:
+                return api_response(False, APIMessages.TOKEN_MISMATCH,
+                                    STATUS_SERVER_ERROR)
+        except Exception as e:
+            print(e)
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR,
                                 {'error_log': str(e)})

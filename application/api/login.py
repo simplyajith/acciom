@@ -8,7 +8,6 @@ from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
 from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
-from application.helper.encrypt import encrypt
 from application.helper.generatehash import generate_hash
 from application.model.models import User, PersonalToken
 
@@ -95,10 +94,9 @@ class GetToken(Resource):
                                 required=True)
             token_generation_data = parser.parse_args()
             token = secrets.token_hex()
-            encrypt_token = encrypt(token)
             message = token_generation_data['message']
             user_id = session.user_id
-            personal_token_obj = PersonalToken(user_id, encrypt_token, message)
+            personal_token_obj = PersonalToken(user_id, token, message)
             personal_token_obj.save_to_db()
             payload = {"personal_access_token": token}
             return api_response(

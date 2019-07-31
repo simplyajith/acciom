@@ -52,6 +52,7 @@ class APIMessages:
 
     SOURCE = "source"
     DESTINATION = "destination"
+    TOKEN_MISMATCH = "Token Mismatch"
 
 
 class GenericStrings:

@@ -2,7 +2,7 @@ from application.helper.runnerclass import run_by_case_id
 from application.model.models import TestSuite
 
 
-def run_by_suite_id(current_user, suite_id):
+def run_by_suite_id(current_user, suite_id, is_external=False):
     """
     Method will run suite by Id
 
@@ -16,5 +16,5 @@ def run_by_suite_id(current_user, suite_id):
     test_suite = TestSuite.query.filter_by(
         test_suite_id=suite_id).first()
     for each_test in test_suite.test_case:
-        run_by_case_id(each_test.test_case_id, current_user)
+        run_by_case_id(each_test.test_case_id, current_user, is_external)
     return True
