@@ -67,7 +67,6 @@ class GroupAPI(Resource):
                     group_id=new_group.group_id, permission_id=each_permission,
                     owner_id=session.user_id)
                 add_adroup_permission.save_to_db()
-
             payload = {'group_name': new_group.name,
                        'group_id': new_group.group_id,
                        'permissions_granted': valid_permissions}
@@ -154,7 +153,7 @@ def check_permission_exists(permission_id_given_by_user):
     Check if permission Id exists in DB.
 
     Args:
-        permission_id_given_by_user (list): List of permission Ids
+        permission_id_given_by_user (set): Set of permission Ids
 
     Returns: list of permission name if provided permission Ids are valid
     Tuple of invalid peermission and permission name in case on invalid
