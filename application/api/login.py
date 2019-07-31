@@ -7,18 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_CREATED, STATUS_SERVER_ERROR)
-from application.common.token import (login_required, generate_auth_token)
-from application.common.token import token_required
-from application.common.utils import (verify_hash, generate_hash)
-from application.common.constants import APIMessages
-from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
-from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
-from application.helper.generatehash import generate_hash
-from application.model.models import User
-from index import db
+from application.common.utils import (send_reset_email, verify_reset_token)
+from application.common.utils import (verify_hash, generate_hash)
 from application.model.models import User, PersonalToken
+from index import db
 
 
 class Login(Resource):
@@ -77,6 +71,43 @@ class AddUser(Resource):
         return data, 200
 
 
+class ForgotPassword(Resource):
+    """ To handle POST API, to send Email for reseting password."""
+
+    def post(self):
+        """
+        To send Email to the registered user to reset password.
+
+        Returns:
+            Standard API Response with message(returns message saying that
+            Mail sent to your Email id) and http status code.
+        """
+        try:
+            post_email_parser = reqparse.RequestParser(bundle_errors=True)
+            post_email_parser.add_argument('email', required=True,
+                                           type=str,
+                                           help=APIMessages.PARSER_MESSAGE)
+            email_data = post_email_parser.parse_args()
+            user = User.query.filter_by(email=email_data['email']).first()
+            if user is None:
+                return api_response(False,
+                                    APIMessages.EMAIL_NOT_CORRECT,
+                                    STATUS_BAD_REQUEST)
+            else:
+                send_reset_email(user)
+            return api_response(True, APIMessages.MAIL_SENT,
+                                STATUS_CREATED)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
 class ChangePassword(Resource):
     """To change the user password"""
 
@@ -116,6 +147,90 @@ class ChangePassword(Resource):
             current_user_object.save_to_db()
             return api_response(True, APIMessages.PASSWORD_CHANGE,
                                 STATUS_CREATED)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
+class ForgotPasswordVerifyToken(Resource):
+    """To handle GET API, to verify the token provided by the user."""
+
+    def get(self):
+        """
+        verify token given by the user and send user to Password Reset page.
+
+        Returns:
+            Standard API Response with message(returns message saying that
+            Page to password reset) and http status code.
+        """
+        try:
+            get_token_parser = reqparse.RequestParser()
+            get_token_parser.add_argument('token', required=False,
+                                          type=str,
+                                          location='args')
+
+            get_token = get_token_parser.parse_args()
+            token = get_token.get("token")
+            token_dic = {"token": token}
+            user = verify_reset_token(token)
+            if user is None:
+                return api_response(False,
+                                    APIMessages.INVALID_TOKEN,
+                                    STATUS_BAD_REQUEST)
+            else:
+                return api_response(True, APIMessages.PAGE_TO_PASSWORD_RESET,
+                                    STATUS_CREATED, token_dic)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
+class ResetPassword(Resource):
+    """ To handle POST API,to Reset user Password."""
+
+    def post(self):
+        """
+        To Reset the user password and update in database.
+
+        Returns:
+            Standard API Response with message(returns message saying that
+            Password changed successfully) and http status code.
+        """
+        try:
+            post_parser = reqparse.RequestParser(bundle_errors=True)
+            post_parser.add_argument('password', required=True,
+                                     type=str,
+                                     help=APIMessages.PARSER_MESSAGE)
+            post_parser.add_argument('confirm_password', required=True,
+                                     type=str,
+                                     help=APIMessages.PARSER_MESSAGE)
+            post_parser.add_argument('token', required=True,
+                                     type=str,
+                                     help=APIMessages.PARSER_MESSAGE)
+            email_data = post_parser.parse_args()
+            user = verify_reset_token(email_data['token'])
+            if user is None:
+                return api_response(False,
+                                    APIMessages.INVALID_TOKEN,
+                                    STATUS_BAD_REQUEST)
+            else:
+                password = generate_hash(email_data['password'])
+                user.password_hash = password
+                user.save_to_db()
+                return api_response(True, APIMessages.PASSWORD_CHANGE,
+                                    STATUS_CREATED)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,
