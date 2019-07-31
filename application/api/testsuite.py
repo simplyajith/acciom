@@ -12,6 +12,7 @@ from application.helper.exportTestcaselog import export_test_case_log
 from application.helper.returnallsuites import return_all_suites
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
+from application.model.models import Project
 
 
 class AddTestSuite(Resource):
@@ -68,11 +69,21 @@ class AddTestSuite(Resource):
         Returns: returns suite level details of associated user
         """
         try:
-            uid = session.user_id
-            data = {"suites": return_all_suites(uid)}
-            return api_response(True, APIMessages.RETURN_SUCCESS,
-                                STATUS_CREATED, data)
-
+            get_project_id_parser = reqparse.RequestParser()
+            get_project_id_parser.add_argument('project_id', required=False,
+                                               type=int,
+                                               location='args')
+            project_id = get_project_id_parser.parse_args()
+            print(project_id)
+            project_obj = Project.query.filter_by(
+                project_id=project_id['project_id']).first()
+            if not project_obj:
+                return api_response(True, APIMessages.PROJECT_NOT_EXIST,
+                                    STATUS_SERVER_ERROR)
+            else:
+                data = {"suites": return_all_suites(project_id['project_id'])}
+                return api_response(True, APIMessages.RETURN_SUCCESS,
+                                    STATUS_CREATED, data)
         except Exception as e:
             app.logger.debug(str(e))
             return api_response(True, APIMessages.INTERNAL_ERROR,
