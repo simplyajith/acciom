@@ -3,11 +3,11 @@ from application.common.constants import SupportedTestClass
 from application.model.models import TestSuite
 
 
-def return_all_suites(user_id):
+def return_all_suites(project_id):
     """
     Method that returns all the suite, case details associated with the user.
     Args:
-        user_id: user_id of the api caller
+        project_id (int): project_id of the api caller
 
     Returns: returns suite details and test_case details of the user
 
@@ -66,4 +66,4 @@ def return_all_suites(user_id):
     return {'test_suite_details_list': list(
         map(lambda suite_id: test_suite_to_json(suite_id),
             TestSuite.query.filter_by(
-                owner_id=user_id)))}
+                project_id=project_id)))}
