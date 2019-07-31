@@ -16,10 +16,11 @@ from application.common.runbysuiteid import run_by_suite_id, \
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
-from application.helper.runnerclass import (run_by_case_id)
-from application.helper.runnerclasshelpers import (save_case_log_information,
-                                                   save_case_log,
-                                                   save_job_status)
+from application.helper.runnerclass import (run_by_case_id,
+                                            save_case_log_information)
+from application.helper.runnerclasshelpers import (
+    save_case_log,
+    save_job_status)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
                                       PersonalToken)
 from index import db
@@ -124,7 +125,8 @@ class TestCaseSparkJob(Resource):
                                           parsed_log['src_count'][0],
                                           (src_count), None,
                                           parsed_log['dest_count'][0],
-                                          (target_count), None)
+                                          (target_count), None,
+                                          case_log.test_case_id)
                 save_case_log(case_log, case_log_execution_status)
                 save_job_status(case_log, case_log_execution_status)
 
@@ -136,7 +138,7 @@ class TestCaseSparkJob(Resource):
                                           src_count, result_src,
                                           parsed_log['dest_count'][0],
                                           target_count,
-                                          result_des)
+                                          result_des, case_log.test_case_id)
 
                 save_case_log(case_log, case_log_execution_status)
                 save_job_status(case_log, case_log_execution_status)
