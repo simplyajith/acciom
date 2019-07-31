@@ -2,13 +2,22 @@ import secrets
 
 from flask_restful import Resource
 from flask_restful import reqparse
+from sqlalchemy.exc import SQLAlchemyError
 
+from application.common.constants import APIMessages
+from application.common.response import (api_response, STATUS_BAD_REQUEST,
+                                         STATUS_CREATED, STATUS_SERVER_ERROR)
+from application.common.token import (login_required, generate_auth_token)
+from application.common.token import token_required
+from application.common.utils import (verify_hash, generate_hash)
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
 from application.common.response import api_response
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
 from application.helper.generatehash import generate_hash
+from application.model.models import User
+from index import db
 from application.model.models import User, PersonalToken
 
 
@@ -66,6 +75,56 @@ class AddUser(Resource):
                 "data": {"user_id": user.user_id}
                 }
         return data, 200
+
+
+class ChangePassword(Resource):
+    """To change the user password"""
+
+    @token_required
+    def post(self, session):
+        """
+         To change the password for the user and updating new password in
+         database
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that password successfully changed) and http status code.
+
+        """
+        try:
+            post_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
+            post_db_detail_parser.add_argument('old_password', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE)
+            post_db_detail_parser.add_argument('new_password', required=True,
+                                               type=str,
+                                               help=APIMessages.PARSER_MESSAGE)
+
+            password_data = post_db_detail_parser.parse_args()
+            current_user_id = session.user_id
+            current_user_object = db.session.query(User).get(current_user_id)
+            if not verify_hash(password_data['old_password'],
+                               current_user_object.password_hash):
+                return api_response(False,
+                                    APIMessages.INVALID_PASSWORD,
+                                    STATUS_BAD_REQUEST)
+            current_user_object.password_hash = generate_hash(
+                password_data['new_password'])
+            current_user_object.save_to_db()
+            return api_response(True, APIMessages.PASSWORD_CHANGE,
+                                STATUS_CREATED)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
 
 
 class GetToken(Resource):

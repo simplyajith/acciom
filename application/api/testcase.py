@@ -12,7 +12,7 @@ from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.runbysuiteid import run_by_suite_id, \
-    run_by_case_id_list
+    execute_external_job
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
@@ -21,7 +21,7 @@ from application.helper.runnerclasshelpers import (save_case_log_information,
                                                    save_case_log,
                                                    save_job_status)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
-                                      PersonalToken, TestSuite)
+                                      PersonalToken)
 from index import db
 
 
@@ -415,21 +415,16 @@ class TestCaseJobExternal(Resource):
                 encrypted_personal_token=token).first()
             if execution_data['case_id_list'] and not execution_data[
                 'suite_id']:
-                case_list = execution_data['case_id_list']
-                case_obj = TestCase.query.filter_by(
-                    test_case_id=case_list[0]).first()
-                test_suite_obj = TestSuite.query.filter_by(
-                    test_suite_id=case_obj.test_suite_id).first()
-                case_id_list = [case_id.test_case_id for case_id in
-                                test_suite_obj.test_case]
-                for each_case in execution_data['case_id_list']:
-                    if each_case not in case_id_list:
+                if personal_token_obj.user_id == user_id:
+                    run_result = execute_external_job(user_id,
+                                                      execution_data[
+                                                          'case_id_list'])
+                    if run_result:
+                        return api_response(True, APIMessages.RETURN_SUCCESS,
+                                            STATUS_CREATED)
+                    else:
                         return api_response(False, APIMessages.INTERNAL_ERROR,
                                             STATUS_SERVER_ERROR)
-                run_by_case_id_list(user_id, execution_data['case_id_list'],
-                                    is_external)
-                return api_response(True, APIMessages.RETURN_SUCCESS,
-                                    STATUS_CREATED)
 
             elif execution_data['suite_id'] and not execution_data[
                 'case_id_list']:
