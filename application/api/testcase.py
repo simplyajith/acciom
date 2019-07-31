@@ -11,15 +11,18 @@ from application.common.constants import (APIMessages, ExecutionStatus,
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
-from application.common.runbysuiteid import run_by_suite_id
+from application.common.runbysuiteid import run_by_suite_id, \
+    execute_external_job
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
-from application.helper.runnerclass import (run_by_case_id)
-from application.helper.runnerclasshelpers import (save_case_log_information,
-                                                   save_case_log,
-                                                   save_job_status)
-from application.model.models import TestCaseLog, TestCase, DbConnection
+from application.helper.runnerclass import (run_by_case_id,
+                                            save_case_log_information)
+from application.helper.runnerclasshelpers import (
+    save_case_log,
+    save_job_status)
+from application.model.models import (TestCaseLog, TestCase, DbConnection,
+                                      PersonalToken)
 from index import db
 
 
@@ -122,7 +125,8 @@ class TestCaseSparkJob(Resource):
                                           parsed_log['src_count'][0],
                                           (src_count), None,
                                           parsed_log['dest_count'][0],
-                                          (target_count), None)
+                                          (target_count), None,
+                                          case_log.test_case_id)
                 save_case_log(case_log, case_log_execution_status)
                 save_job_status(case_log, case_log_execution_status)
 
@@ -134,7 +138,7 @@ class TestCaseSparkJob(Resource):
                                           src_count, result_src,
                                           parsed_log['dest_count'][0],
                                           target_count,
-                                          result_des)
+                                          result_des, case_log.test_case_id)
 
                 save_case_log(case_log, case_log_execution_status)
                 save_job_status(case_log, case_log_execution_status)
@@ -370,6 +374,70 @@ class EditTestCase(Resource):
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR,
                                 {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
+class TestCaseJobExternal(Resource):
+    """
+    class to  Execute the job from external source
+    """
+
+    @token_required
+    def post(self, session):
+        """
+        Method to execute the job from external source by the use of token
+        generated from the user
+        Args:
+            session (Obj): session obj will give the user_id
+
+        Returns:  execute the job from external source by the use of token
+        generated from the user
+
+        """
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('suite_id', type=int, required=False,
+                                help=APIMessages.PARSER_MESSAGE,
+                                location="json")
+            parser.add_argument('case_id_list',
+                                required=False,
+                                help=APIMessages.PARSER_MESSAGE,
+                                type=list, default=list(), location="json")
+            parser.add_argument('token', type=str, required=True,
+                                location="json",
+                                help=APIMessages.PARSER_MESSAGE)
+            execution_data = parser.parse_args()
+            user_id = session.user_id
+            is_external = True
+            token = execution_data['token']
+            personal_token_obj = PersonalToken.query.filter_by(
+                encrypted_personal_token=token).first()
+            if execution_data['case_id_list'] and not execution_data[
+                'suite_id']:
+                if personal_token_obj.user_id == user_id:
+                    run_result = execute_external_job(user_id,
+                                                      execution_data[
+                                                          'case_id_list'])
+                    if run_result:
+                        return api_response(True, APIMessages.RETURN_SUCCESS,
+                                            STATUS_CREATED)
+                    else:
+                        return api_response(False, APIMessages.INTERNAL_ERROR,
+                                            STATUS_SERVER_ERROR)
+
+            elif execution_data['suite_id'] and not execution_data[
+                'case_id_list']:
+                if personal_token_obj.user_id == user_id:
+                    run_by_suite_id(user_id, execution_data['suite_id'],
+                                    is_external)
+                    return api_response(True, APIMessages.RETURN_SUCCESS,
+                                        STATUS_CREATED)
+                else:
+                    return api_response(False, APIMessages.TOKEN_MISMATCH,
+                                        STATUS_SERVER_ERROR)
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR,
