@@ -399,8 +399,6 @@ class TestCaseJobExternal(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('suite_id', type=int, required=False,
                                 help=APIMessages.PARSER_MESSAGE)
-            # parser.add_argument('case_id', type=int, required=False,
-            #                     help=APIMessages.PARSER_MESSAGE)
             # todo pass [] of case
             parser.add_argument('token', type=str, required=True,
                                 help=APIMessages.PARSER_MESSAGE)
@@ -419,7 +417,6 @@ class TestCaseJobExternal(Resource):
                 return api_response(False, APIMessages.TOKEN_MISMATCH,
                                     STATUS_SERVER_ERROR)
         except Exception as e:
-            print(e)
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR,
                                 {'error_log': str(e)})
