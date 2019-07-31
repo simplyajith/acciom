@@ -9,7 +9,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 
 from application.common.constants import APIMessages
 from application.common.response import api_response
-from application.helper.generatehash import verify_hash
+from application.common.utils import verify_hash
 from application.model.models import User
 
 logger = logging.getLogger(__name__)

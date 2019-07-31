@@ -28,8 +28,9 @@ def save_test_status(test_case_id, status):
     return True
 
 
-def save_job_status(test_suite_id, user_id):
-    job = Job(test_suite_id=test_suite_id, owner_id=user_id)
+def save_job_status(test_suite_id, user_id, is_external=False):
+    job = Job(test_suite_id=test_suite_id, owner_id=user_id,
+              is_external_trigger=is_external)
     job.save_to_db()
     return job, job.job_id
     # return job_id
@@ -56,7 +57,7 @@ def save_case_log(test_case_id, execution_status,
     return temp_log
 
 
-def run_by_case_id(test_case_id, user_id):
+def run_by_case_id(test_case_id, user_id, is_external=False):
     """
     This runs the case based on its test_case_id
        Args:
@@ -68,11 +69,11 @@ def run_by_case_id(test_case_id, user_id):
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
     test_suite_id = test_case.test_suite_id
-    res = run_test(test_case, user_id, test_suite_id)
+    res = run_test(test_case, user_id, test_suite_id, is_external)
     return {"status": True, "result": res}
 
 
-def run_test(case_id, user_id, test_suite_id):
+def run_test(case_id, user_id, test_suite_id, is_external=False):
     # run_test(case_id, user_id, test_suite_id)
     """
     This method implements the execution of job
@@ -85,7 +86,7 @@ def run_test(case_id, user_id, test_suite_id):
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
     save_test_status(case_id, inprogress)  # case_id saved
-    (job, job_id) = save_job_status(test_suite_id, user_id)
+    (job, job_id) = save_job_status(test_suite_id, user_id, is_external)
     case_log = save_case_log(case_id.test_case_id, inprogress,
                              job_id)
     if case_id.latest_execution_status == ExecutionStatus().get_execution_status_id_by_name(
