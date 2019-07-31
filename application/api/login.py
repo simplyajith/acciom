@@ -11,7 +11,6 @@ from application.common.token import (login_required, token_required,
                                       generate_auth_token)
 from application.common.utils import (send_reset_email, verify_reset_token)
 from application.common.utils import (verify_hash, generate_hash)
-from application.helper.generatehash import generate_hash
 from application.model.models import User, PersonalToken
 from index import db
 
