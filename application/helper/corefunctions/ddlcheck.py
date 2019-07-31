@@ -97,8 +97,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         else:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
-                "Execution_log": {"source_execution_log": None,
-                                  "dest_execution_log": None}})
+                "Execution_log": {
+                    "source_execution_log": source_schema_results,
+                    "dest_execution_log": target_schema_results}})
     except Exception as e:
         app.logger.error(e)
         return ({"res": ExecutionStatus().get_execution_status_id_by_name(

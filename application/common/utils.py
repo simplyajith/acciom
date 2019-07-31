@@ -2,6 +2,7 @@ from flask import current_app
 from flask import render_template
 from flask_mail import Message, Mail
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from passlib.hash import pbkdf2_sha256 as sha256
 
 from application.common.constants import APIMessages
 from application.model.models import DbConnection
@@ -107,3 +108,31 @@ def verify_reset_token(token):
         app.logger.error(e)
         return None
     return User.query.get(user_id)
+
+
+def verify_hash(userpassword, password_in_db):
+    """
+       To verify whether the password entered by the user and password in db
+       are matching or not.
+
+    Args:
+        userpassword(str): Old Password entered by the user.
+        password_in_db(str): Password in db.
+
+    Returns:
+        It returns true if both the passwords matches.
+    """
+    return sha256.verify(userpassword, password_in_db)
+
+
+def generate_hash(userpassword):
+    """
+     To generate hash password.
+
+    Args:
+        userpassword(str):New Password entered by the user.
+
+    Returns:
+        It returns hashed password for the new password enter by the user.
+    """
+    return sha256.hash(userpassword)

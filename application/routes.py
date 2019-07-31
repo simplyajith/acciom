@@ -10,11 +10,12 @@ from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
 from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
-                                   ForgotPasswordVerifyToken, ResetPassword)
+                                   ForgotPasswordVerifyToken, ResetPassword,
+                                   GetToken, ChangePassword)
 from application.api.organization import OrganizationAPI
 from application.api.project import ProjectAPI
-from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
-    EditTestCase
+from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
+                                      EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
 from application.model.models import db
@@ -71,3 +72,6 @@ api.add_resource(ForgotPassword, '/api/forgot-password')
 api.add_resource(ForgotPasswordVerifyToken,
                  '/api/forgot-password-verify-token')
 api.add_resource(ResetPassword, '/api/reset-password')
+api.add_resource(GetToken, '/api/generate-token')
+api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
+api.add_resource(ChangePassword, '/api/change-password')
