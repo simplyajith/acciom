@@ -55,6 +55,8 @@ class APIMessages:
     EMAIL_NOT_CORRECT = "Your Email id is not correct"
     MAIL_SENT = "Mail sent your Email id"
     PAGE_TO_PASSWORD_RESET = "Page to password reset"
+    PROJECT_NOT_EXIST = "Project does not exist"
+    SUITE_NOT_EXIST = "suite does not exist"
 
 
 class GenericStrings:
