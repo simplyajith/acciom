@@ -91,6 +91,7 @@ class AddTestSuite(Resource):
 
 
 class TestCaseLogDetail(Resource):
+    @token_required
     def get(self):
         """
         Method call will return the log of the Executed case based on its
@@ -120,6 +121,7 @@ class ExportTestLog(Resource):
      test_case_log_id
     """
 
+    @token_required
     def get(self):
         """
         Method will Export log to Excel based on the test_case_log_id of the
