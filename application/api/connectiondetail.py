@@ -37,6 +37,7 @@ class SelectConnection(Resource):
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
             data = parser.parse_args()
+            print(data)
             user = session.user_id
             select_connection(data, user)
 
@@ -56,7 +57,7 @@ class DbConnection(Resource):
     """
 
     @token_required
-    def get(self):
+    def get(self, session):
         """
         Method will give all the db_connection_ids associated with the
         project_id which we will pass in the argument
@@ -93,7 +94,7 @@ class CaseDetails(Resource):
     """
 
     @token_required
-    def get(self):
+    def get(self, session):
         """
         Method will return all the case_ids associated with
          the particular case_id provided in the args

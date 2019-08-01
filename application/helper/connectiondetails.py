@@ -13,7 +13,7 @@ def select_connection(case_data, user):
 
     """
     if case_data['connection_reference'] == (APIMessages.SOURCE).lower():
-        for each_case in case_data['case_id_list']:
+        for each_case in list(case_data['case_id_list']):
             testcase_object = TestCase.query.filter_by(test_case_id=each_case,
                                                        owner_id=user).first()
             test_case_detail = testcase_object.test_case_detail
@@ -22,7 +22,7 @@ def select_connection(case_data, user):
 
     elif case_data['connection_reference'] == (
             APIMessages.DESTINATION).lower():
-        for each_case in case_data['case_id_list']:
+        for each_case in list(case_data['case_id_list']):
             testcase_object = TestCase.query.filter_by(test_case_id=each_case,
                                                        owner_id=user).first()
             test_case_detail = testcase_object.test_case_detail
