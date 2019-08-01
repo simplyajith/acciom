@@ -42,7 +42,7 @@ def save_file_to_db(current_user, project_id, data, file):
                     for rows in range(2,
                                       worksheet.max_row)]})
 
-    test_case_list = data['case_id_list']
+    test_case_list = list(data['case_id_list'])
     for each_row in range(worksheet.max_row - 1):
         if int(temp_data_array[each_row]) in test_case_list:
             test_case_list.remove(int(temp_data_array[each_row]))

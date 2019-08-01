@@ -9,11 +9,14 @@ from application.api.connectiondetail import (SelectConnection, DbConnection,
 from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
 from application.api.dbdetail import DbDetails
-from application.api.login import (Login, LogOut, AddUser)
+from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
+                                   ForgotPasswordVerifyToken, ResetPassword,
+                                   GetToken, ChangePassword)
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
-from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
-    EditTestCase
+from application.api.group import GroupAPI
+from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
+                                      EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
 from application.model.models import db
@@ -53,8 +56,8 @@ api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
                  '/api/spark-job-status/<int:test_case_log_id>')
 api.add_resource(TestCaseLogDetail,
-                 '/api/test-case-log/<int:test_case_log_id>')
-api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')
+                 '/api/test-case-log')
+api.add_resource(ExportTestLog, '/api/export')
 api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')
@@ -67,3 +70,11 @@ api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')
 api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
 api.add_resource(DashBoardStatus, '/api/dash-board-status')
+api.add_resource(GroupAPI, '/api/group')
+api.add_resource(ForgotPassword, '/api/forgot-password')
+api.add_resource(ForgotPasswordVerifyToken,
+                 '/api/forgot-password-verify-token')
+api.add_resource(ResetPassword, '/api/reset-password')
+api.add_resource(GetToken, '/api/generate-token')
+api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
+api.add_resource(ChangePassword, '/api/change-password')
