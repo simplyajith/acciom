@@ -14,7 +14,7 @@ from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    GetToken, ChangePassword)
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
-from application.api.group import GroupAPI
+from application.api.role import RoleAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
@@ -70,7 +70,7 @@ api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')
 api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
 api.add_resource(DashBoardStatus, '/api/dash-board-status')
-api.add_resource(GroupAPI, '/api/group')
+api.add_resource(RoleAPI, '/api/role')
 api.add_resource(ForgotPassword, '/api/forgot-password')
 api.add_resource(ForgotPasswordVerifyToken,
                  '/api/forgot-password-verify-token')

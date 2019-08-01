@@ -401,3 +401,5 @@ class Session(db.Model):
         """
         db.session.delete(self)
         db.session.commit()
+
+# Permission("edit_org", "project permission", 1).save_to_db()

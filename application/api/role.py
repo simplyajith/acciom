@@ -1,23 +1,24 @@
-"""File to handle Group API Operations."""
+"""File to handle Role API Operations."""
 from flask_restful import Resource, reqparse
+from sqlalchemy import and_
+
+from application.common.constants import APIMessages
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
                                          STATUS_OK, STATUS_NOT_FOUND,
                                          STATUS_BAD_REQUEST)
-from application.common.constants import APIMessages
-from application.common.token import token_required
-from application.model.models import (Project, Group, Permission,
-                                      GroupPermission)
 from application.common.response import api_response
-from sqlalchemy import and_
+from application.common.token import token_required
+from application.model.models import (Project, Role, Permission,
+                                      RolePermission)
 
 
-class GroupAPI(Resource):
-    """Class to handle Group related GET, POST and PUT APIs."""
+class RoleAPI(Resource):
+    """Class to handle Role related GET, POST and PUT APIs."""
 
     @token_required
     def post(self, session):
         """
-        POST call to Create a  group.
+        POST call to Create a  role.
 
         Args:
             session (object): User session
@@ -25,20 +26,20 @@ class GroupAPI(Resource):
         Returns: Standard API Response with HTTP status code
 
         """
-        create_group_parser = reqparse.RequestParser()
-        create_group_parser.add_argument(
-            'group_name', help=APIMessages.PARSER_MESSAGE, required=True,
+        create_role_parser = reqparse.RequestParser()
+        create_role_parser.add_argument(
+            'role_name', help=APIMessages.PARSER_MESSAGE, required=True,
             type=str, location='json')
-        create_group_parser.add_argument(
+        create_role_parser.add_argument(
             'org_id', help=APIMessages.PARSER_MESSAGE, required=True,
             type=int, location='json')
-        create_group_parser.add_argument(
+        create_role_parser.add_argument(
             'permission_id_list', help=APIMessages.PARSER_MESSAGE,
             required=True, type=list, location='json')
-        create_group_data = create_group_parser.parse_args()
+        create_role_data = create_role_parser.parse_args()
         try:
             permission_id_given_by_user = set(
-                create_group_data['permission_id_list'])
+                create_role_data['permission_id_list'])
             # checking if permissions are valid
             valid_permissions = check_permission_exists(
                 permission_id_given_by_user)
@@ -48,30 +49,31 @@ class GroupAPI(Resource):
                     STATUS_BAD_REQUEST,
                     {'invalid_permissions': list(valid_permissions[0])})
             # TODO: Check if org_id is valid
-            # checking if group_name already exists with given org
-            get_group_details = Group.query.filter(and_(
-                Group.name.ilike(create_group_data['group_name']),
-                Group.org_id == create_group_data['org_id'])).first()
-            if get_group_details:
+            # checking if role_name already exists with given org
+            get_role_details = Role.query.filter(and_(
+                Role.name.ilike(create_role_data['role_name']),
+                Role.org_id == create_role_data['org_id'])).first()
+            if get_role_details:
                 return api_response(
-                    False, APIMessages.RESOURCE_EXISTS.format('Group'),
+                    False, APIMessages.RESOURCE_EXISTS.format('Role'),
                     STATUS_BAD_REQUEST)
-            new_group = Group(
-                name=create_group_data['group_name'],
-                org_id=create_group_data['org_id'], owner_id=session.user_id)
-            new_group.save_to_db()
-            # add permission to group
-            for each_permission in create_group_data['permission_id_list']:
-                add_adroup_permission = GroupPermission(
-                    org_id=create_group_data['org_id'],
-                    group_id=new_group.group_id, permission_id=each_permission,
+            new_role = Role(
+                name=create_role_data['role_name'],
+                org_id=create_role_data['org_id'],
+                owner_id=session.user_id)
+            new_role.save_to_db()
+            # add permission to role
+            for each_permission in create_role_data['permission_id_list']:
+                add_role_permission = RolePermission(
+                    org_id=create_role_data['org_id'],
+                    role_id=new_role.role_id, permission_id=each_permission,
                     owner_id=session.user_id)
-                add_adroup_permission.save_to_db()
-            payload = {'group_name': new_group.name,
-                       'group_id': new_group.group_id,
+                add_role_permission.save_to_db()
+            payload = {'role_name': new_role.name,
+                       'role_id': new_role.role_id,
                        'permissions_granted': valid_permissions}
             return api_response(
-                True, APIMessages.CREATE_RESOURCE.format('Group'),
+                True, APIMessages.CREATE_RESOURCE.format('Role'),
                 STATUS_CREATED, payload)
         except Exception as e:
             return api_response(
@@ -81,7 +83,7 @@ class GroupAPI(Resource):
     @token_required
     def get(self, session):
         """
-        GET call to retrieve group information.
+        GET call to retrieve role information.
 
         Args:
             session (object): User session
@@ -89,31 +91,31 @@ class GroupAPI(Resource):
         Returns: Standard API Response with HTTP status code
 
         """
-        get_group_parser = reqparse.RequestParser()
-        get_group_parser.add_argument(
+        get_role_parser = reqparse.RequestParser()
+        get_role_parser.add_argument(
             'org_id', help=APIMessages.PARSER_MESSAGE,
             type=str, location='args')
-        get_group_parser.add_argument(
+        get_role_parser.add_argument(
             'project_id', help=APIMessages.PARSER_MESSAGE,
             type=str, location='args')
-        get_group_data = get_group_parser.parse_args()
+        get_role_data = get_role_parser.parse_args()
         payload = None
         try:
-            if get_group_data['org_id'] and not get_group_data['project_id']:
-                # get all groups based on org_id
-                # TODO: Returns groups with permission not exceeding the User's
+            if get_role_data['org_id'] and not get_role_data['project_id']:
+                # get all roles based on org_id
+                # TODO: Returns roles with permission not exceeding the User's
                 #  permissions
-                payload = retrieve_groups_under_org(get_group_data['org_id'])
-            if get_group_data['project_id'] and not get_group_data['org_id']:
+                payload = retrieve_roles_under_org(get_role_data['org_id'])
+            if get_role_data['project_id'] and not get_role_data['org_id']:
                 get_project = Project.query.filter_by(
-                    project_id=get_group_data['project_id']).first()
-                payload = retrieve_groups_under_org(get_project.org_id)
+                    project_id=get_role_data['project_id']).first()
+                payload = retrieve_roles_under_org(get_project.org_id)
             if payload:
                 return api_response(True, APIMessages.SUCCESS, STATUS_OK,
-                                    {'groups': payload})
+                                    {'roles': payload})
             else:
                 return api_response(
-                    False, APIMessages.NO_RESOURCE.format('Group'),
+                    False, APIMessages.NO_RESOURCE.format('Role'),
                     STATUS_NOT_FOUND)
         except Exception as e:
             return api_response(
@@ -121,31 +123,31 @@ class GroupAPI(Resource):
                 STATUS_SERVER_ERROR, {'error_log': str(e)})
 
 
-def retrieve_groups_under_org(org_id):
+def retrieve_roles_under_org(org_id):
     """
-    Retrieve Groups for given org Id.
+    Retrieve Roles for given org Id.
 
     Args:
         org_id (int): Id of the organization
 
-    Returns: list of groups with Id, Name and permission names
+    Returns: list of roles with Id, Name and permission names
 
     """
-    groups_to_send = []
-    get_group = Group.query.filter_by(org_id=org_id).all()
-    for each_group in get_group:
-        groups_to_send.append({'group_id': each_group.group_id,
-                               'name': each_group.name,
-                               'permissions': []})
-    for group in groups_to_send:
-        get_group_permission = GroupPermission.query.filter_by(
-            org_id=org_id, group_id=group['group_id']).all()
-        for each_group_permission in get_group_permission:
-            group['permissions'].append(
-                {'permission_id': each_group_permission.permission.
+    roles_to_send = []
+    get_role = Role.query.filter_by(org_id=org_id).all()
+    for each_role in get_role:
+        roles_to_send.append({'role_id': each_role.role_id,
+                              'name': each_role.name,
+                              'permissions': []})
+    for role in roles_to_send:
+        get_role_permission = RolePermission.query.filter_by(
+            org_id=org_id, role_id=role['role_id']).all()
+        for each_role_permission in get_role_permission:
+            role['permissions'].append(
+                {'permission_id': each_role_permission.permission.
                     permission_id,
-                 'permission_name': each_group_permission.permission.name})
-    return groups_to_send
+                 'permission_name': each_role_permission.permission.name})
+    return roles_to_send
 
 
 def check_permission_exists(permission_id_given_by_user):
