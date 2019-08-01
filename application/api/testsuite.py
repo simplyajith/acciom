@@ -3,7 +3,8 @@ from flask import request
 from flask_restful import reqparse, Resource
 
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR)
+from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
+                                         STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.returnlog import return_all_log
 from application.common.runbysuiteid import run_by_suite_id
@@ -12,7 +13,7 @@ from application.helper.exportTestcaselog import export_test_case_log
 from application.helper.returnallsuites import return_all_suites
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
-from application.model.models import Project
+from application.model.models import Project, TestCaseLog
 
 
 class AddTestSuite(Resource):
@@ -92,7 +93,7 @@ class AddTestSuite(Resource):
 
 class TestCaseLogDetail(Resource):
     @token_required
-    def get(self):
+    def get(self, session):
         """
         Method call will return the log of the Executed case based on its
         test_case_log_id
@@ -104,7 +105,14 @@ class TestCaseLogDetail(Resource):
                                        required=True,
                                        type=int,
                                        location='args')
-
+            test_case_logid = test_case_log.parse_args()
+            db_obj = TestCaseLog.query.filter_by(
+                test_case_log_id=test_case_logid['test_case_log_id']).first()
+            if not db_obj:
+                return api_response(False,
+                                    APIMessages.TESTCASELOGID_NOT_IN_DB.format(
+                                        test_case_logid['test_case_log_id']),
+                                    STATUS_BAD_REQUEST)
             test_case_log = test_case_log.parse_args()
             log_data = {"test_case_log": return_all_log(
                 test_case_log['test_case_log_id']),
@@ -122,7 +130,7 @@ class ExportTestLog(Resource):
     """
 
     @token_required
-    def get(self):
+    def get(self, session):
         """
         Method will Export log to Excel based on the test_case_log_id of the
         executed job
@@ -135,5 +143,12 @@ class ExportTestLog(Resource):
                                    type=int,
                                    location='args')
         test_case_log = test_case_log.parse_args()
+        db_obj = TestCaseLog.query.filter_by(
+            test_case_log_id=test_case_log['test_case_log_id']).first()
+        if not db_obj:
+            return api_response(False,
+                                APIMessages.TESTCASELOGID_NOT_IN_DB.format(
+                                    test_case_log['test_case_log_id']),
+                                STATUS_BAD_REQUEST)
 
         return export_test_case_log(test_case_log['test_case_log_id'])
