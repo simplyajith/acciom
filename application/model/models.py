@@ -84,9 +84,9 @@ class Project(db.Model):
         self.owner_id = owner_id
 
 
-class Group(db.Model):
-    __tablename__ = "group"
-    group_id = db.Column(db.Integer, primary_key=True, index=True)
+class Role(db.Model):
+    __tablename__ = "role"
+    role_id = db.Column(db.Integer, primary_key=True, index=True)
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
     name = db.Column(db.String(50), nullable=False)
@@ -104,25 +104,49 @@ class Group(db.Model):
         db.session.commit()
 
 
-class UserGroup(db.Model):
-    __tablename__ = "user_group"
+class UserProjectRole(db.Model):
+    __tablename__ = "user_project_role"
     user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False,
                         primary_key=True, index=True)
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=True,
                        primary_key=True, index=True)
     project_id = db.Column(db.ForeignKey('project.project_id'), nullable=True,
                            primary_key=True, index=True)
-    group_id = db.Column(db.ForeignKey('group.group_id'), nullable=False,
-                         primary_key=True, index=True)
+    role_id = db.Column(db.ForeignKey('role.role_id'), nullable=False,
+                        primary_key=True, index=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, user_id, org_id, project_id, group_id, owner_id):
+    def __init__(self, user_id, org_id, project_id, role_id, owner_id):
         self.user_id = user_id
         self.org_id = org_id
         self.project_id = project_id
-        self.group_id = group_id
+        self.role_id = role_id
+        self.owner_id = owner_id
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class UserOrgRole(db.Model):
+    __tablename__ = "user_org_role"
+    user_id = db.Column(db.ForeignKey('user.user_id'), nullable=False,
+                        primary_key=True, index=True)
+    org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=True,
+                       primary_key=True, index=True)
+    role_id = db.Column(db.ForeignKey('role.role_id'), nullable=False,
+                        primary_key=True, index=True)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
+
+    def __init__(self, user_id, org_id, project_id, role_id, owner_id):
+        self.user_id = user_id
+        self.org_id = org_id
+        self.project_id = project_id
+        self.role_id = role_id
         self.owner_id = owner_id
 
     def save_to_db(self):
@@ -140,8 +164,8 @@ class Permission(db.Model):
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
     # sqlalchemy ORM relation
-    group_permission = db.relationship("GroupPermission",
-                                 back_populates='permission', lazy=True)
+    role_permission = db.relationship("RolePermission",
+                                      back_populates='permission', lazy=True)
 
     def __init__(self, name, description, owner_id):
         self.name = name
@@ -153,12 +177,12 @@ class Permission(db.Model):
         db.session.commit()
 
 
-class GroupPermission(db.Model):
-    __tablename__ = "group_permission"
+class RolePermission(db.Model):
+    __tablename__ = "role_permission"
     org_id = db.Column(db.ForeignKey('organization.org_id'),
                        nullable=False, primary_key=True, index=True)
-    group_id = db.Column(db.ForeignKey('group.group_id'),
-                         nullable=False, primary_key=True, index=True)
+    role_id = db.Column(db.ForeignKey('role.role_id'),
+                        nullable=False, primary_key=True, index=True)
     permission_id = db.Column(db.ForeignKey('permission.permission_id'),
                               nullable=False, primary_key=True, index=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
@@ -167,11 +191,11 @@ class GroupPermission(db.Model):
 
     # sqlalchemy ORM relation
     permission = db.relationship("Permission",
-                                 back_populates='group_permission', lazy=True)
+                                 back_populates='role_permission', lazy=True)
 
-    def __init__(self, org_id, group_id, permission_id, owner_id):
+    def __init__(self, org_id, role_id, permission_id, owner_id):
         self.org_id = org_id
-        self.group_id = group_id
+        self.role_id = role_id
         self.permission_id = permission_id
         self.owner_id = owner_id
 
