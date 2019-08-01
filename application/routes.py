@@ -12,7 +12,7 @@ from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
                                    GetToken, ChangePassword)
-from application.api.organization import OrganizationAPI
+from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
 from application.api.group import GroupAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
@@ -69,6 +69,7 @@ api.add_resource(SelectConnection, '/api/select-connection')
 api.add_resource(SideBarMenu, '/api/sidebar-menu')
 api.add_resource(ProjectDQI, '/api/project-data-quality-index')
 api.add_resource(OrganizationDQI, '/api/organization-data-quality-index')
+api.add_resource(DashBoardStatus, '/api/dash-board-status')
 api.add_resource(GroupAPI, '/api/group')
 api.add_resource(ForgotPassword, '/api/forgot-password')
 api.add_resource(ForgotPasswordVerifyToken,
