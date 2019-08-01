@@ -37,7 +37,6 @@ class SelectConnection(Resource):
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
             data = parser.parse_args()
-            print(data)
             user = session.user_id
             select_connection(data, user)
 
