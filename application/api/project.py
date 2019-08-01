@@ -1,11 +1,12 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
+
+from application.common.constants import APIMessages
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
                                          STATUS_OK, STATUS_UNAUTHORIZED)
-from application.common.constants import APIMessages
-from application.common.token import token_required
-from application.model.models import Project, UserGroup
 from application.common.response import api_response
+from application.common.token import token_required
+from application.model.models import Project, UserOrgRole
 
 
 class ProjectAPI(Resource):
@@ -112,10 +113,9 @@ class ProjectAPI(Resource):
             project_details_list = list()
             organization_id_in_database = None
             # check if user has all org level permissions
-            user_groups = UserGroup.query.filter_by(
+            user_roles = UserOrgRole.query.filter_by(
                 user_id=session.user_id,
-                org_id=get_project_data['org_id'],
-                project_id=None).first()
+                org_id=get_project_data['org_id']).first()
             for each_project in list_of_active_project:
                 # Store each project details in a list
                 project_details_list.append(
@@ -125,7 +125,7 @@ class ProjectAPI(Resource):
                 organization_id_in_database = each_project.org_id
             projects_to_return.update(
                 {'org_id': organization_id_in_database,
-                 'is_org_user': True if user_groups else False,
+                 'is_org_user': True if user_roles else False,
                  'project_details': project_details_list})
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,

@@ -11,8 +11,8 @@ from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
                                          STATUS_OK, STATUS_UNAUTHORIZED)
 from application.common.response import api_response
 from application.common.token import token_required
-from application.model.models import Organization, Job, UserGroup, TestSuite, \
-    Project
+from application.model.models import (Organization, Job, TestSuite,
+                                      Project, UserProjectRole, UserOrgRole)
 from index import db
 
 
@@ -120,7 +120,8 @@ class OrganizationAPI(Resource):
 class DashBoardStatus(Resource):
     """ To handle GET API,to get count of active projects,users,jobs."""
 
-    def get(self):
+    @token_required
+    def get(self, session):
         """
         To get active projects,users and jobs for a particular org id.
 
@@ -154,11 +155,24 @@ class DashBoardStatus(Resource):
             active_projects = len(project_obj)
             result_dic["active_projects"] = active_projects
 
-            user_group_obj = UserGroup.query.filter(
-                UserGroup.org_id == org_detail['org_id']).distinct(
-                UserGroup.user_id).all()
-            list_user_id = [each_user_grp.user_id for each_user_grp in
-                            user_group_obj]
+            user_project_role_object = UserProjectRole.query.filter(
+                UserProjectRole.org_id == org_detail['org_id']).distinct(
+                UserProjectRole.user_id).all()
+
+            user_org_role_object = UserOrgRole.query.filter(
+                UserOrgRole.org_id == org_detail['org_id']).distinct(
+                UserOrgRole.user_id).all()
+
+            list_user_id_in_user_project_role_object = [each_user_grp.user_id
+                                                        for each_user_grp in
+                                                        user_project_role_object]
+            list_user_id_in_user_org_role_object = [each_user_grp.user_id
+                                                    for each_user_grp in
+                                                    user_org_role_object]
+            user_id_list = [list_user_id_in_user_project_role_object,
+                            list_user_id_in_user_org_role_object]
+            list_user_id = set().union(*user_id_list)
+
             result_dic["active_users"] = len(list_user_id)
 
             all_project_test_suite_id_list = []
