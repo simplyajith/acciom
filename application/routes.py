@@ -55,8 +55,8 @@ api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
                  '/api/spark-job-status/<int:test_case_log_id>')
 api.add_resource(TestCaseLogDetail,
-                 '/api/test-case-log/<int:test_case_log_id>')
-api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')
+                 '/api/test-case-log')
+api.add_resource(ExportTestLog, '/api/export')
 api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')
 api.add_resource(DbDetails, '/api/db-detail')

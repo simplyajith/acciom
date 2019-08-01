@@ -91,19 +91,23 @@ class AddTestSuite(Resource):
 
 
 class TestCaseLogDetail(Resource):
-    def get(self, test_case_log_id):
+    def get(self):
         """
         Method call will return the log of the Executed case based on its
         test_case_log_id
-
-        Args:
-            test_case_log_id(Int): test_Case_log_id of the case
-
         Returns: return the log of the case_log_id
         """
         try:
-            log_data = {"test_case_log": return_all_log(test_case_log_id),
-                        "success": True}
+            test_case_log = reqparse.RequestParser()
+            test_case_log.add_argument('test_case_log_id',
+                                       required=True,
+                                       type=int,
+                                       location='args')
+
+            test_case_log = test_case_log.parse_args()
+            log_data = {"test_case_log": return_all_log(
+                test_case_log['test_case_log_id']),
+                "success": True}
             return api_response(True, APIMessages.RETURN_SUCCESS,
                                 STATUS_CREATED, log_data)
         except Exception as e:
@@ -116,14 +120,18 @@ class ExportTestLog(Resource):
      test_case_log_id
     """
 
-    def get(self, case_log_id):
+    def get(self):
         """
         Method will Export log to Excel based on the test_case_log_id of the
         executed job
-
-        Args:
-            case_log_id:Export log to Excel based on the case_log_id
-
-        Returns:
+        Returns:  Export log to Excel based on the test_case_log_id of the
+        executed job
         """
-        return export_test_case_log(case_log_id)
+        test_case_log = reqparse.RequestParser()
+        test_case_log.add_argument('test_case_log_id',
+                                   required=False,
+                                   type=int,
+                                   location='args')
+        test_case_log = test_case_log.parse_args()
+
+        return export_test_case_log(test_case_log['test_case_log_id'])
