@@ -58,6 +58,7 @@ class APIMessages:
     PROJECT_NOT_EXIST = "Project does not exist"
     SUITE_NOT_EXIST = "suite does not exist"
     TESTCASELOGID_NOT_IN_DB = "testcase log id {} not present in db"
+    ADD_ROLE = "Roles added Successfully"
 
 
 class GenericStrings:
