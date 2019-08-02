@@ -249,7 +249,7 @@ class GetToken(Resource):
     """
 
     @token_required
-    def get(self, session):
+    def post(self, session):
         """
         Method will be a get call used to generate a token for the user and
         store that with the user reference in the PersonalToken page.
