@@ -19,6 +19,7 @@ from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
                                        ExportTestLog)
+from application.api.user_management import UserAPI
 from application.model.models import db
 from index import (app, api, static_folder)
 
@@ -78,3 +79,4 @@ api.add_resource(ResetPassword, '/api/reset-password')
 api.add_resource(GetToken, '/api/generate-token')
 api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
 api.add_resource(ChangePassword, '/api/change-password')
+api.add_resource(UserAPI, '/api/user')
