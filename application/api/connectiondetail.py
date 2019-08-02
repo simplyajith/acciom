@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages
-from application.common.response import (api_response, STATUS_SERVER_ERROR)
+from application.common.response import (api_response, STATUS_SERVER_ERROR,
+                                         STATUS_CREATED)
 from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
@@ -80,7 +81,7 @@ class DbConnection(Resource):
             else:
                 payload = get_db_connection(project_id['project_id'])
                 return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload)
+                                    payload, STATUS_CREATED)
         except Exception as e:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_SERVER_ERROR)
@@ -116,7 +117,7 @@ class CaseDetails(Resource):
             else:
                 payload = get_case_detail(suite_id['suite_id'])
                 return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload)
+                                    payload, STATUS_CREATED)
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)
