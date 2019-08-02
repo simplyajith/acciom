@@ -50,11 +50,13 @@ class TestCaseJob(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('suite_id', type=int, required=False,
                                 help=APIMessages.PARSER_MESSAGE)
-            parser.add_argument('case_id', type=int, required=False,
+            parser.add_argument('case_id_list',
+                                type=list, location="json",
                                 help=APIMessages.PARSER_MESSAGE)
             execution_data = parser.parse_args()
 
-            if execution_data['suite_id'] and not (execution_data['case_id']):
+            if execution_data['suite_id'] and not (
+                    execution_data['case_id_list']):
                 run_by_suite_id(user_id, execution_data['suite_id'])
                 suite_data = {"suite_id": execution_data['suite_id']}
                 return api_response(True, APIMessages.RETURN_SUCCESS,
@@ -62,9 +64,9 @@ class TestCaseJob(Resource):
                                     suite_data)
 
             elif not (execution_data['suite_id']) \
-                    and execution_data['case_id']:
-                run_by_case_id(execution_data['case_id'], user_id)
-                case_data = {"case_id": execution_data["case_id"]}
+                    and execution_data['case_id_list']:
+                run_by_case_id(execution_data['case_id_list'][0], user_id)
+                case_data = {"case_id_list": execution_data["case_id_list"]}
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED,
                                     case_data)
