@@ -64,6 +64,7 @@ def db_details_without_password(db_connection_id):
     db_details_list['db_name'] = db_obj.db_name
     db_details_list['db_hostname'] = db_obj.db_hostname
     db_details_list['db_username'] = db_obj.db_username
+    db_details_list['db_connection_name'] = db_obj.db_connection_name
     return db_details_list
 
 

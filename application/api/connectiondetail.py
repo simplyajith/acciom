@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages
-from application.common.response import (api_response, STATUS_SERVER_ERROR)
+from application.common.response import (api_response, STATUS_SERVER_ERROR,
+                                         STATUS_CREATED)
 from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
@@ -40,8 +41,8 @@ class SelectConnection(Resource):
             user = session.user_id
             select_connection(data, user)
 
-            return api_response("success", True, 200,
-                                APIMessages.RETURN_SUCCESS)
+            return api_response(True, APIMessages.RETURN_SUCCESS,
+                                STATUS_CREATED)
 
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
@@ -79,8 +80,8 @@ class DbConnection(Resource):
                                     STATUS_SERVER_ERROR)
             else:
                 payload = get_db_connection(project_id['project_id'])
-                return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload)
+                return api_response(True, APIMessages.SUCCESS,
+                                    STATUS_CREATED, payload)
         except Exception as e:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_SERVER_ERROR)
@@ -115,8 +116,8 @@ class CaseDetails(Resource):
                                     STATUS_SERVER_ERROR)
             else:
                 payload = get_case_detail(suite_id['suite_id'])
-                return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload)
+                return api_response(True, APIMessages.SUCCESS,
+                                    STATUS_CREATED, payload)
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)

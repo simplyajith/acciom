@@ -110,8 +110,12 @@ def save_file_to_db(current_user, project_id, data, file):
                     else:
                         query["sourceqry"] = ""
                         query["targetqry"] = ""
+
             jsondict = {"column": column, "table": table, "query": query,
-                        "src_db_id": src_db_id, "target_db_id": target_db_id}
+                        "src_db_id": src_db_id, "target_db_id": target_db_id,
+                        "test_desc": temp_test_dict[
+                            current_app.config.get('DESCRIPTION')][
+                            each_row]}
             temp = TestCase(test_suite_id=temp_file.test_suite_id,
                             owner_id=current_user,
                             test_case_class=SupportedTestClass().
