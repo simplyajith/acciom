@@ -227,6 +227,12 @@ class EditTestCase(Resource):
                                "des_db_type": SupportedDBType().
                                    get_db_name_by_id(
                                    DbConnection_detail_target["db_type"]),
+                               "src_connection_name": DbConnection_detail_src[
+                                   "db_connection_name"],
+                               "target_connection_name":
+                                   DbConnection_detail_target[
+                                       "db_connection_name"],
+
                                "column": column,
                                "test_queries": test_case_detail["query"],
                                "src_qry": src_qry,

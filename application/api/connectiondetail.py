@@ -80,8 +80,8 @@ class DbConnection(Resource):
                                     STATUS_SERVER_ERROR)
             else:
                 payload = get_db_connection(project_id['project_id'])
-                return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload, STATUS_CREATED)
+                return api_response(True, APIMessages.SUCCESS,
+                                    STATUS_CREATED, payload)
         except Exception as e:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_SERVER_ERROR)
@@ -116,8 +116,8 @@ class CaseDetails(Resource):
                                     STATUS_SERVER_ERROR)
             else:
                 payload = get_case_detail(suite_id['suite_id'])
-                return api_response(True, "success", APIMessages.SUCCESS,
-                                    payload, STATUS_CREATED)
+                return api_response(True, APIMessages.SUCCESS,
+                                    STATUS_CREATED, payload)
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)

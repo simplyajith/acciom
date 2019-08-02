@@ -36,6 +36,10 @@ def return_all_suites(project_id):
             'test_class_name': SupportedTestClass().get_test_class_name_by_id(
                 case_id.test_case_class),
             'test_class_id': case_id.test_case_class,
+            'test_class_description': case_id.test_case_detail.get('test_desc',
+                                                                   SupportedTestClass()
+                                                                   .get_test_class_name_by_id(
+                                                                       case_id.test_case_class)),
             'test_status': ExecutionStatus().get_execution_status_by_id(
                 case_id.latest_execution_status),
             'test_case_log_list': list(map(lambda each_case:
