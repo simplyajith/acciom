@@ -142,10 +142,9 @@ class UserOrgRole(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, user_id, org_id, project_id, role_id, owner_id):
+    def __init__(self, user_id, org_id, role_id, owner_id):
         self.user_id = user_id
         self.org_id = org_id
-        self.project_id = project_id
         self.role_id = role_id
         self.owner_id = owner_id
 
