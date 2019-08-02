@@ -38,8 +38,6 @@ class UserAPI(Resource):
         user_id_list = [user_id_list_in_org, user_id_list_in_project]
         unique_user_id_list = set().union(*user_id_list)
 
-        print(unique_user_id_list)
-        print(user_id_list)
         all_user_details = User.query.filter(
             User.user_id.in_(unique_user_id_list)).all()
 
