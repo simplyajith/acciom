@@ -59,6 +59,7 @@ class APIMessages:
     SUITE_NOT_EXIST = "suite does not exist"
     TESTCASELOGID_NOT_IN_DB = "testcase log id {} not present in db"
     ADD_ROLE = "Roles added Successfully"
+    EMAIL_USER = "Either User Id or Email Id is mandatory"
 
 
 class GenericStrings:
