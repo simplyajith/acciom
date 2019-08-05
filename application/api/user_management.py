@@ -5,7 +5,8 @@ from application.common.response import (api_response, STATUS_OK,
                                          STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
-from application.model.models import (UserOrgRole, UserProjectRole, User)
+from application.model.models import (UserOrgRole, UserProjectRole, User,
+                                      Organization)
 from application.common.utils import generate_hash
 
 
@@ -179,9 +180,24 @@ class UserRoleAPI(Resource):
                     not get_role_api_parser['email_id']:
                 return api_response(False, APIMessages.EMAIL_USER,
                                     STATUS_BAD_REQUEST)
+            # Checking if org id is valid
+            org_validation = Organization.query.filter_by(
+                org_id=get_role_api_parser['org_id'], is_deleted=False).first()
+            if not org_validation:
+                return api_response(
+                    False, APIMessages.NO_RESOURCE.format('Organization'),
+                    STATUS_BAD_REQUEST)
             # Storing user id if user id is passed
             user_id = get_role_api_parser['user_id'] \
                 if get_role_api_parser['user_id'] else None
+            # checking if User Id is valid
+            if get_role_api_parser['user_id']:
+                user_validity = User.query.filter_by(user_id=user_id,
+                                                     is_deleted=False).first()
+                if not user_validity:
+                    return api_response(
+                        False, APIMessages.NO_RESOURCE.format('User'),
+                        STATUS_BAD_REQUEST)
             # Get user Id based on email Id passed
             if get_role_api_parser['email_id'] and \
                     not get_role_api_parser['user_id']:
