@@ -19,6 +19,8 @@ def select_connection(case_data, user):
             test_case_detail = testcase_object.test_case_detail
             test_case_detail['src_db_id'] = int(case_data["db_connection_id"])
             testcase_object.save_to_db()
+            testcase_object.test_case_detail = test_case_detail
+            testcase_object.save_to_db()
 
     elif case_data['connection_reference'] == (
             APIMessages.DESTINATION).lower():
@@ -29,9 +31,8 @@ def select_connection(case_data, user):
             test_case_detail['target_db_id'] = int(
                 case_data["db_connection_id"])
             testcase_object.save_to_db()
-
-    testcase_object.test_case_detail = test_case_detail
-    testcase_object.save_to_db()
+            testcase_object.test_case_detail = test_case_detail
+            testcase_object.save_to_db()
     return True
 
 
