@@ -26,10 +26,11 @@ def create_dbconnection(current_user, db_type, db_name, hostname,
     if temp_connection:
         return temp_connection.db_connection_id
     else:
+        temp_connenction_name = "{0}_{1}".format(username, db_name)
         temp_connection = DbConnection(
             project_id=project_id,
             owner_id=current_user,
-            db_connection_name=None,
+            db_connection_name=temp_connenction_name,
             db_type=SupportedDBType().get_db_id_by_name(db_type),
             db_name=db_name,
             db_hostname=hostname,
