@@ -1,5 +1,4 @@
-from application.common.constants import ExecutionStatus
-from application.common.constants import SupportedTestClass
+from application.common.constants import SupportedTestClass, ExecutionStatus
 from application.model.models import TestSuite
 
 
@@ -17,6 +16,8 @@ def return_all_suites(project_id):
         return {
             'test_case_log_id': case_log_id.test_case_log_id,
             'test_execution_status': case_log_id.execution_status,
+            'test_execution_status_name': ExecutionStatus().get_execution_status_by_id(
+                case_log_id.execution_status),
             'executed_at': str(case_log_id.modified_at)[0:19]
         }
 
@@ -40,7 +41,9 @@ def return_all_suites(project_id):
                                                                    SupportedTestClass()
                                                                    .get_test_class_name_by_id(
                                                                        case_id.test_case_class)),
-            'test_status': ExecutionStatus().get_execution_status_by_id(
+
+            'test_status': case_id.latest_execution_status,
+            'test_status_name': ExecutionStatus().get_execution_status_by_id(
                 case_id.latest_execution_status),
             'test_case_log_list': list(map(lambda each_case:
                                            test_log_to_json(each_case),

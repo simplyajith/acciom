@@ -7,7 +7,6 @@ from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
                                                   get_case_detail)
-from application.helper.runnerclasshelpers import args_as_list
 from application.model.models import Project, TestSuite
 
 
@@ -31,9 +30,8 @@ class SelectConnection(Resource):
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
             parser.add_argument('case_id_list',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True,
-                                type=args_as_list, default=[])
+                                type=list, location="json",
+                                help=APIMessages.PARSER_MESSAGE)
             parser.add_argument('db_connection_id',
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
