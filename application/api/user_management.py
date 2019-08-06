@@ -2,9 +2,11 @@
 from flask_restful import reqparse, Resource
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_CREATED, STATUS_SERVER_ERROR)
+                                         STATUS_CREATED, STATUS_SERVER_ERROR,
+                                         STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
-from application.model.models import (UserOrgRole, UserProjectRole, User)
+from application.model.models import (UserOrgRole, UserProjectRole, User,
+                                      Organization)
 from application.common.utils import generate_hash
 
 
@@ -149,6 +151,106 @@ class UserRoleAPI(Resource):
             return api_response(
                 False, APIMessages.INTERNAL_ERROR,
                 STATUS_SERVER_ERROR, {'error_log': str(e)})
+
+    @token_required
+    def get(self, session):
+        """
+        GET call to retrieve UserProjectRole and UserOrgRole records.
+
+        Args:
+            session (object): User Session
+
+        Returns: Standard API Response with HTTP status code
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('org_id',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True, type=int, location='args')
+        parser.add_argument('user_id',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=False, type=int, location='args')
+        parser.add_argument('email_id',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=False, type=str, location='args')
+        get_role_api_parser = parser.parse_args()
+        try:
+            result_dict = {}
+            # Checking if User Id or Email Id is mandatorily passed
+            if not get_role_api_parser['user_id'] and \
+                    not get_role_api_parser['email_id']:
+                return api_response(False, APIMessages.EMAIL_USER,
+                                    STATUS_BAD_REQUEST)
+            # Checking if org id is valid
+            org_validation = Organization.query.filter_by(
+                org_id=get_role_api_parser['org_id'], is_deleted=False).first()
+            if not org_validation:
+                return api_response(
+                    False, APIMessages.NO_RESOURCE.format('Organization'),
+                    STATUS_BAD_REQUEST)
+            # Storing user id if user id is passed
+            user_id = get_role_api_parser['user_id'] \
+                if get_role_api_parser['user_id'] else None
+            # checking if User Id is valid
+            if get_role_api_parser['user_id']:
+                user_validity = User.query.filter_by(user_id=user_id,
+                                                     is_deleted=False).first()
+                if not user_validity:
+                    return api_response(
+                        False, APIMessages.NO_RESOURCE.format('User'),
+                        STATUS_BAD_REQUEST)
+            # Get user Id based on email Id passed
+            if get_role_api_parser['email_id'] and \
+                    not get_role_api_parser['user_id']:
+                user_record = User.query.filter(
+                    User.email.ilike(get_role_api_parser['email_id'])).first()
+                if not user_record:
+                    return api_response(
+                        False, APIMessages.NO_RESOURCE.format('User'),
+                        STATUS_BAD_REQUEST)
+                user_id = user_record.user_id
+                result_dict['email_id'] = user_record.email
+            if get_role_api_parser['org_id'] and user_id:
+                # Get Project Role list
+                project_role_list = list()
+                temp_dict = {}
+                user_project_roles = UserProjectRole.query.filter_by(
+                    org_id=get_role_api_parser['org_id'],
+                    user_id=user_id).all()
+                for each_project_role in user_project_roles:
+                    if each_project_role.project_id not in temp_dict.keys():
+                        # Add a key with value as role_id
+                        temp_dict[each_project_role.project_id] = \
+                            [each_project_role.role_id]
+                    else:
+                        temp_dict[each_project_role.project_id].append(
+                            each_project_role.role_id)
+                for key, value in temp_dict.items():
+                    project_role_list.append({'project_id': key,
+                                              'allowed_role_list': value})
+                result_dict['project_role_list'] = project_role_list
+                # Get Org Roles
+                user_org_roles = UserOrgRole.query.filter_by(
+                    org_id=get_role_api_parser['org_id'],
+                    user_id=user_id).all()
+                result_dict['is_org_user'] = True if user_org_roles else False
+                result_dict['org_allowed_role_list'] = []
+                if user_org_roles:
+                    for each_user_org_role in user_org_roles:
+                        result_dict['org_allowed_role_list'].append(
+                            each_user_org_role.role_id)
+                # Get User email
+                if get_role_api_parser['user_id'] and \
+                        not get_role_api_parser['email_id']:
+                    user_detail = User.query.filter_by(
+                        user_id=get_role_api_parser['user_id']).first()
+                    result_dict['email_id'] = user_detail.email
+                result_dict['org_id'] = get_role_api_parser['org_id']
+                return api_response(True, APIMessages.SUCCESS, STATUS_OK,
+                                    result_dict)
+        except Exception as e:
+            return api_response(
+                False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
+                {'error_log': str(e)})
 
 
 def create_new_user(email_id, **kwargs):
