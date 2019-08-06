@@ -70,7 +70,8 @@ class CheckConnection(Resource):
                 return api_response(True, APIMessages.CONNECTION_CREATE,
                                     STATUS_CREATED)
             else:
-                return api_response(True, APIMessages.CONNECTION_CANNOT_CREATE,
+                return api_response(False,
+                                    APIMessages.CONNECTION_CANNOT_CREATE,
                                     STATUS_CREATED)
         except SQLAlchemyError as e:
             db.session.rollback()

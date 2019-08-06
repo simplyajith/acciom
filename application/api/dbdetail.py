@@ -120,11 +120,11 @@ class DbDetails(Resource):
                     return api_response(
                         True, APIMessages.DATA_LOADED, STATUS_CREATED,
                         {'project_id': db_obj.project_id,
-                         'connection_name': db_obj.db_connection_name,
-                         'db_type_id': db_obj.db_connection_id,
+                         'db_connection_name': db_obj.db_connection_name,
+                         'db_connection_id': db_obj.db_connection_id,
                          'db_type_name': SupportedDBType().get_db_name_by_id(
                              db_obj.db_type),
-                         'db_type': db_obj.db_type,
+                         'db_type_id': db_obj.db_type,
                          "db_name": db_obj.db_name,
                          'db_hostname': db_obj.db_hostname,
                          'db_username': db_obj.db_username,
@@ -148,12 +148,12 @@ class DbDetails(Resource):
                         return {
                             'project_id': projectid.project_id,
                             'project_name': project_name_obj.project_name,
-                            'connection_name': projectid.db_connection_name,
-                            'db_type_id': projectid.db_connection_id,
+                            'db_connection_name': projectid.db_connection_name,
+                            'db_connection_id': projectid.db_connection_id,
                             'db_type_name':
                                 SupportedDBType().get_db_name_by_id(
                                     projectid.db_type),
-                            'db_type': projectid.db_type,
+                            'db_type_id': projectid.db_type,
                             'db_name': projectid.db_name,
                             'db_hostname': projectid.db_hostname,
                             'db_username': projectid.db_username}
