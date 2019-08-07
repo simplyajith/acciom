@@ -1,5 +1,5 @@
 from application.common.constants import SupportedTestClass, ExecutionStatus
-from application.model.models import TestSuite
+from application.model.models import (TestSuite, TestCase)
 
 
 def return_all_suites(project_id):
@@ -74,3 +74,46 @@ def return_all_suites(project_id):
         map(lambda suite_id: test_suite_to_json(suite_id),
             TestSuite.query.filter_by(
                 project_id=project_id)))}
+
+
+def test_suite_details(suite_id):
+    suite_obj = TestSuite.query.filter_by(test_suite_id=suite_id).first()
+
+    def test_case_to_json(case_id):
+        return {
+            'test_case_id': case_id.test_case_id,
+            'test_class_name': SupportedTestClass().get_test_class_name_by_id(
+                case_id.test_case_class),
+            'test_class_id': case_id.test_case_class,
+            'test_class_description': case_id.test_case_detail.get('test_desc',
+                                                                   SupportedTestClass()
+                                                                   .get_test_class_name_by_id(
+                                                                       case_id.test_case_class)),
+
+            'test_status': case_id.latest_execution_status,
+            'test_status_name': ExecutionStatus().get_execution_status_by_id(
+                case_id.latest_execution_status)
+        }
+
+    return {
+        'test_case_list': list(map(lambda each_case:
+                                   test_case_to_json(each_case),
+                                   suite_obj.test_case))}
+
+
+def test_case_details(case_id):
+    case_obj = TestCase.query.filter_by(test_case_id=case_id).first()
+
+    def test_log_to_json(case_log_id):
+        return {
+            'test_case_log_id': case_log_id.test_case_log_id,
+            'test_execution_status': case_log_id.execution_status,
+            'test_execution_status_name': ExecutionStatus().get_execution_status_by_id(
+                case_log_id.execution_status),
+            'executed_at': str(case_log_id.modified_at)[0:19]
+        }
+
+    return {
+        'test_case_log_list': list(map(lambda each_case:
+                                       test_log_to_json(each_case),
+                                       case_obj.test_case_log))}

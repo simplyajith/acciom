@@ -1,4 +1,6 @@
-from application.common.constants import SupportedDBType
+from datetime import datetime
+
+from application.common.constants import (SupportedDBType, APIMessages)
 from application.model.models import DbConnection
 
 
@@ -26,7 +28,11 @@ def create_dbconnection(current_user, db_type, db_name, hostname,
     if temp_connection:
         return temp_connection.db_connection_id
     else:
-        temp_connenction_name = "{0}_{1}".format(username, db_name)
+        current_date_time = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S")
+        temp_connenction_name = "{0} {1}".format(
+            APIMessages.DEFAULT_DB_CONNECTION_PREFIX,
+            current_date_time)
         temp_connection = DbConnection(
             project_id=project_id,
             owner_id=current_user,

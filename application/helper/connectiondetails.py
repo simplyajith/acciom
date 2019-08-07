@@ -1,5 +1,4 @@
 from application.common.constants import APIMessages
-from application.common.constants import SupportedDBType
 from application.model.models import DbConnection, TestSuite, TestCase
 
 
@@ -47,12 +46,27 @@ def get_db_connection(project_id):
     return payload
 
 
+def get_connection_name(db_connection_id):
+    db_obj = DbConnection.query.filter_by(
+        db_connection_id=db_connection_id).first()
+    return db_obj.db_connection_name
+
+
 def get_case_detail(suite_id):
     suite_obj = TestSuite. \
         query.filter_by(test_suite_id=suite_id).first()
     all_case = [{"case_id": each_case.test_case_id,
-                 "case_name": SupportedDBType().get_db_name_by_id(
-                     each_case.test_case_class)}
+                 "case_name": each_case.test_case_detail.get('test_desc',
+                                                             APIMessages.NO_NAME_DEFINE),
+                 "source_db_connection_id": each_case.test_case_detail.get(
+                     'src_db_id'),
+                 "source_db_connection_name": get_connection_name(
+                     each_case.test_case_detail.get('src_db_id')),
+                 "target_db_connection_id": each_case.test_case_detail.get(
+                     'target_db_id'),
+                 "target_db_connection_name": get_connection_name(
+                     each_case.test_case_detail.get('target_db_id')),
+                 }
                 for each_case in suite_obj.test_case]
     payload = {"all_cases": all_case}
     print(payload)
