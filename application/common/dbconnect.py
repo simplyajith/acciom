@@ -34,10 +34,19 @@ def dbconnection(db_name, db_type, host_name, db_username, db_password):
                                      db=db_name)
         return connection
     elif db_type == SupportedDBType().get_db_id_by_name('postgresql'):
-        connection = psycopg2.connect(host=host_name,
-                                      database=db_name, user=db_username,
-                                      password=db_password)
+        if ":" in host_name:
+            host, port = host_name.split(":")
+            connection = psycopg2.connect(host=host,
+                                          database=db_name, user=db_username,
+                                          password=db_password,port = port)
+
+        else:
+            connection = psycopg2.connect(host=host_name,
+                                          database=db_name, user=db_username,
+                                          password=db_password)
+
         return connection
+
     elif db_type == SupportedDBType().get_db_id_by_name('oracle'):
         connection = cx_Oracle.connect(
             "{0}/{1}@{2}/{3}".format(db_username, db_password,
