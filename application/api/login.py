@@ -59,16 +59,24 @@ class AddUser(Resource):
                             help='This field cannot be blank',
                             required=True)
         user_data = parser.parse_args()
-        user = User(user_data['email'], user_data['first_name'],
-                    user_data['last_name'],
-                    generate_hash(user_data['password']),
-                    True)
-        user.save_to_db()
-        data = {"status": True,
-                "message": "success",
-                "data": {"user_id": user.user_id}
-                }
-        return data, 200
+        old_user = User.query.filter_by(email=user_data['email']).first()
+        if old_user is None:
+            user = User(user_data['email'], user_data['first_name'],
+                        user_data['last_name'],
+                        generate_hash(user_data['password']),
+                        True)
+            user.save_to_db()
+            data = {"status": True,
+                    "message": "success",
+                    "data": {"user_id": user.user_id}
+                    }
+            return data, 200
+        else:
+            data = {"status": False,
+                    "message": "user already registered"
+
+                    }
+            return data, 409
 
 
 class ForgotPassword(Resource):
