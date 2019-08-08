@@ -60,6 +60,9 @@ class APIMessages:
     TESTCASELOGID_NOT_IN_DB = "testcase log id {} not present in db"
     ADD_ROLE = "Roles added Successfully"
     EMAIL_USER = "Either User Id or Email Id is mandatory"
+    NO_NAME_DEFINE = "No name define"
+    DEFAULT_DB_CONNECTION_PREFIX = "Connection"
+    TESTSUITE_NOT_IN_DB = "test suite {} not present in db"
 
 
 class GenericStrings:
