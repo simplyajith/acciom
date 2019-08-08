@@ -11,14 +11,13 @@ from application.common.runbysuiteid import run_by_suite_id
 from application.common.token import (token_required)
 from application.helper.exportTestcaselog import export_test_case_log
 from application.helper.returnallsuites import (return_all_suites,
-                                                test_suite_details,
                                                 test_case_details)
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
-from application.model.models import (Project, TestCaseLog, TestSuite)
+from application.model.models import (Project, TestCaseLog, TestCase)
 
 
-class AddTestSuite(Resource):
+class TestSuiteAPI(Resource):
     """
     AddTestSuite Uploads the suite
     """
@@ -156,26 +155,7 @@ class ExportTestLog(Resource):
         return export_test_case_log(test_case_log['test_case_log_id'])
 
 
-class EachSuiteDetails(Resource):
-    @token_required
-    def get(self, session):
-        test_suite_detail = reqparse.RequestParser()
-        test_suite_detail.add_argument('test_suite_id',
-                                       required=False,
-                                       type=int,
-                                       location='args')
-        test_suite_detail = test_suite_detail.parse_args()
-        suite_obj = TestSuite.query.filter_by(
-            test_suite_id=test_suite_detail['test_suite_id']).first()
-        if not suite_obj:
-            return api_response(False,
-                                APIMessages.TESTSUITE_NOT_IN_DB.format(
-                                    test_suite_detail['test_suite_id']),
-                                STATUS_BAD_REQUEST)
-        return test_suite_details(test_suite_detail['test_suite_id'])
-
-
-class EachCaseDetail(Resource):
+class TestCaseLogAPI(Resource):
     def get(self):
         test_case_detail = reqparse.RequestParser()
         test_case_detail.add_argument('test_case_id',
@@ -183,11 +163,11 @@ class EachCaseDetail(Resource):
                                       type=int,
                                       location='args')
         test_case_detail = test_case_detail.parse_args()
-        case_obj = TestSuite.query.filter_by(
-            test_suite_id=test_case_detail['test_case_id']).first()
+        case_obj = TestCase.query.filter_by(
+            test_case_id=test_case_detail['test_case_id']).first()
         if not case_obj:
             return api_response(False,
-                                APIMessages.TESTSUITE_NOT_IN_DB.format(
+                                APIMessages.TEST_CASE_NOT_IN_DB.format(
                                     test_case_detail['test_case_id']),
                                 STATUS_BAD_REQUEST)
 
